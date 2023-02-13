@@ -1,48 +1,48 @@
 body {
-  background: linear-gradient(135deg, #f05f57, #360940);
-  height: 100vh;
-  margin: 0;
-  padding: 0;
+  background-color: #1f1f1f;
+  color: #fff;
   font-family: Arial, sans-serif;
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 
 .container {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 60%;
+  height: 70%;
+  width: 70%;
 }
 
 .container div {
+  height: 100%;
+  width: 100%;
   display: none;
 }
 
 .container div img {
-  width: 80%;
-  height: auto;
-  object-fit: contain;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
 }
 
-.prev,
-.next {
-  background-color: #f05f57;
-  color: #fff;
-  padding: 1em 2em;
+button {
+  height: 50px;
+  width: 80px;
+  background-color: #fff;
+  color: #1f1f1f;
+  border: 0;
   border-radius: 5px;
-  border: none;
+  margin: 10px;
+  font-size: 18px;
   cursor: pointer;
-  margin: 1em;
 }
 
 .poem {
-  background-color: rgba(255, 255, 255, 0.7);
-  padding: 2em;
-  border-radius: 10px;
+  width: 70%;
   text-align: center;
-  width: 80%;
-  margin-top: 2em;
+  margin-top: 20px;
+  font-size: 20px;
 }
