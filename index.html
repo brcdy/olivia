@@ -6,16 +6,34 @@
     <link rel="stylesheet" type="text/css" href="style.css">
   </head>
   <body>
-    <div class="photo-container">
-      <img class="photo" src="your-photo-1.jpg" alt="your photo description">
-      <img class="photo" src="your-photo-2.jpg" alt="your photo description">
-      <!-- Add more photos here -->
+    <h1>Happy Birthday, My Love</h1>
+    <div id="slideshow">
+      <img src="1.jpg" alt="image 1">
+      <img src="2.jpg" alt="image 2">
+      <img src="3.jpg" alt="image 3">
+      <!-- Add additional images here -->
     </div>
-    <div class="poem">
-      <p>Olivia, my love, from Tasmania's shore We met on a screen, but our bond is much more Your bright smile and kind heart captured me I knew from the start, you were meant to be
-Your beauty radiates, like the sun on the beach Your laugh fills my ears, within arm's reach Our love may have started with a game of COD But it's grown into something, that I can't help but nod
-You live on an island, so far away But distance can't stop, the words I have to say I love you, Olivia, more each day I'll wait until we're together, in every single way
-So until that day, when we're face to face I'll hold you close, in this loving embrace And think of you, as I look up at the stars Hoping one day, we'll be together, no matter how far.</p>
-    </div>
+    <p>A special poem just for you:</p>
+    <p>
+      Roses are red,<br>
+      Violets are blue,<br>
+      Happy birthday to the one,<br>
+      That I love so much, it's true.<br>
+    </p>
+
+    <script>
+      // Add your JavaScript code here
+      let slideshow = document.getElementById("slideshow");
+      let images = slideshow.getElementsByTagName("img");
+      let currentImage = 0;
+
+      setInterval(function() {
+        for (let i = 0; i < images.length; i++) {
+          images[i].style.opacity = 0;
+        }
+        currentImage = (currentImage + 1) % images.length;
+        images[currentImage].style.opacity = 1;
+      }, 2000);
+    </script>
   </body>
 </html>
