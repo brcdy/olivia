@@ -1,0 +1,30 @@
+body {
+  background-color: #333;
+  color: #fff;
+  font-family: sans-serif;
+  text-align: center;
+}
+
+.photo-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 50px 0;
+}
+
+.photo {
+  width: 300px;
+  height: 300px;
+  object-fit: cover;
+  margin: 20px;
+  box-shadow: 0 0 10px #fff;
+  border-radius: 10px;
+}
+
+.poem {
+  width: 80%;
+  margin: 50px auto;
+  text-align: center;
+  font-style: italic;
+}
+
