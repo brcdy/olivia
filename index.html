@@ -1,39 +1,79 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <title>Girlfriend's Birthday</title>
-    <link rel="stylesheet" type="text/css" href="style.css">
-  </head>
-  <body>
-    <h1>Happy Birthday, My Love</h1>
-    <div id="slideshow">
-      <img src="1.jpg" alt="image 1">
-      <img src="2.jpg" alt="image 2">
-      <img src="3.jpg" alt="image 3">
-      <!-- Add additional images here -->
-    </div>
-    <p>A special poem just for you:</p>
-    <p>
-      Roses are red,<br>
-      Violets are blue,<br>
-      Happy birthday to the one,<br>
-      That I love so much, it's true.<br>
-    </p>
 
-    <script>
-      // Add your JavaScript code here
-      let slideshow = document.getElementById("slideshow");
-      let images = slideshow.getElementsByTagName("img");
-      let currentImage = 0;
+<head>
+  <meta charset="UTF-8">
+  <title>Olivia's Birthday</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function () {
+      var currentIndex = 0,
+        items = $('.container div'),
+        itemAmt = items.length;
 
-      setInterval(function() {
-        for (let i = 0; i < images.length; i++) {
-          images[i].style.opacity = 0;
+      function cycleItems() {
+        var item = $('.container div').eq(currentIndex);
+        items.hide();
+        item.css('display', 'inline-block');
+      }
+
+      var autoSlide = setInterval(function () {
+        currentIndex += 1;
+        if (currentIndex > itemAmt - 1) {
+          currentIndex = 0;
         }
-        currentImage = (currentImage + 1) % images.length;
-        images[currentImage].style.opacity = 1;
-      }, 2000);
-    </script>
-  </body>
+        cycleItems();
+      }, 3000);
+
+      $('.next').click(function () {
+        clearInterval(autoSlide);
+        currentIndex += 1;
+        if (currentIndex > itemAmt - 1) {
+          currentIndex = 0;
+        }
+        cycleItems();
+      });
+
+      $('.prev').click(function () {
+        clearInterval(autoSlide);
+        currentIndex -= 1;
+        if (currentIndex < 0) {
+          currentIndex = itemAmt - 1;
+        }
+        cycleItems();
+      });
+    });
+  </script>
+</head>
+
+<body>
+  <div class="container">
+    <div><img src="photo1.jpg" alt="photo1"></div>
+    <div><img src="photo2.jpg" alt="photo2"></div>
+    <div><img src="photo3.jpg" alt="photo3"></div>
+    <!-- Add additional slides here -->
+  </div>
+  <button class="prev">Prev</button>
+  <button class="next">Next</button>
+  <div class="poem">
+    <p>Olivia, my love, from Tasmania's shore<br>
+      We met on a screen, but our bond is much more<br>
+      Your bright smile and kind heart captured me<br>
+      I knew from the start, you were meant to be<br>
+      Your beauty radiates, like the sun on the beach<br>
+      Your laugh fills my ears, within arm's reach<br>
+      Our love may have started with a game of COD<br>
+      But it's grown into something, that I can't help but nod<br>
+      You live on an island, so far away<br>
+      But distance can't stop, the words I have to say<br>
+      I love you, Olivia, more each day<br>
+      I'll wait until we're together, in every single way<br>
+      So until that day, when we're face to face<br>
+      I'll hold you close, in this loving embrace<br>
+      And think of you, as I look up at the stars<br>
+      Hoping one day, we'll be together, no matter how far.</p>
+
+  </div>
+</body>
 </html>
