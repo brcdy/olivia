@@ -1,48 +1,44 @@
+/* Add your custom styles here */
 body {
-  background-color: #1f1f1f;
-  color: #fff;
-  font-family: Arial, sans-serif;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
+  background: repeating-linear-gradient(
+    45deg,
+    #0d0d0d,
+    #0d0d0d 10px,
+    #262626 10px,
+    #262626 20px
+  );
+  background-size: 20px 20px;
 }
 
 .container {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 70%;
-  width: 70%;
+  height: 80vh;
 }
 
 .container div {
-  height: 100%;
-  width: 100%;
   display: none;
 }
 
 .container div img {
-  height: 100%;
-  width: 100%;
-  object-fit: cover;
-}
-
-button {
-  height: 50px;
-  width: 80px;
-  background-color: #fff;
-  color: #1f1f1f;
-  border: 0;
-  border-radius: 5px;
-  margin: 10px;
-  font-size: 18px;
-  cursor: pointer;
+  width: 200px;
+  height: 200px;
 }
 
 .poem {
-  width: 70%;
   text-align: center;
+  color: white;
   margin-top: 20px;
-  font-size: 20px;
+}
+
+button {
+  display: block;
+  margin: 20px auto;
+  padding: 10px 20px;
+  background-color: #262626;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 18px;
 }
