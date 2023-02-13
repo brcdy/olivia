@@ -1,48 +1,87 @@
 body {
-  background-color: #1f1f1f;
-  color: #fff;
-  font-family: Arial, sans-serif;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  background-image: 
+    linear-gradient(
+      to right, 
+      url(pattern1.png), 
+      url(pattern2.png)
+    ), 
+    linear-gradient(
+      to bottom, 
+      url(pattern3.png), 
+      url(pattern4.png)
+    );
+  background-size: 200px 200px;
+  background-repeat: repeat;
   height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 
 .container {
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  height: 70%;
-  width: 70%;
+  margin: 20px 0;
+  width: 80%;
+  height: 60%;
 }
 
 .container div {
-  height: 100%;
-  width: 100%;
+  width: 30%;
+  height: 30%;
   display: none;
 }
 
-.container div img {
-  height: 100%;
+.container img {
   width: 100%;
+  height: 100%;
   object-fit: cover;
+  border-radius: 10px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
 }
 
-button {
-  height: 50px;
-  width: 80px;
-  background-color: #fff;
-  color: #1f1f1f;
-  border: 0;
-  border-radius: 5px;
-  margin: 10px;
-  font-size: 18px;
+.prev,
+.next {
+  background-color: rgba(255, 255, 255, 0.1);
+  border: none;
+  outline: none;
   cursor: pointer;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 10px;
+  transition: all 0.3s ease-in-out;
+  position: absolute;
+  bottom: 30px;
+}
+
+.prev:hover,
+.next:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.prev {
+  left: 30px;
+}
+
+.next {
+  right: 30px;
 }
 
 .poem {
-  width: 70%;
-  text-align: center;
-  margin-top: 20px;
-  font-size: 20px;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+  width: 60%;
+  margin: 20px 0;
+}
+
+.poem p {
+  font-size: 1.2em;
+  line-height: 1.5em;
 }
