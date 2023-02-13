@@ -6,6 +6,7 @@
   <title>Olivia's Birthday</title>
   <link rel="stylesheet" type="text/css" href="style.css">
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script type="text/javascript" src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
   <script type="text/javascript">
     $(document).ready(function () {
       var currentIndex = 0,
@@ -26,25 +27,36 @@
         cycleItems();
       }, 3000);
 
-      $('.next').click(function () {
-        clearInterval(autoSlide);
-        currentIndex += 1;
-        if (currentIndex > itemAmt - 1) {
-          currentIndex = 0;
-        }
-        cycleItems();
-      });
-
-      $('.prev').click(function () {
-        clearInterval(autoSlide);
-        currentIndex -= 1;
-        if (currentIndex < 0) {
-          currentIndex = itemAmt - 1;
-        }
-        cycleItems();
+      $('.container div').swipe( {
+        swipeLeft:function(event, direction, distance, duration, fingerCount) {
+          clearInterval(autoSlide);
+          currentIndex += 1;
+          if (currentIndex > itemAmt - 1) {
+            currentIndex = 0;
+          }
+          cycleItems();
+        },
+        swipeRight:function(event, direction, distance, duration, fingerCount) {
+          clearInterval(autoSlide);
+          currentIndex -= 1;
+          if (currentIndex < 0) {
+            currentIndex = itemAmt - 1;
+          }
+          cycleItems();
+        },
+        threshold:0
       });
     });
   </script>
+  <style>
+    .container {
+      margin: 10px;
+    }
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+  </style>
 </head>
 
 <body>
@@ -53,14 +65,8 @@
     <div><img src="photo1.jpg" alt="photo1"></div>
     <div><img src="photo2.jpg" alt="photo2"></div>
     <div><img src="photo3.jpg" alt="photo3"></div>
-	<div><img src="photo4.jpg" alt="photo4"></div>
-	<div><img src="photo5.jpg" alt="photo5"></div>
-	<div><img src="photo6.jpg" alt="photo6"></div>
-
     <!-- Add additional slides here -->
   </div>
-  <button class="prev">Prev</button>
-  <button class="next">Next</button>
   <div class="poem">
     <p>Olivia, my love, from Tasmania's shore<br>
       We met on a screen, but our bond is much more<br>
@@ -71,17 +77,16 @@
       Our love may have started with a game of COD<br>
       But it's grown into something, that I can't help but nod<br>
       You live on an island, so far away<br>
-      But distance can't stop, the words I have to say<br>
-      I love you, Olivia, more each day<br>
-      I'll wait until we're together, in every single way<br>
-      So until that day, when we're face to face<br>
-      I'll hold you close, in this loving embrace<br>
-      And think of you, as I look up at the stars<br>
-      Hoping one day, that you'll be in my arms.<br>
-	  Happy birthday, my love, here's to many more<br>
-	  I'll love you forever, and always, that's for sure.<br>
-</p>
+      But distance can't break the bond, that will always stay<br>
+      Happy birthday, my love, have the best day<br>
+      I wish I could be there, to give you a bouquet<br>
+      But know that I'm thinking of you, every moment of the day<br>
+      I love you more and more, with each passing day.</p>
+<!-- Add your poem here -->
 
   </div>
+  <audio src="music.mp3" loop autoplay></audio>
 </body>
 </html>
+<!-- Add the audio element for background music -->
+<!-- Add the poem within a container with a class of "poem" -->
