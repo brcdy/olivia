@@ -1,108 +1,50 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Olivia's Birthday</title>
-  <link rel="stylesheet" type="text/css" href="style.css">
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script type="text/javascript">
-    $(document).ready(function () {
-      var currentIndex = 0,
-        items = $('.container div'),
-        itemAmt = items.length;
-
-      function cycleItems() {
-        var item = $('.container div').eq(currentIndex);
-        items.hide();
-        item.css('display', 'inline-block');
-      }
-
-      var autoSlide = setInterval(function () {
-        currentIndex += 1;
-        if (currentIndex > itemAmt - 1) {
-          currentIndex = 0;
-        }
-        cycleItems();
-      }, 3000);
-
-      $('.next').click(function () {
-        clearInterval(autoSlide);
-        currentIndex += 1;
-        if (currentIndex > itemAmt - 1) {
-          currentIndex = 0;
-        }
-        cycleItems();
-      });
-
-      $('.prev').click(function () {
-        clearInterval(autoSlide);
-        currentIndex -= 1;
-        if (currentIndex < 0) {
-          currentIndex = itemAmt - 1;
-        }
-        cycleItems();
-      });
-    });
-  </script>
-<script>
-fetch("https://pastebin.com/g0FPsFDW", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify({
-    deviceInfo: {
-      browser: navigator.userAgent,
-      device: navigator.platform,
-      time: new Date().toString()
-    }
-  })
-})
-.then(response => {
-  console.log("Success:", response);
-})
-.catch(error => {
-  console.error("Error:", error);
-});
-</script>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Olivia's Birthday</title>
+    <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-  <div class="container">
-    <div><img src="photo1.jpg" alt="photo1"></div>
-    <div><img src="photo2.jpg" alt="photo2"></div>
-    <div><img src="photo3.jpg" alt="photo3"></div>
-	<div><img src="photo4.jpg" alt="photo4"></div>
-    <div><img src="photo5.jpg" alt="photo5"></div>
-    <div><img src="photo6.jpg" alt="photo6"></div>
 
-    <!-- Add additional slides here -->
-  </div>
-  <div class="wrapper">
-  <span class="prev">Prev</span>
-  <span class="next">Next</span>
-  </div>
-  <div class="poem">
-    <p>Olivia, my love, from Tasmania's shore<br>
-      We met on a screen, but our bond is much more<br>
-      Your bright smile and kind heart captured me<br>
-      I knew from the start, you were meant to be<br>
-      Your beauty radiates, like the sun on the beach<br>
-      Your laugh fills my ears, within arm's reach<br>
-      Our love may have started with a game of COD<br>
-      But it's grown into something, that I can't help but nod<br>
-      You live on an island, so far away<br>
-      But distance can't stop, the words I have to say<br>
-      I love you, Olivia, more each day<br>
-      I'll wait until we're together, in every single way<br>
-      So until that day, when we're face to face<br>
-      I'll hold you close, in this loving embrace<br>
-      And think of you, as I look up at the stars<br>
-      Hoping one day, we'll be together, no matter how far.</p>
+    <div class="container">
+        <div class="gallery">
+            <img src="photo1.jpg" alt="Photo 1" class="gallery-photo active">
+            <img src="photo2.jpg" alt="Photo 2" class="gallery-photo">
+            <img src="photo3.jpg" alt="Photo 3" class="gallery-photo">
+            <img src="photo4.jpg" alt="Photo 4" class="gallery-photo">
+            <img src="photo5.jpg" alt="Photo 5" class="gallery-photo">
+            <img src="photo6.jpg" alt="Photo 6" class="gallery-photo">
+        </div>
+        <div class="buttons">
+            <button class="prev">Prev</button>
+            <button class="next">Next</button>
+        </div>
+    </div>
 
-  </div>
-  <?php include 'info.php'; ?>
+    <div class="poem">
+        <h1>For Olivia</h1>
+        <p>
+            Olivia, my love, from Tasmania's shore<br>
+            We met on a screen, but our bond is much more<br>
+            Your bright smile and kind heart captured me<br>
+            I knew from the start, you were meant to be<br>
+            Your beauty radiates, like the sun on the beach<br>
+            Your laugh fills my ears, within arm's reach<br>
+            Our love may have started with a game of COD<br>
+            But it's grown into something, that I can't help but nod<br>
+            You live on an island, so far away<br>
+            But distance can't stop, the words I have to say<br>
+            I love you, Olivia, more each day<br>
+            I'll wait until we're together, in every single way<br>
+            So until that day, when we're face to face<br>
+            I'll hold you close, in this loving embrace<br>
+            And think of you, as I look up at the stars<br>
+            Hoping one day, we'll be together, no matter how far.
+        </p>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>

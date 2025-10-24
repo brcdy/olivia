@@ -1,126 +1,98 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
-  background-color: #4d0026;
-  color: #fff;
-  font-family: sans-serif, Helvetica;
-  text-transform: Uppercase;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  margin: auto;
-  padding: 0 7px;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    text-align: center;
 }
 
 .container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 70%;
-  width: 70%;
-
+    width: 90%;
+    max-width: 600px;
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
 }
 
-.container div {
-  height: 100%;
-  width: 100%;
-  display: none;
-  
+.gallery {
+    position: relative;
+    height: 400px;
+    overflow: hidden;
+    border-radius: 10px;
 }
 
-.container div img {
-  height: 100%;
-  width: 100%;
-  object-fit: cover;
+.gallery-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
 }
 
--button {
-  height: 50px;
-  width: 80px;
-  background-color: #fff;
-  color: #1f1f1f;
-  border: 0;
-  border-radius: 5px;
-  margin: 10px;
-  font-size: 18px;
-  cursor: pointer;
+.gallery-photo.active {
+    opacity: 1;
+}
+
+.buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+}
+
+.prev, .next {
+    background-color: #ff9a9e;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s, transform 0.2s;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.prev:hover, .next:hover {
+    background-color: #f57b7f;
+    transform: translateY(-2px);
+}
+
+.prev:active, .next:active {
+    transform: translateY(1px);
 }
 
 .poem {
-  width: 70%;
-  text-align: center;
-  margin-top: 20px;
-  font-size: 15px;
-  letter-spacing: 2px;
-  line-height: 24px;
-  
+    background: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 600px;
 }
 
-.next, .prev {
-        padding: 15px 10px;
-        margin: 145px auto;
-        color: #ffffff;
-        font-family: sans-serif, Helvetica;
-        text-transform: uppercase;
-        text-align: center;
-        position: relative;
-        text-decoration: none;
-        display: inline-block;
-        border: 1px solid;
-        user-select: none;
-      }
-.prev::before, .next::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        display: block;
-        width: 100%;
-        height: 100%;
-        z-index: -1;
-        -webkit-transform: scaleY(0.1);
-        transform: scaleY(0.1);
-        transition: all 0.4s;
-      }
-.next:hover, .prev:hover {
-        color: #b414ba;
-      }
-.prev:hover::before, .next:hover::before {
-        opacity: 1;
-        background-color: #f7c2f9;
-        -webkit-transform: scaleY(1);
-        transform: scaleY(1);
-        transition: -webkit-transform 0.6s cubic-bezier(0.08, 0.35, 0.13, 1.02), opacity 0.4s;
-        transition: transform 0.6s cubic-bezier(0.08, 0.35, 0.13, 1.02), opacity;
-      }
-
-.wrapper {
-    margin-left: 45;
+.poem h1 {
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: #d1385b;
 }
 
-.next:active, .prev:active {
-  background-color: #3e8e41;
-  box-shadow: 0 5px #666;
-  transform: translateY(4px);
+.poem p {
+    line-height: 1.8;
+    font-weight: 300;
 }
-
-.prev span, .next span {
-        position: relative;
-        z-index: 1;
-      }
-.prev:after, .next:after {
-        content: "";
-        position: absolute;
-        left: 0;
-        top: 0;
-        height: 30%;
-        width: 30%;
-        background: #52b71f;
-        -webkit-transition: all .5s ease-in-out;
-        transition: all .5s ease-in-out;
-        -webkit-transform: translateX(-100%) translateY(-25%) rotate(45deg);
-        transform: translateX(-100%) translateY(-25%) rotate(45deg);
-      }
-.prev:hover:after, .next:hover:after {
-        -webkit-transform: translateX(-9%) translateY(-25%) rotate(45deg);
-        transform: translateX(-9%) translateY(-25%) rotate(45deg);
-      }
