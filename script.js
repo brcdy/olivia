@@ -69,7 +69,7 @@
             gradients: supports3d, // enable gradients only if 3D supported
             acceleration: supports3d,
             display: 'double',
-            cornerSize: 170
+            cornerSize: 50
         };
 
         $book.turn(turnOpts);
