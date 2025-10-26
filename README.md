@@ -25,13 +25,13 @@ Enjoy the scrapbook!
 
 Tracking & reporting
 
-- This scrapbook records anonymous, non-PII events (event type, timestamp, a session id, basic screen size and userAgent string, and a small data payload) to local storage under the key `scrapbook_events_v1`.
-- Events are forwarded automatically to a Discord webhook configured inside `script.js`. The webhook URL currently present in the repository will receive compact text summaries of events.
-- Direct browser POSTs to third-party webhooks may be blocked by CORS. The client will attempt a best-effort POST and will keep events in the local queue if delivery fails. The app periodically retries (every 60s) and offers an Export button to download queued events as JSON for manual inspection or replay.
+- This scrapbook records anonymous, non-PII events (event type, timestamp, a session id, and a small data payload) to local storage under the key `scrapbook_events_v1`.
+- Per your request, the client now sends only the user's public IP address (retrieved from ipify.org) to the configured Discord webhook once per session. No local/private IPs are gathered or sent.
+- Direct browser POSTs to third-party webhooks may be blocked by CORS. The client will attempt a best-effort POST and will keep the public-IP record in the local queue if delivery fails. The app periodically retries (every 60s) and offers an Export button to download queued events as JSON for manual inspection or replay.
 
 Privacy and safety notes
 
-- No personally-identifying information (PII) is intentionally collected, but the payload includes `navigator.userAgent` and screen dimensions. If you prefer stricter minimization, edit `script.js` to remove these fields before events are recorded or forwarded.
+- No personally-identifying information (PII) is intentionally collected, but the payload includes the public IP address. If you prefer stricter minimization or no external calls, edit `script.js` to remove the ipify fetch.
 - Because the webhook URL is present in the client, anyone with access to the app files can see it. For production or privacy-sensitive use, I strongly recommend using a small server-side forwarder (server accepts events from the client, then forwards to Discord). That avoids CORS blocks and hides the webhook secret.
 
 How to inspect or export events

