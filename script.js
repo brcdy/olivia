@@ -28,105 +28,23 @@
         });
     }
 
-    function initTurn() {
-        const $book = $('.scrapbook');
-        // Feature detection: if Turn.js isn't available, fall back to stacked pages
-        if (!$.fn.turn) {
-            console.warn('Turn.js not found: falling back to static layout');
-            $book.addClass('no-turn');
-            // make images fill (match updated CSS page size)
-            forcePageSizes($book, 410, 560);
-            return;
-        }
-
-        // Decide whether to enable gradients/acceleration based on support
-        const supports3d = (function() {
-            const el = document.createElement('p');
-            let has3d;
-            const transforms = {
-                'webkitTransform':'-webkit-transform',
-                'OTransform':'-o-transform',
-                'msTransform':'-ms-transform',
-                'MozTransform':'-moz-transform',
-                'transform':'transform'
-            };
-            // Add it to the body to get the computed style
-            document.body.insertBefore(el, null);
-            for (let t in transforms) {
-                if (el.style[t] !== undefined) {
-                    el.style[t] = 'translate3d(1px,1px,1px)';
-                    has3d = window.getComputedStyle(el).getPropertyValue(transforms[t]);
-                }
-            }
-            document.body.removeChild(el);
-            return (has3d !== undefined && has3d.length > 0 && has3d !== 'none');
-        })();
-
-        const turnOpts = {
-            width: 820,
+    function initPageFlip() {
+        const pageFlip = new St.PageFlip(document.querySelector('.scrapbook'), {
+            width: 410,
             height: 560,
-            autoCenter: true,
-            gradients: supports3d, // enable gradients only if 3D supported
-            acceleration: supports3d,
-            display: 'double',
-            cornerSize: 50
-        };
-
-        $book.turn(turnOpts);
-
-    // Force page sizes and update after a short delay to let turn.js layout
-    forcePageSizes($book, 410, 560);
-
-        // Some browsers need the wrapper sizes set as inline styles after turn creates them.
-        function fixPageWrappers() {
-            try {
-                const wrapperSelector = '.page-wrapper';
-                const wrapperEls = $book.parent().find(wrapperSelector);
-                if (wrapperEls.length) {
-                    wrapperEls.each(function() {
-                        const $w = $(this);
-                        // In double display, each page wrapper should match CSS: 410x560
-                        $w.css({width: '410px', height: '560px'});
-                        // ensure inner .page is also set
-                        $w.children().css({width: '410px', height: '560px'});
-                    });
-                }
-            } catch (err) {
-                // ignore
-            }
-        }
-
-        // Run fixes a few times shortly after init to handle race conditions
-        fixPageWrappers();
-        setTimeout(fixPageWrappers, 60);
-        setTimeout(fixPageWrappers, 300);
-
-        // Ensure Turn.js gets updated on resize; throttle to avoid jank
-        let resizeTimer = null;
-        window.addEventListener('resize', () => {
-            if (resizeTimer) clearTimeout(resizeTimer);
-            resizeTimer = setTimeout(() => {
-                try {
-                    $book.turn('size', 820, 560);
-                    forcePageSizes($book, 410, 560);
-                    fixPageWrappers();
-                    $book.turn('update');
-                    $book.turn('center');
-                } catch (e) {
-                    // ignore errors
-                }
-            }, 120);
+            showCover: true
         });
+        pageFlip.loadFromHTML(document.querySelectorAll('.page'));
     }
 
     // Run preload then init
     document.addEventListener('DOMContentLoaded', () => {
         // Preload images inside scrapbook
         preloadImages('.scrapbook .page img', 4000).then(() => {
-            initTurn();
+            initPageFlip();
         }).catch(() => {
             // Fallback: still init after timeout
-            initTurn();
+            initPageFlip();
         });
     });
 })();
