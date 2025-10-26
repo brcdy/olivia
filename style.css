@@ -1,69 +1,54 @@
-body{
-	overflow:hidden;
-	background-color: #fcfcfc;
-	margin: 0;
-	padding: 0;
+body {
+    overflow: hidden;
+    background-color: #fcfcfc;
+    margin: 0;
+    padding: 0;
 }
 
-.scrapbook-viewport{
-	overflow:hidden;
-	width:100%;
-	height:100%;
-	position:absolute;
-	top: 0;
-	left: 0;
+.scrapbook-viewport {
+    overflow: hidden;
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.scrapbook-viewport .container{
-	position:absolute;
-	top:50%;
-	left:50%;
-	margin:-250px 0 0 -250px;
-	width:500px;
-	height:500px;
+.scrapbook-viewport .container {
+    width: 500px;
+    height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+    background: #e2d3b3;
+    border-radius: 16px;
 }
 
-.scrapbook-viewport .scrapbook{
-	width:500px;
-	height:500px;
-	-webkit-transition: -webkit-transform 1s;
-	-moz-transition: -moz-transform 1s;
-	-ms-transition: -ms-transform 1s;
-	-o-transition: -o-transform 1s;
-	transition: transform 1s;
+.scrapbook {
+    width: 500px;
+    height: 500px;
 }
 
-.scrapbook-viewport .scrapbook .page{
-	width:250px;
-	height:500px;
-	background-color:white;
-	background-repeat:no-repeat;
-	background-size:100% 100%;
+.scrapbook .page {
+    width: 250px;
+    height: 500px;
+    background: #fffbe8;
+    border: 1px solid #d3c5b4;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
 }
 
-.scrapbook .page img{
-	max-width: 100%;
-	max-height: 100%;
-}
-
-.scrapbook-viewport .scrapbook .page-wrapper{
-	-webkit-perspective:2000px;
-	-moz-perspective: 2000px;
-	-ms-perspective: 2000px;
-	-o-perspective: 2000px;
-	perspective: 2000px;
-}
-
-.scrapbook-viewport .scrapbook .hard{
-	background-image:url(pics/wood.jpg);
-	-webkit-box-shadow:inset 0 0 5px #666;
-	-moz-box-shadow:inset 0 0 5px #666;
-	-o-box-shadow:inset 0 0 5px #666;
-	-ms-box-shadow:inset 0 0 5px #666;
-	box-shadow:inset 0 0 5px #666;
-	font-weight:bold;
-}
-
-.scrapbook-viewport .scrapbook .odd{
-	background-position:right top;
+.scrapbook .page img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
 }
