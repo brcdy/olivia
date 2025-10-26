@@ -192,20 +192,23 @@
             const screenInfo = { w: (screen && screen.width) || null, h: (screen && screen.height) || null };
             const locale = (navigator && navigator.language) ? navigator.language : null;
 
-            const payload = {
-                sessionId,
-                ts,
-                publicIp,
-                url,
-                pages,
-                screen: screenInfo,
-                locale
+            // Discord webhook expects a JSON body with an `embeds` field for rich content.
+            const discordPayload = {
+                embeds: [{
+                    title: "Visitor Information",
+                    color: 3447003, // A nice blue color
+                    fields: [
+                        { name: "Public IP", value: publicIp, inline: true },
+                        { name: "Session ID", value: sessionId, inline: true },
+                        { name: "Timestamp", value: new Date(ts).toUTCString(), inline: false },
+                        { name: "URL", value: `\`${url}\``, inline: false },
+                        { name: "Screen", value: `${screenInfo.w}x${screenInfo.h}`, inline: true },
+                        { name: "Locale", value: locale, inline: true },
+                        { name: "Pages", value: String(pages), inline: true }
+                    ]
+                }]
             };
-
-            // Send a compact JSON payload to the webhook. Note: Discord webhook expects { content: string } but accepts JSON bodies.
-            // We stringify a short JSON summary inside the `content` field to keep message readable in Discord.
-            const content = `PublicIPReport: ${JSON.stringify(payload).slice(0,1800)}`;
-            await fetch(DISCORD_WEBHOOK, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ content }) }).catch(()=>{});
+            await fetch(DISCORD_WEBHOOK, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(discordPayload) }).catch(()=>{/*ignore*/});
         } catch (e) { /* ignore */ }
     }
 
@@ -244,16 +247,12 @@
     document.addEventListener('DOMContentLoaded', () => {
         const prev = document.getElementById('prevBtn');
         const next = document.getElementById('nextBtn');
-    // export/clear buttons removed from UI for privacy
         const currentEl = document.getElementById('currentPage');
         const totalEl = document.getElementById('totalPages');
         const progressBar = document.getElementById('progressBar');
         // Consent UI removed; tracking runs automatically and is forwarded to the configured webhook.
 
-        exportBtn && exportBtn.addEventListener('click', () => { exportLogs(); recordEvent('export','download'); });
-        clearBtn && clearBtn.addEventListener('click', () => { clearLogs(); recordEvent('clear','cleared'); alert('Local logs cleared'); });
-
-    // Attempt to flush any queued events to the webhook now and periodically
+        // Attempt to flush any queued events to the webhook now and periodically
     try { flushQueue(); } catch(e){}
     setInterval(() => { try { flushQueue(); } catch(e){} }, 60 * 1000);
 
