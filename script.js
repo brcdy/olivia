@@ -35,6 +35,18 @@
             showCover: true
         });
         pageFlip.loadFromHTML(document.querySelectorAll('.page'));
+
+        // Add event listener for the window animation
+        pageFlip.on('flip', (e) => {
+            const container = document.querySelector('.container');
+            // When the book is opened (page > 0), add the 'is-open' class to expand the window
+            if (e.data.pageNumber > 0) {
+                container.classList.add('is-open');
+            } else {
+                // When the book is closed (back to cover), remove the class
+                container.classList.remove('is-open');
+            }
+        });
     }
 
     // Run preload then init

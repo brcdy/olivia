@@ -1,22 +1,24 @@
-@import url('https://fonts.cdnfonts.com/css/ms-sans-serif');
+@import url('https://fonts.googleapis.com/css2?family=Cantarell:wght@400;700&display=swap');
 
 :root{
-  --win95-grey: #c0c0c0;
-  --win95-blue: #0000a8;
-  --win95-text: #000;
-  --border-light: #ffffff;
-  --border-dark: #808080;
+  --gnome-bg: #3d3836;
+  --gnome-header: #2e2b29;
+  --gnome-text: #f4f3f2;
+  --gnome-accent: #3584e4;
+  --gnome-border: rgba(0, 0, 0, 0.2);
 }
 
 *{box-sizing:border-box}
 html,body{height:100%}
 body{
   margin:0;
-  font-family: 'MS Sans Serif', sans-serif;
-  background: #008080; /* Classic Win95 teal */
-  color:var(--win95-text);
-  -webkit-font-smoothing:none; /* For a more authentic pixelated look */
+  font-family: 'Cantarell', sans-serif;
+  background: url('https://assets.codepen.io/227/fedora.jpg') no-repeat center center fixed;
+  background-size: cover;
+  color:var(--gnome-text);
+  -webkit-font-smoothing:antialiased;
   cursor: default;
+  overflow: hidden;
 }
 
 .scrapbook-viewport{
@@ -24,17 +26,23 @@ body{
 }
 
 .container{
-  width:900px;max-width:calc(100% - 80px);height:620px;border-top: 2px solid var(--border-light); border-left: 2px solid var(--border-light); border-right: 2px solid var(--border-dark); border-bottom: 2px solid var(--border-dark);display:flex;align-items:center;justify-content:center;position:relative;
-  background: var(--win95-grey);
-  box-shadow: 2px 2px 0px rgba(0,0,0,1);
+  width: 450px; /* Initial width for closed book */
+  max-width:calc(100% - 80px);height:620px;border-radius: 8px;display:flex;align-items:center;justify-content:center;position:relative;
+  background: var(--gnome-bg);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  transition: width 0.5s cubic-bezier(0.65, 0, 0.35, 1);
 }
 
-.app-title{font-weight:700;font-size:16px;color:#fff;margin:0}
-.controls{position:absolute;top:0;left:0;right:0;height:28px;background:var(--win95-blue); padding: 4px;display:flex;align-items:center;justify-content:space-between;gap:14px; z-index: 200;}
-.nav-controls{display:flex;align-items:center;gap:4px}
-.ctrl{background:var(--win95-grey);border-top: 2px solid var(--border-light); border-left: 2px solid var(--border-light); border-right: 2px solid var(--border-dark); border-bottom: 2px solid var(--border-dark);padding:2px 10px;color:var(--win95-text);cursor:pointer;font-weight:400; font-size: 14px;}
-.ctrl:active{border-top: 2px solid var(--border-dark); border-left: 2px solid var(--border-dark); border-right: 2px solid var(--border-light); border-bottom: 2px solid var(--border-light);}
-.page-indicator{padding:4px 8px;color:var(--win95-text);font-weight:400; font-size: 14px;}
+.container.is-open {
+    width: 900px; /* Expanded width for open book */
+}
+
+.app-title{font-weight:700;font-size:16px;color:var(--gnome-text);margin:0}
+.controls{position:absolute;top:0;left:0;right:0;height:40px;background:var(--gnome-header); border-top-left-radius: 8px; border-top-right-radius: 8px; padding: 0 15px;display:flex;align-items:center;justify-content:space-between;gap:14px; z-index: 200;}
+.nav-controls{display:flex;align-items:center;gap:8px}
+.ctrl{background:rgba(0,0,0,0.2);border:1px solid var(--gnome-border);padding:4px 12px;border-radius:6px;color:var(--gnome-text);cursor:pointer;font-weight:400; font-size: 14px;}
+.ctrl:hover{background:rgba(0,0,0,0.3);}
+.page-indicator{padding:4px 8px;color:var(--gnome-text);font-weight:400; font-size: 14px;}
 
 .window-buttons {
     display: flex;
@@ -64,8 +72,8 @@ body{
 
 .touch-hint{position:absolute;top:18px;right:18px;background:var(--glass);padding:8px 10px;border-radius:999px;color:var(--muted);font-size:13px}
 
-.scrapbook{width:820px;height:560px;transform-style:preserve-d; margin-top: 30px;}
-.page{width:410px;height:560px;border-radius:0;background:var(--win95-grey);overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center; border-top: 2px solid var(--border-dark); border-left: 2px solid var(--border-dark); border-right: 2px solid var(--border-light); border-bottom: 2px solid var(--border-light);}
+.scrapbook{width:820px;height:560px;transform-style:preserve-d; margin-top: 40px;}
+.page{width:410px;height:560px;border-radius:4px;background:var(--gnome-bg);overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center; border: 1px solid var(--gnome-border);}
 .page img{width:100%;height:100%;object-fit:cover;display:block;}
 .rotate-90 img {
     transform: rotate(-90deg) scale(1.37); /* Rotate left and scale up to fill the page */
@@ -76,8 +84,8 @@ body{
 .scrapbook.no-turn{display:block;padding:20px}
 .scrapbook.no-turn .page{width:100%}
 
-.hard{background: var(--win95-grey);color:var(--win95-text);border-radius:0;display:flex;align-items:center;justify-content:center}
-.cover-title{font-size:34px;font-weight:700;color:var(--win95-text);letter-spacing:1px;text-transform:uppercase; text-shadow: 1px 1px 0px var(--border-light);}
+.hard{background: var(--gnome-header);color:var(--gnome-text);border-radius:4px;display:flex;align-items:center;justify-content:center}
+.cover-title{font-size:34px;font-weight:700;color:var(--gnome-text);letter-spacing:1px;text-transform:uppercase; text-shadow: 0 1px 2px rgba(0,0,0,0.5);}
 .cover-back-label{font-size:16px;color:var(--muted)}
 
 /* subtle entrance animation */
