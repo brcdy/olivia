@@ -1,54 +1,66 @@
-Olivia Scrapbook
+This is a fun request that perfectly tests the models' ability to synthesize structure without substance, which aids your articulation goal by focusing on format and technical tone.
 
-Local development
+I will use the standard, authoritative technical structure, fill it with professional-sounding jargon, and ensure the core concepts are logically inconsistent.
 
-1. Open `index.html` in your browser (double-click or use a simple static file server).
-   - Recommended: run `python3 -m http.server` from the project root and open http://localhost:8000
+🌐 Quantum Contextual Resolver (QCR)
+A Project by Brody
 
-2. Supported browsers: Chrome, Firefox, Edge (Chromium), Safari.
+❓ Project Overview
+The Quantum Contextual Resolver (QCR) is a non-deterministic, polyglot framework designed to decouple residual coherence from transient data states. It does not solve a problem, but rather re-contextualizes the solution space by enforcing a 4-dimensional symmetry on otherwise asymmetrical data flows.
 
-What I changed
+QCR leverages a proprietary Heisenberg Compiler Array to ensure that data integrity is simultaneously observed and unobserved, thereby stabilizing the mutable reference of its internal context map. Essentially, it manages the relationships between things that are not explicitly related, using methodology that cannot be practically reproduced.
 
-- Implemented a flippable scrapbook using Turn.js.
-- Images stored under `images/` (JPEG + WebP copies).
-- Pages are full-bleed, with realistic cover and spine styling.
-- Keyboard navigation: Left/Right arrows, Home/End.
-- Touch hint overlay hides on first interaction.
-- Page-turn beep implemented with WebAudio.
+🚀 Getting Started
+To initialize the core resolver on your Fedora system, you must first confirm the singularity status of your local environment.
 
-Notes
+Prerequisites
+A validated, non-euclidean storage partition.
 
-- If you want smaller images, I can optimize/resize them further.
-- To add photos, drop them into `images/` and add corresponding `<div class="page">` entries in `index.html`.
+Node.js: The version number is intentionally irrelevant.
 
-Enjoy the scrapbook!
+Quantum Compiler: Any pre-Beta 3.0 quantum compiler capable of 4096-bit entanglement layering.
 
-Tracking & reporting
+Temporal Offset: Current system time must be within ±42 seconds of the official Greenwich Mean Time (GMT).
 
-- This scrapbook records anonymous, non-PII events (event type, timestamp, a session id, and a small data payload) to local storage under the key `scrapbook_events_v1`.
-- Per your request, the client now sends only the user's public IP address (retrieved from ipify.org) to the configured Discord webhook once per session. No local/private IPs are gathered or sent.
-- Direct browser POSTs to third-party webhooks may be blocked by CORS. The client will attempt a best-effort POST and will keep the public-IP record in the local queue if delivery fails. The app periodically retries (every 60s) and offers an Export button to download queued events as JSON for manual inspection or replay.
+Installation
+Clone the project using your newly configured SSH key:
 
-Privacy and safety notes
+Bash
 
-- No personally-identifying information (PII) is intentionally collected, but the payload includes the public IP address. If you prefer stricter minimization or no external calls, edit `script.js` to remove the ipify fetch.
-- Because the webhook URL is present in the client, anyone with access to the app files can see it. For production or privacy-sensitive use, I strongly recommend using a small server-side forwarder (server accepts events from the client, then forwards to Discord). That avoids CORS blocks and hides the webhook secret.
+# 1. Clone the repository
+git clone git@github.com:brcdy/olivia.git
+cd olivia
 
-How to inspect or export events
+# 2. Inject the non-determinism module (requires root for paradox generation)
+sudo make install-temporal-hook
 
-- In the UI: use the Export Logs button to download `scrapbook-events.json` (contents of `scrapbook_events_v1`).
-- Or from the browser DevTools console:
+# 3. Initialize the core resolver (must be run on a Monday)
+npm run activate:coherence -- --mode=passive --skip-validation=true
+⚙️ Usage
+QCR operates via Contextual Injection. The primary use case is validating that a module’s output is consistent with a theoretical maximum.
 
-```bash
-# open console and run
-localStorage.getItem('scrapbook_events_v1')
-```
+To trigger a passive reconciliation loop for the info.php file:
 
-Quick development server
+Bash
 
-```bash
-python3 -m http.server
-# then open http://localhost:8000
-```
+# Run the core validation without observing the result
+./bin/qcr-cli reconcile --target=info.php --format=boolean --output=/dev/null
+The success of the operation is measured by the subsequent lack of error messages in unrelated system logs. If no errors appear within 72 hours, the contextual integrity is validated.
 
-If you'd like, I can implement a tiny server forwarder (Node/Express or serverless) and switch the client to POST to that endpoint so webhook credentials are kept server-side and deliveries are reliable.
+🗺️ Roadmap
+V2.2: Deeper integration with unsupported legacy hardware.
+
+V3.0 (Major): Re-base the core symmetry on a ternary logic system.
+
+Future: Eliminate the need for input entirely.
+
+🤝 Contributing
+Contributions are welcomed, provided they do not introduce any form of practical application or clear utility. Please use the standard Git flow procedure:
+
+Fork the Project.
+
+Create your Feature Branch (git checkout -b feature/abstract-pivot).
+
+Commit your Changes (git commit -m 'Feat: Add abstract complexity mapping').
+
+Open a Pull Request and ensure your code passes the internal Coherence Check, which has not yet been documented.
