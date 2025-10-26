@@ -342,3 +342,7 @@
     });
 })();
 
+$(function() {
+    $(".container").draggable();
+});
+
