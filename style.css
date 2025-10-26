@@ -1,20 +1,20 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Tahoma:wght@400;700&display=swap');
 
 :root{
-  --bg: #fdf6e3; /* A warm, creamy background */
-  --card: #fff;
-  --muted: #93a1a1;
-  --accent: #268bd2; /* A gentle blue accent */
-  --glass: rgba(0,0,0,0.03);
+  --xp-blue: #0058e1;
+  --xp-blue-dark: #0045b3;
+  --xp-silver: #ece9d8;
+  --xp-silver-dark: #d4d0c8;
+  --xp-green: #3a9e00;
 }
 
 *{box-sizing:border-box}
 html,body{height:100%}
 body{
   margin:0;
-  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
-  background: var(--bg);
-  color:#586e75; /* A softer, less harsh text color */
+  font-family: 'Tahoma', sans-serif;
+  background: #3a6ea5; /* Classic XP desktop blue */
+  color:#000;
   -webkit-font-smoothing:antialiased;
 }
 
@@ -23,30 +23,30 @@ body{
 }
 
 .container{
-  width:900px;max-width:calc(100% - 80px);height:620px;border-radius:14px;display:flex;align-items:center;justify-content:center;position:relative;
-  background: #f5e9d3; /* A slightly darker shade for the container */
-  box-shadow: 0 12px 40px rgba(0,0,0,0.1);
+  width:900px;max-width:calc(100% - 80px);height:620px;border: 3px solid var(--xp-blue); border-radius: 8px;display:flex;align-items:center;justify-content:center;position:relative;
+  background: var(--xp-silver);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
 }
 
-.app-title{font-weight:800;font-size:18px;color:var(--accent);margin:0 18px}
-.controls{position:absolute;top:18px;left:20px;display:flex;align-items:center;gap:14px; z-index: 100;}
-.nav-controls{display:flex;align-items:center;gap:12px}
-.ctrl{background:var(--glass);border:1px solid rgba(0,0,0,0.06);padding:10px 14px;border-radius:10px;color:var(--accent);cursor:pointer;font-weight:600}
-.ctrl:hover{background:rgba(0,0,0,0.02)}
-.page-indicator{background:var(--glass);padding:6px 10px;border-radius:8px;color:var(--muted);font-weight:600}
+.app-title{font-weight:700;font-size:16px;color:#fff;margin:0}
+.controls{position:absolute;top:0;left:0;right:0;height:30px;background:linear-gradient(to bottom, #0058e1, #0045b3);border-top-left-radius: 5px; border-top-right-radius: 5px; padding: 0 10px;display:flex;align-items:center;justify-content:space-between;gap:14px; z-index: 200;}
+.nav-controls{display:flex;align-items:center;gap:8px}
+.ctrl{background:linear-gradient(to bottom, #fefefe, #d4d0c8);border:1px solid #000;padding:2px 10px;border-radius:4px;color:#000;cursor:pointer;font-weight:400; font-size: 14px;}
+.ctrl:hover{background:linear-gradient(to bottom, #fff, #e0e0e0)}
+.page-indicator{background:var(--xp-silver);border:1px solid #7f9db9;padding:4px 8px;border-radius:4px;color:#000;font-weight:400; font-size: 14px;}
 
 .touch-hint{position:absolute;top:18px;right:18px;background:var(--glass);padding:8px 10px;border-radius:999px;color:var(--muted);font-size:13px}
 
-.scrapbook{width:820px;height:560px;transform-style:preserve-3d}
-.page{width:410px;height:560px;border-radius:10px;background:var(--card);overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center; padding: 20px;}
-.page img{width:100%;height:100%;object-fit:contain;display:block; border: 10px solid #fff; box-shadow: 0 0 10px rgba(0,0,0,0.1);}
+.scrapbook{width:820px;height:560px;transform-style:preserve-d; margin-top: 30px;}
+.page{width:410px;height:560px;border-radius:0;background:var(--xp-silver-dark);overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center; border: 1px solid #7f9db9;}
+.page img{width:100%;height:100%;object-fit:cover;display:block;}
 .page-wrapper{width:410px!important;height:560px!important}
 
 .scrapbook.no-turn{display:block;padding:20px}
 .scrapbook.no-turn .page{width:100%}
 
-.hard{background: #e0d8c6;color:#586e75;border-radius:10px;display:flex;align-items:center;justify-content:center}
-.cover-title{font-size:34px;font-weight:800;color:#fff;letter-spacing:1px;letter-spacing:1px;text-transform:uppercase}
+.hard{background: var(--xp-silver);color:#000;border-radius:0;display:flex;align-items:center;justify-content:center}
+.cover-title{font-size:34px;font-weight:700;color:#000;letter-spacing:1px;text-transform:uppercase}
 .cover-back-label{font-size:16px;color:var(--muted)}
 
 /* subtle entrance animation */
