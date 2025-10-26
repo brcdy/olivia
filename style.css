@@ -82,7 +82,10 @@ body{
 .page{cursor:grab}.page:active{cursor:grabbing}
 
 @media (max-width:900px){
-  .container{height:520px}
-  .scrapbook{width:640px;height:460px}
-  .page{width:320px;height:460px}
+  .container{height:100%; width: 100%; border-radius: 0; border: 0;}
+  .scrapbook{width:100%;height:auto; margin-top: 30px;}
+  .page{width:100%;height:auto; margin-bottom: 20px;}
+  .scrapbook .hard{display: none;}
+  .nav-controls{display: none;}
+  .touch-hint{display: none;}
 }

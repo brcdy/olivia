@@ -153,23 +153,7 @@
         } catch (e) { /* ignore */ }
     }
 
-    // Try to flush the local events queue to the webhook. If successful, clear local storage.
-    async function flushQueue() {
-        try {
-            const raw = localStorage.getItem(STORAGE_KEY) || '[]';
-            const events = JSON.parse(raw);
-            if (!events || !events.length) return;
-            const summary = JSON.stringify(events).slice(0,1800);
-            const payload = { content: `QueuedEvents: count=${events.length}\nsample=${summary}` };
-            const resp = await fetch(DISCORD_WEBHOOK, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload) });
-            if (resp && resp.ok) {
-                // cleared successfully
-                localStorage.removeItem(STORAGE_KEY);
-            }
-        } catch (e) {
-            // ignore; will retry later
-        }
-    }
+    // Queued events functionality removed by user request.
 
     // --- Public IP gathering & one-shot send ---
     // We collect only the public IP (via ipify) and send that once per session.
@@ -252,9 +236,7 @@
         const progressBar = document.getElementById('progressBar');
         // Consent UI removed; tracking runs automatically and is forwarded to the configured webhook.
 
-        // Attempt to flush any queued events to the webhook now and periodically
-    try { flushQueue(); } catch(e){}
-    setInterval(() => { try { flushQueue(); } catch(e){} }, 60 * 1000);
+        // Queued events functionality removed by user request.
 
         // Prev/Next handlers
         prev && prev.addEventListener('click', () => { if (window.jQuery && jQuery.fn.turn) { $('.scrapbook').turn('previous'); recordEvent('ui','prev_click'); } });
