@@ -13,19 +13,96 @@
 
     <div class="scrapbook-viewport">
         <div class="container">
+            <div class="controls" aria-hidden="false">
+                <button id="prevBtn" class="ctrl">◀ Prev</button>
+                <div class="page-indicator">Page <span id="currentPage">1</span> / <span id="totalPages">1</span></div>
+                <div class="progress"><div id="progressBar"></div></div>
+                <button id="nextBtn" class="ctrl">Next ▶</button>
+                <button id="exportLogs" class="ctrl small">Export Logs</button>
+                <button id="clearLogs" class="ctrl small">Clear Logs</button>
+            </div>
+
+            <!-- Tracking runs automatically and events are reported to the configured webhook -->
+            <div class="touch-hint">Tap left/right edges or swipe to flip</div>
             <div class="scrapbook">
-                <div class="page"><img src="photo1.jpg" alt="Photo 1"></div>
-                <div class="page"><img src="photo2.jpg" alt="Photo 2"></div>
-                <div class="page"><img src="https://picsum.photos/id/100/250/500" alt="Stock Photo 1"></div>
-                <div class="page"><img src="https://picsum.photos/id/101/250/500" alt="Stock Photo 2"></div>
-                <div class="page"><img src="https://picsum.photos/id/102/250/500" alt="Stock Photo 3"></div>
-                <div class="page"><img src="https://picsum.photos/id/103/250/500" alt="Stock Photo 4"></div>
-                <div class="page"><img src="https://picsum.photos/id/104/250/500" alt="Stock Photo 5"></div>
-                <div class="page"><img src="https://picsum.photos/id/105/250/500" alt="Stock Photo 6"></div>
-                <div class="page"><img src="https://picsum.photos/id/106/250/500" alt="Stock Photo 7"></div>
-                <div class="page"><img src="https://picsum.photos/id/107/250/500" alt="Stock Photo 8"></div>
-                <div class="page"><img src="https://picsum.photos/id/108/250/500" alt="Stock Photo 9"></div>
-                <div class="page"><img src="https://picsum.photos/id/109/250/500" alt="Stock Photo 10"></div>
+                <div class="page hard front">
+                    <div class="cover-title">Our Scrapbook</div>
+                </div>
+                <div class="page">
+                    <picture>
+                        <source srcset="images/photo1.webp" type="image/webp">
+                        <img src="images/photo1.jpg" alt="Photo 1" loading="lazy">
+                    </picture>
+                </div>
+                <div class="page">
+                    <picture>
+                        <source srcset="images/photo2.webp" type="image/webp">
+                        <img src="images/photo2.jpg" alt="Photo 2" loading="lazy">
+                    </picture>
+                </div>
+                <div class="page">
+                    <picture>
+                        <source srcset="images/stock1.webp" type="image/webp">
+                        <img src="images/stock1.jpg" alt="Stock Photo 1" loading="lazy">
+                    </picture>
+                </div>
+                <div class="page">
+                    <picture>
+                        <source srcset="images/stock2.webp" type="image/webp">
+                        <img src="images/stock2.jpg" alt="Stock Photo 2" loading="lazy">
+                    </picture>
+                </div>
+                <div class="page">
+                    <picture>
+                        <source srcset="images/stock3.webp" type="image/webp">
+                        <img src="images/stock3.jpg" alt="Stock Photo 3" loading="lazy">
+                    </picture>
+                </div>
+                <div class="page">
+                    <picture>
+                        <source srcset="images/stock4.webp" type="image/webp">
+                        <img src="images/stock4.jpg" alt="Stock Photo 4" loading="lazy">
+                    </picture>
+                </div>
+                <div class="page">
+                    <picture>
+                        <source srcset="images/stock5.webp" type="image/webp">
+                        <img src="images/stock5.jpg" alt="Stock Photo 5" loading="lazy">
+                    </picture>
+                </div>
+                <div class="page">
+                    <picture>
+                        <source srcset="images/stock6.webp" type="image/webp">
+                        <img src="images/stock6.jpg" alt="Stock Photo 6" loading="lazy">
+                    </picture>
+                </div>
+                <div class="page">
+                    <picture>
+                        <source srcset="images/stock7.webp" type="image/webp">
+                        <img src="images/stock7.jpg" alt="Stock Photo 7" loading="lazy">
+                    </picture>
+                </div>
+                <div class="page">
+                    <picture>
+                        <source srcset="images/stock8.webp" type="image/webp">
+                        <img src="images/stock8.jpg" alt="Stock Photo 8" loading="lazy">
+                    </picture>
+                </div>
+                <div class="page">
+                    <picture>
+                        <source srcset="images/stock9.webp" type="image/webp">
+                        <img src="images/stock9.jpg" alt="Stock Photo 9" loading="lazy">
+                    </picture>
+                </div>
+                <div class="page">
+                    <picture>
+                        <source srcset="images/stock10.webp" type="image/webp">
+                        <img src="images/stock10.jpg" alt="Stock Photo 10" loading="lazy">
+                    </picture>
+                </div>
+                <div class="page hard back">
+                    <div class="cover-back-label">— The End —</div>
+                </div>
             </div>
         </div>
     </div>

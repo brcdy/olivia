@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Kalam&display=swap');
+
 body {
     overflow: hidden;
     background-color: #f0e6d6; /* A warmer, aged paper background */
@@ -32,34 +34,121 @@ body {
     position: relative; /* For potential pseudo-elements for texture */
 }
 
+.touch-hint{
+    position: absolute;
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255,255,255,0.85);
+    color: #5a4a3a;
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-size: 13px;
+    z-index: 30;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.touch-hint.fadeout{
+    transition: opacity 0.4s ease; opacity: 0;
+}
+
+/* Controls */
+.controls{
+    position: absolute;
+    bottom: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    display:flex;
+    gap:10px;
+    align-items:center;
+    z-index:40;
+}
+.ctrl{
+    background:#fffbe8;
+    border:1px solid #d3c5b4;
+    padding:8px 12px;
+    border-radius:6px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+    cursor:pointer;
+    font-weight:600;
+}
+.ctrl.small{ padding:6px 8px; font-size:13px }
+.page-indicator{ background:rgba(255,255,255,0.9); padding:6px 10px; border-radius:6px; border:1px solid #eee}
+.progress{ width:160px; height:8px; background:rgba(0,0,0,0.06); border-radius:8px; overflow:hidden }
+#progressBar{ width:0%; height:100%; background:linear-gradient(90deg,#ffd9b8,#f2bfa0) }
+
+/* Consent banner */
+.consent{ position: absolute; top: 10px; right: 10px; z-index:60 }
+.consent-inner{ background: rgba(255,255,255,0.95); padding:10px 14px; border-radius:8px; box-shadow:0 8px 20px rgba(0,0,0,0.15); display:flex; gap:12px; align-items:center }
+.consent-actions{ display:flex; gap:8px }
+
+/* Spine effect */
+.scrapbook-viewport .container:before{
+    content: '';
+    position: absolute;
+    left: calc(50% - 6px);
+    top: 10px;
+    bottom: 10px;
+    width: 12px;
+    background: linear-gradient(90deg,#6f5a44,#8b6b4f);
+    border-radius: 6px;
+    box-shadow: inset 0 2px 6px rgba(0,0,0,0.4);
+    z-index: 5;
+}
+
 .scrapbook {
     width: 500px;
     height: 500px;
+    -webkit-transform-style: preserve-3d;
+    -moz-transform-style: preserve-3d;
     transform-style: preserve-3d; /* Enable 3D transformations */
 }
 
 .scrapbook .page {
     width: 250px;
     height: 500px;
-    background: #fffbe8; /* Old paper color */
-    border: 1px solid #d3c5b4; /* Subtle page border */
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08); /* Soft shadow for page thickness */
+    background: linear-gradient(180deg,#fffdf6 0%, #fff6e6 100%); /* Paper gradient */
+    border-left: 1px solid rgba(0,0,0,0.06);
+    border-right: 1px solid rgba(0,0,0,0.03);
+    box-shadow: 0 1px 0 rgba(0,0,0,0.04), 0 6px 18px rgba(0,0,0,0.08);
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    padding: 10px; /* Inner padding for content */
+    padding: 0; /* Remove padding so images can be full-bleed */
     box-sizing: border-box; /* Include padding in width/height */
 }
 
 .scrapbook .page img {
-    width: 100%; /* Make image fill the page width */
-    height: 100%; /* Make image fill the page height */
-    object-fit: cover; /* Crop to fill, maintaining aspect ratio */
-    border-radius: 0; /* Remove rounded corners for full page fill */
-    box-shadow: none; /* Remove individual image shadow */
-    border: 2px solid #ccc; /* A thin border around the photo */
-    box-sizing: border-box;
+    width: 100% !important; /* Force full bleed */
+    height: 100% !important; /* Force full bleed */
+    object-fit: cover !important; /* Crop to fill, maintaining aspect ratio */
+    display: block !important; /* Remove inline gaps */
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 4px solid #f6f1e6; /* Thin inner border for realism */
+    box-sizing: border-box !important;
+}
+
+/* Turn.js page-wrapper fallback: ensure wrappers don't collapse in some browsers */
+.page-wrapper {
+    width: 250px !important;
+    height: 500px !important;
+}
+
+/* If Turn.js isn't available, show pages stacked vertically for graceful degradation */
+.scrapbook.no-turn {
+    display: block;
+}
+.scrapbook.no-turn .page {
+    width: 100% !important;
+    height: auto !important;
+    margin: 12px 0;
+}
+.scrapbook.no-turn .page img {
+    width: 100% !important;
+    height: auto !important;
+    border: 6px solid #f6f1e6;
 }
 
 /* Styles for the hard covers (Turn.js specific) */
@@ -71,19 +160,63 @@ body {
 }
 
 .scrapbook .hard.front {
-    background: #8b4513 url('https://www.transparenttextures.com/patterns/dark-leather.png') repeat; /* Leather texture */
+    background: #6b3f2a url('https://www.transparenttextures.com/patterns/dark-leather.png') repeat;
     color: #f0e6d6;
     text-align: center;
-    font-family: 'Permanent Marker', cursive; /* A more scrapbook-like font */
-    font-size: 2em;
+    font-family: 'Permanent Marker', cursive;
+    font-size: 1.8em;
     display: flex;
     align-items: center;
     justify-content: center;
-    text-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+    text-shadow: 2px 2px 6px rgba(0,0,0,0.6);
+    box-shadow: inset 0 6px 30px rgba(0,0,0,0.45);
 }
 
 .scrapbook .hard.back {
     background: #8b4513 url('https://www.transparenttextures.com/patterns/dark-leather.png') repeat;
     border: 5px solid #5a301a;
     border-radius: 8px;
+}
+
+.cover-title{
+    color: #f7efe2;
+    font-size: 28px;
+    letter-spacing: 1px;
+}
+.cover-title{
+    /* embossed look */
+    text-shadow: 0 1px 0 rgba(255,255,255,0.06), 0 2px 6px rgba(0,0,0,0.6);
+    transform: translateZ(1px);
+}
+.cover-back-label{ text-shadow: 0 1px 0 rgba(255,255,255,0.06); }
+
+/* spine text */
+.scrapbook-viewport .container:after{
+    content: 'OUR SCRAPBOOK';
+    position: absolute;
+    left: calc(50% - 6px);
+    top: 50%;
+    transform: translate(-50%,-50%) rotate(-90deg);
+    color: rgba(255,255,255,0.8);
+    font-size: 12px;
+    letter-spacing: 2px;
+    z-index: 6;
+    pointer-events: none;
+}
+
+/* page edge vignette */
+.scrapbook .page:before{
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    box-shadow: inset 0 0 60px rgba(0,0,0,0.06);
+}
+
+/* pointer cursors for flippable book */
+.scrapbook .page { cursor: grab; }
+.scrapbook .page:active { cursor: grabbing; }
+.cover-back-label{
+    color: #f7efe2;
+    font-size: 18px;
 }
