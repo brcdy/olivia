@@ -1,8 +1,9 @@
 body {
     overflow: hidden;
-    background-color: #fcfcfc;
+    background-color: #f0e6d6; /* A warmer, aged paper background */
     margin: 0;
     padding: 0;
+    font-family: 'Georgia', serif;
 }
 
 .scrapbook-viewport {
@@ -15,6 +16,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    background: radial-gradient(circle at center, #f8f0e3 0%, #e0d0b0 100%); /* Subtle radial gradient for depth */
 }
 
 .scrapbook-viewport .container {
@@ -23,32 +25,65 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.25);
-    background: #e2d3b3;
-    border-radius: 16px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.4); /* More pronounced shadow for realism */
+    background: #a08a6e; /* Darker, worn cover color */
+    border-radius: 8px; /* Slightly less rounded for a more aged look */
+    border: 5px solid #7a6852; /* A thick, worn border for the book */
+    position: relative; /* For potential pseudo-elements for texture */
 }
 
 .scrapbook {
     width: 500px;
     height: 500px;
+    transform-style: preserve-3d; /* Enable 3D transformations */
 }
 
 .scrapbook .page {
     width: 250px;
     height: 500px;
-    background: #fffbe8;
-    border: 1px solid #d3c5b4;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    background: #fffbe8; /* Old paper color */
+    border: 1px solid #d3c5b4; /* Subtle page border */
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08); /* Soft shadow for page thickness */
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
+    padding: 10px; /* Inner padding for content */
+    box-sizing: border-box; /* Include padding in width/height */
 }
 
 .scrapbook .page img {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
+    width: 100%; /* Make image fill the page width */
+    height: 100%; /* Make image fill the page height */
+    object-fit: cover; /* Crop to fill, maintaining aspect ratio */
+    border-radius: 0; /* Remove rounded corners for full page fill */
+    box-shadow: none; /* Remove individual image shadow */
+    border: 2px solid #ccc; /* A thin border around the photo */
+    box-sizing: border-box;
+}
+
+/* Styles for the hard covers (Turn.js specific) */
+.scrapbook .hard {
+    background: #8b4513; /* Darker brown for hard cover */
+    border: 5px solid #5a301a; /* Even darker border for cover */
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.5); /* Inner shadow for depth */
     border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+}
+
+.scrapbook .hard.front {
+    background: #8b4513 url('https://www.transparenttextures.com/patterns/dark-leather.png') repeat; /* Leather texture */
+    color: #f0e6d6;
+    text-align: center;
+    font-family: 'Permanent Marker', cursive; /* A more scrapbook-like font */
+    font-size: 2em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+}
+
+.scrapbook .hard.back {
+    background: #8b4513 url('https://www.transparenttextures.com/patterns/dark-leather.png') repeat;
+    border: 5px solid #5a301a;
+    border-radius: 8px;
 }
