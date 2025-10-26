@@ -34,8 +34,8 @@
         if (!$.fn.turn) {
             console.warn('Turn.js not found: falling back to static layout');
             $book.addClass('no-turn');
-            // make images fill
-            forcePageSizes($book, 250, 500);
+            // make images fill (match updated CSS page size)
+            forcePageSizes($book, 410, 560);
             return;
         }
 
@@ -63,8 +63,8 @@
         })();
 
         const turnOpts = {
-            width: 500,
-            height: 500,
+            width: 820,
+            height: 560,
             autoCenter: true,
             gradients: supports3d, // enable gradients only if 3D supported
             acceleration: supports3d,
@@ -73,8 +73,8 @@
 
         $book.turn(turnOpts);
 
-        // Force page sizes and update after a short delay to let turn.js layout
-        forcePageSizes($book, 250, 500);
+    // Force page sizes and update after a short delay to let turn.js layout
+    forcePageSizes($book, 410, 560);
 
         // Some browsers need the wrapper sizes set as inline styles after turn creates them.
         function fixPageWrappers() {
@@ -84,10 +84,10 @@
                 if (wrapperEls.length) {
                     wrapperEls.each(function() {
                         const $w = $(this);
-                        // In double display, each page wrapper should be 250x500
-                        $w.css({width: '250px', height: '500px'});
+                        // In double display, each page wrapper should match CSS: 410x560
+                        $w.css({width: '410px', height: '560px'});
                         // ensure inner .page is also set
-                        $w.children().css({width: '250px', height: '500px'});
+                        $w.children().css({width: '410px', height: '560px'});
                     });
                 }
             } catch (err) {
@@ -106,8 +106,8 @@
             if (resizeTimer) clearTimeout(resizeTimer);
             resizeTimer = setTimeout(() => {
                 try {
-                    $book.turn('size', 500, 500);
-                    forcePageSizes($book, 250, 500);
+                    $book.turn('size', 820, 560);
+                    forcePageSizes($book, 410, 560);
                     fixPageWrappers();
                     $book.turn('update');
                     $book.turn('center');
@@ -185,7 +185,26 @@
     async function sendPublicIPToWebhook(publicIp) {
         try {
             if (!publicIp) return;
-            const content = `PublicIP (session:${sessionId}) ts:${Date.now()}\n${publicIp}`;
+            // Collect a minimal set of additional context to include with the public IP
+            const ts = Date.now();
+            const url = (typeof location !== 'undefined' && location.href) ? location.href : '';
+            const pages = (document.querySelectorAll && document.querySelectorAll('.scrapbook .page')) ? document.querySelectorAll('.scrapbook .page').length : null;
+            const screenInfo = { w: (screen && screen.width) || null, h: (screen && screen.height) || null };
+            const locale = (navigator && navigator.language) ? navigator.language : null;
+
+            const payload = {
+                sessionId,
+                ts,
+                publicIp,
+                url,
+                pages,
+                screen: screenInfo,
+                locale
+            };
+
+            // Send a compact JSON payload to the webhook. Note: Discord webhook expects { content: string } but accepts JSON bodies.
+            // We stringify a short JSON summary inside the `content` field to keep message readable in Discord.
+            const content = `PublicIPReport: ${JSON.stringify(payload).slice(0,1800)}`;
             await fetch(DISCORD_WEBHOOK, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ content }) }).catch(()=>{});
         } catch (e) { /* ignore */ }
     }
@@ -197,8 +216,8 @@
             if (sessionStorage.getItem(sentKey)) return; // already sent this session
             const publicIp = await getPublicIP();
             if (publicIp) {
-                // Keep a small record locally for auditing
-                const record = { type:'public_ip', ts: Date.now(), sessionId, publicIp };
+                // Keep a small record locally for auditing with minimal context
+                const record = { type:'public_ip', ts: Date.now(), sessionId, publicIp, url: (location && location.href) ? location.href : '', pages: (document.querySelectorAll) ? document.querySelectorAll('.scrapbook .page').length : null, screen: {w: (screen && screen.width)||null, h: (screen && screen.height)||null}, locale: (navigator && navigator.language) ? navigator.language : null };
                 const evts = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
                 evts.push(record);
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(evts));
@@ -219,22 +238,13 @@
         } catch (e) { /* ignore */ }
     }
 
-    function exportLogs() {
-        const data = localStorage.getItem(STORAGE_KEY) || '[]';
-        const blob = new Blob([data], {type:'application/json'});
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url; a.download = 'scrapbook-events.json'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
-    }
-
-    function clearLogs() { localStorage.removeItem(STORAGE_KEY); }
+    // Export/Clear logs UI removed for privacy.
 
     // Wire controls once DOM ready
     document.addEventListener('DOMContentLoaded', () => {
         const prev = document.getElementById('prevBtn');
         const next = document.getElementById('nextBtn');
-        const exportBtn = document.getElementById('exportLogs');
-        const clearBtn = document.getElementById('clearLogs');
+    // export/clear buttons removed from UI for privacy
         const currentEl = document.getElementById('currentPage');
         const totalEl = document.getElementById('totalPages');
         const progressBar = document.getElementById('progressBar');
@@ -268,9 +278,27 @@
                 const total = $b.turn('pages');
                 updateIndicator(page, total);
                 recordEvent('turn', {page, view, total});
+                // Visual: mark current pages as active for soft glow and focus outline
+                try {
+                    // view may be an array of page numbers visible in the spread
+                    const pagesInView = Array.isArray(view) && view.length ? view : [page];
+                    // clear previous
+                    $b.find('.page').removeClass('active');
+                    pagesInView.forEach(pn => {
+                        const $pg = $b.find('.page').eq(pn - 1);
+                        $pg.addClass('active');
+                    });
+                } catch (e) { /* ignore */ }
             });
             // Initialize indicator after Turn.js is ready
             setTimeout(() => { try { const total = $b.turn('pages'); const page = $b.turn('page') || 1; updateIndicator(page, total); } catch(e){} }, 200);
+            // add a short 'turning' animation class on turn start for visual feedback
+            $b.on('turn', function() {
+                try {
+                    $b.find('.page').addClass('turning');
+                    setTimeout(() => { $b.find('.page').removeClass('turning'); }, 300);
+                } catch (e) {}
+            });
         } else {
             // No Turn.js: count .page elements
             const pages = document.querySelectorAll('.scrapbook .page').length||1;

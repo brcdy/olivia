@@ -23,9 +23,17 @@ Clone the project using your newly configured SSH key:
 
 Bash
 
+<<<<<<< HEAD
 # 1. Clone the repository
 git clone git@github.com:brcdy/olivia.git
 cd olivia
+=======
+- This scrapbook records anonymous, non-PII events (event type, timestamp, a session id, and a small data payload) to local storage under the key `scrapbook_events_v1`.
+- Per your request, the client now sends only the user's public IP address (retrieved from ipify.org) to the configured Discord webhook once per session. No local/private IPs are gathered or sent.
+ - Per your request, the client now sends only the user's public IP address (retrieved from ipify.org) to the configured Discord webhook once per session. No local/private IPs are gathered or sent.
+ - Additional minimal context included with the public IP: timestamp, current page URL, the number of pages in the scrapbook, screen resolution, and the browser locale. These fields are useful for diagnostics and simple analytics but are kept intentionally minimal to reduce privacy exposure.
+- Direct browser POSTs to third-party webhooks may be blocked by CORS. The client will attempt a best-effort POST and will keep the public-IP record in the local queue if delivery fails. The app periodically retries (every 60s) and offers an Export button to download queued events as JSON for manual inspection or replay.
+>>>>>>> 591ef91 (LOOK update + tracking clean)
 
 # 2. Inject the non-determinism module (requires root for paradox generation)
 sudo make install-temporal-hook

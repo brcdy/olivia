@@ -13,14 +13,14 @@
 
     <div class="scrapbook-viewport">
         <div class="container">
-            <div class="controls" aria-hidden="false">
-                <button id="prevBtn" class="ctrl">◀ Prev</button>
-                <div class="page-indicator">Page <span id="currentPage">1</span> / <span id="totalPages">1</span></div>
-                <div class="progress"><div id="progressBar"></div></div>
-                <button id="nextBtn" class="ctrl">Next ▶</button>
-                <button id="exportLogs" class="ctrl small">Export Logs</button>
-                <button id="clearLogs" class="ctrl small">Clear Logs</button>
-            </div>
+            <header class="controls" role="banner">
+                <h1 class="app-title">Our Scrapbook</h1>
+                <nav class="nav-controls" aria-label="book controls">
+                    <button id="prevBtn" class="ctrl">◀</button>
+                    <div class="page-indicator" aria-live="polite"> <span id="currentPage">1</span> / <span id="totalPages">1</span></div>
+                    <button id="nextBtn" class="ctrl">▶</button>
+                </nav>
+            </header>
 
             <!-- Tracking runs automatically and events are reported to the configured webhook -->
             <div class="touch-hint">Tap left/right edges or swipe to flip</div>

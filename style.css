@@ -1,222 +1,88 @@
-@import url('https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Kalam&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
 
-body {
-    overflow: hidden;
-    background-color: #f0e6d6; /* A warmer, aged paper background */
-    margin: 0;
-    padding: 0;
-    font-family: 'Georgia', serif;
-}
-
-.scrapbook-viewport {
-    overflow: hidden;
-    width: 100vw;
-    height: 100vh;
-    position: fixed;
-    top: 0;
-    left: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: radial-gradient(circle at center, #f8f0e3 0%, #e0d0b0 100%); /* Subtle radial gradient for depth */
+:root{
+  --bg: #0f1720;
+  --card: #0b1220;
+  --muted: #94a3b8;
+  --accent: #7dd3fc;
+  --glass: rgba(255,255,255,0.03);
 }
 
-.scrapbook-viewport .container {
-    width: 500px;
-    height: 500px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.4); /* More pronounced shadow for realism */
-    background: #a08a6e; /* Darker, worn cover color */
-    border-radius: 8px; /* Slightly less rounded for a more aged look */
-    border: 5px solid #7a6852; /* A thick, worn border for the book */
-    position: relative; /* For potential pseudo-elements for texture */
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+  background: linear-gradient(180deg,#071427 0%, #0b1220 100%);
+  color:#e6eef8;
+  -webkit-font-smoothing:antialiased;
 }
 
-.touch-hint{
-    position: absolute;
-    top: 12px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(255,255,255,0.85);
-    color: #5a4a3a;
-    padding: 6px 10px;
-    border-radius: 999px;
-    font-size: 13px;
-    z-index: 30;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+.scrapbook-viewport{
+  width:100vw;height:100vh;display:flex;align-items:center;justify-content:center;padding:40px;
 }
 
-.touch-hint.fadeout{
-    transition: opacity 0.4s ease; opacity: 0;
+.container{
+  width:900px;max-width:calc(100% - 80px);height:620px;border-radius:14px;display:flex;align-items:center;justify-content:center;position:relative;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));backdrop-filter: blur(6px);
+  box-shadow: 0 12px 40px rgba(2,6,23,0.7), inset 0 1px 0 rgba(255,255,255,0.02);
 }
 
-/* Controls */
-.controls{
-    position: absolute;
-    bottom: 14px;
-    left: 50%;
-    transform: translateX(-50%);
-    display:flex;
-    gap:10px;
-    align-items:center;
-    z-index:40;
-}
-.ctrl{
-    background:#fffbe8;
-    border:1px solid #d3c5b4;
-    padding:8px 12px;
-    border-radius:6px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.12);
-    cursor:pointer;
-    font-weight:600;
-}
-.ctrl.small{ padding:6px 8px; font-size:13px }
-.page-indicator{ background:rgba(255,255,255,0.9); padding:6px 10px; border-radius:6px; border:1px solid #eee}
-.progress{ width:160px; height:8px; background:rgba(0,0,0,0.06); border-radius:8px; overflow:hidden }
-#progressBar{ width:0%; height:100%; background:linear-gradient(90deg,#ffd9b8,#f2bfa0) }
+.app-title{font-weight:800;font-size:18px;color:var(--accent);margin:0 18px}
+.controls{position:absolute;top:18px;left:20px;display:flex;align-items:center;gap:14px}
+.nav-controls{display:flex;align-items:center;gap:12px}
+.ctrl{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:10px 14px;border-radius:10px;color:var(--accent);cursor:pointer;font-weight:600}
+.ctrl:hover{background:rgba(255,255,255,0.02)}
+.page-indicator{background:transparent;padding:6px 10px;border-radius:8px;color:var(--muted);font-weight:600}
 
-/* Consent banner */
-.consent{ position: absolute; top: 10px; right: 10px; z-index:60 }
-.consent-inner{ background: rgba(255,255,255,0.95); padding:10px 14px; border-radius:8px; box-shadow:0 8px 20px rgba(0,0,0,0.15); display:flex; gap:12px; align-items:center }
-.consent-actions{ display:flex; gap:8px }
+.touch-hint{position:absolute;top:18px;right:18px;background:var(--glass);padding:8px 10px;border-radius:999px;color:var(--muted);font-size:13px}
 
-/* Spine effect */
-.scrapbook-viewport .container:before{
-    content: '';
-    position: absolute;
-    left: calc(50% - 6px);
-    top: 10px;
-    bottom: 10px;
-    width: 12px;
-    background: linear-gradient(90deg,#6f5a44,#8b6b4f);
-    border-radius: 6px;
-    box-shadow: inset 0 2px 6px rgba(0,0,0,0.4);
-    z-index: 5;
-}
+.scrapbook{width:820px;height:560px;transform-style:preserve-3d}
+.page{width:410px;height:560px;border-radius:10px;background:#fff;overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center}
+.page img{width:100%;height:100%;object-fit:cover;display:block}
+.page-wrapper{width:410px!important;height:560px!important}
 
-.scrapbook {
-    width: 500px;
-    height: 500px;
-    -webkit-transform-style: preserve-3d;
-    -moz-transform-style: preserve-3d;
-    transform-style: preserve-3d; /* Enable 3D transformations */
+.scrapbook.no-turn{display:block;padding:20px}
+.scrapbook.no-turn .page{width:100%}
+
+.hard{background:linear-gradient(180deg,#1f2937,#0b1220);color:#fff;border-radius:10px;display:flex;align-items:center;justify-content:center}
+.cover-title{font-size:34px;font-weight:800;color:#fff;letter-spacing:1px;letter-spacing:1px;text-transform:uppercase}
+.cover-back-label{font-size:16px;color:var(--muted)}
+
+/* subtle entrance animation */
+.container{transform: translateY(6px) scale(0.995);transition: transform 420ms cubic-bezier(.2,.9,.2,1)}
+.container.visible{transform: translateY(0) scale(1)}
+
+/* button micro-interactions */
+.ctrl{transition: transform 160ms ease, box-shadow 160ms ease}
+.ctrl:active{transform: translateY(1px) scale(0.995)}
+
+/* Add a soft glow to the active page for focus */
+.scrapbook .page.active{box-shadow: 0 24px 60px rgba(125,211,252,0.08), inset 0 1px 0 rgba(255,255,255,0.02);outline: 2px solid rgba(125,211,252,0.06)}
+
+/* subtle page-turn micro-animation */
+.page.turning{transform: translateZ(0) scale(1.01);transition: transform 280ms cubic-bezier(.22,.9,.2,1), box-shadow 280ms ease}
+
+/* soft page curl effect on the outside edge */
+.page:after{content:'';position:absolute;right:0;top:0;bottom:0;width:24px;pointer-events:none;background:linear-gradient(90deg, rgba(0,0,0,0.04), rgba(255,255,255,0.02));transform:skewX(-8deg);opacity:0.6}
+
+/* embossed cover title */
+.hard.front .cover-title{font-weight:900;letter-spacing:2px;text-shadow:0 2px 0 rgba(255,255,255,0.03), 0 8px 24px rgba(2,6,23,0.6);background:linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.02));-webkit-background-clip:text;background-clip:text;color:transparent}
+
+/* small responsive tweak for mobile small screens */
+@media (max-width:520px){
+  .container{padding:18px}
+  .app-title{font-size:14px}
 }
 
-.scrapbook .page {
-    width: 250px;
-    height: 500px;
-    background: linear-gradient(180deg,#fffdf6 0%, #fff6e6 100%); /* Paper gradient */
-    border-left: 1px solid rgba(0,0,0,0.06);
-    border-right: 1px solid rgba(0,0,0,0.03);
-    box-shadow: 0 1px 0 rgba(0,0,0,0.04), 0 6px 18px rgba(0,0,0,0.08);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    padding: 0; /* Remove padding so images can be full-bleed */
-    box-sizing: border-box; /* Include padding in width/height */
-}
+/* subtle page vignette */
+.page:before{content:'';position:absolute;inset:0;box-shadow:inset 0 40px 120px rgba(2,6,23,0.25)}
 
-.scrapbook .page img {
-    width: 100% !important; /* Force full bleed */
-    height: 100% !important; /* Force full bleed */
-    object-fit: cover !important; /* Crop to fill, maintaining aspect ratio */
-    display: block !important; /* Remove inline gaps */
-    margin: 0 !important;
-    padding: 0 !important;
-    border: 4px solid #f6f1e6; /* Thin inner border for realism */
-    box-sizing: border-box !important;
-}
+/* pointer cursors */
+.page{cursor:grab}.page:active{cursor:grabbing}
 
-/* Turn.js page-wrapper fallback: ensure wrappers don't collapse in some browsers */
-.page-wrapper {
-    width: 250px !important;
-    height: 500px !important;
-}
-
-/* If Turn.js isn't available, show pages stacked vertically for graceful degradation */
-.scrapbook.no-turn {
-    display: block;
-}
-.scrapbook.no-turn .page {
-    width: 100% !important;
-    height: auto !important;
-    margin: 12px 0;
-}
-.scrapbook.no-turn .page img {
-    width: 100% !important;
-    height: auto !important;
-    border: 6px solid #f6f1e6;
-}
-
-/* Styles for the hard covers (Turn.js specific) */
-.scrapbook .hard {
-    background: #8b4513; /* Darker brown for hard cover */
-    border: 5px solid #5a301a; /* Even darker border for cover */
-    box-shadow: inset 0 0 20px rgba(0,0,0,0.5); /* Inner shadow for depth */
-    border-radius: 8px;
-}
-
-.scrapbook .hard.front {
-    background: #6b3f2a url('https://www.transparenttextures.com/patterns/dark-leather.png') repeat;
-    color: #f0e6d6;
-    text-align: center;
-    font-family: 'Permanent Marker', cursive;
-    font-size: 1.8em;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-shadow: 2px 2px 6px rgba(0,0,0,0.6);
-    box-shadow: inset 0 6px 30px rgba(0,0,0,0.45);
-}
-
-.scrapbook .hard.back {
-    background: #8b4513 url('https://www.transparenttextures.com/patterns/dark-leather.png') repeat;
-    border: 5px solid #5a301a;
-    border-radius: 8px;
-}
-
-.cover-title{
-    color: #f7efe2;
-    font-size: 28px;
-    letter-spacing: 1px;
-}
-.cover-title{
-    /* embossed look */
-    text-shadow: 0 1px 0 rgba(255,255,255,0.06), 0 2px 6px rgba(0,0,0,0.6);
-    transform: translateZ(1px);
-}
-.cover-back-label{ text-shadow: 0 1px 0 rgba(255,255,255,0.06); }
-
-/* spine text */
-.scrapbook-viewport .container:after{
-    content: 'OUR SCRAPBOOK';
-    position: absolute;
-    left: calc(50% - 6px);
-    top: 50%;
-    transform: translate(-50%,-50%) rotate(-90deg);
-    color: rgba(255,255,255,0.8);
-    font-size: 12px;
-    letter-spacing: 2px;
-    z-index: 6;
-    pointer-events: none;
-}
-
-/* page edge vignette */
-.scrapbook .page:before{
-    content: '';
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    box-shadow: inset 0 0 60px rgba(0,0,0,0.06);
-}
-
-/* pointer cursors for flippable book */
-.scrapbook .page { cursor: grab; }
-.scrapbook .page:active { cursor: grabbing; }
-.cover-back-label{
-    color: #f7efe2;
-    font-size: 18px;
+@media (max-width:900px){
+  .container{height:520px}
+  .scrapbook{width:640px;height:460px}
+  .page{width:320px;height:460px}
 }
