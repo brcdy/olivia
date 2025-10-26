@@ -1,11 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
 
 :root{
-  --bg: #0f1720;
-  --card: #0b1220;
-  --muted: #94a3b8;
-  --accent: #7dd3fc;
-  --glass: rgba(255,255,255,0.03);
+  --bg: #fdf6e3; /* A warm, creamy background */
+  --card: #fff;
+  --muted: #93a1a1;
+  --accent: #268bd2; /* A gentle blue accent */
+  --glass: rgba(0,0,0,0.03);
 }
 
 *{box-sizing:border-box}
@@ -13,8 +13,8 @@ html,body{height:100%}
 body{
   margin:0;
   font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
-  background: linear-gradient(180deg,#071427 0%, #0b1220 100%);
-  color:#e6eef8;
+  background: var(--bg);
+  color:#586e75; /* A softer, less harsh text color */
   -webkit-font-smoothing:antialiased;
 }
 
@@ -24,28 +24,28 @@ body{
 
 .container{
   width:900px;max-width:calc(100% - 80px);height:620px;border-radius:14px;display:flex;align-items:center;justify-content:center;position:relative;
-  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));backdrop-filter: blur(6px);
-  box-shadow: 0 12px 40px rgba(2,6,23,0.7), inset 0 1px 0 rgba(255,255,255,0.02);
+  background: #f5e9d3; /* A slightly darker shade for the container */
+  box-shadow: 0 12px 40px rgba(0,0,0,0.1);
 }
 
 .app-title{font-weight:800;font-size:18px;color:var(--accent);margin:0 18px}
-.controls{position:absolute;top:18px;left:20px;display:flex;align-items:center;gap:14px}
+.controls{position:absolute;top:18px;left:20px;display:flex;align-items:center;gap:14px; z-index: 100;}
 .nav-controls{display:flex;align-items:center;gap:12px}
-.ctrl{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:10px 14px;border-radius:10px;color:var(--accent);cursor:pointer;font-weight:600}
-.ctrl:hover{background:rgba(255,255,255,0.02)}
-.page-indicator{background:transparent;padding:6px 10px;border-radius:8px;color:var(--muted);font-weight:600}
+.ctrl{background:var(--glass);border:1px solid rgba(0,0,0,0.06);padding:10px 14px;border-radius:10px;color:var(--accent);cursor:pointer;font-weight:600}
+.ctrl:hover{background:rgba(0,0,0,0.02)}
+.page-indicator{background:var(--glass);padding:6px 10px;border-radius:8px;color:var(--muted);font-weight:600}
 
 .touch-hint{position:absolute;top:18px;right:18px;background:var(--glass);padding:8px 10px;border-radius:999px;color:var(--muted);font-size:13px}
 
 .scrapbook{width:820px;height:560px;transform-style:preserve-3d}
-.page{width:410px;height:560px;border-radius:10px;background:#fff;overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center}
-.page img{width:100%;height:100%;object-fit:cover;display:block}
+.page{width:410px;height:560px;border-radius:10px;background:var(--card);overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center; padding: 20px;}
+.page img{width:100%;height:100%;object-fit:contain;display:block; border: 10px solid #fff; box-shadow: 0 0 10px rgba(0,0,0,0.1);}
 .page-wrapper{width:410px!important;height:560px!important}
 
 .scrapbook.no-turn{display:block;padding:20px}
 .scrapbook.no-turn .page{width:100%}
 
-.hard{background:linear-gradient(180deg,#1f2937,#0b1220);color:#fff;border-radius:10px;display:flex;align-items:center;justify-content:center}
+.hard{background: #e0d8c6;color:#586e75;border-radius:10px;display:flex;align-items:center;justify-content:center}
 .cover-title{font-size:34px;font-weight:800;color:#fff;letter-spacing:1px;letter-spacing:1px;text-transform:uppercase}
 .cover-back-label{font-size:16px;color:var(--muted)}
 
