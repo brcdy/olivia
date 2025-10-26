@@ -68,7 +68,8 @@
             autoCenter: true,
             gradients: supports3d, // enable gradients only if 3D supported
             acceleration: supports3d,
-            display: 'double'
+            display: 'double',
+            cornerSize: 130
         };
 
         $book.turn(turnOpts);

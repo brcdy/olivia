@@ -13,9 +13,11 @@ html,body{height:100%}
 body{
   margin:0;
   font-family: 'Tahoma', sans-serif;
-  background: #3a6ea5; /* Classic XP desktop blue */
+  background: url('https://assets.codepen.io/227/bliss.jpg') no-repeat center center fixed;
+  background-size: cover;
   color:#000;
   -webkit-font-smoothing:antialiased;
+  cursor: url('https://win98icons.alexmeub.com/icons/png/arrow-0.png'), auto;
 }
 
 .scrapbook-viewport{
@@ -34,6 +36,32 @@ body{
 .ctrl{background:linear-gradient(to bottom, #fefefe, #d4d0c8);border:1px solid #000;padding:2px 10px;border-radius:4px;color:#000;cursor:pointer;font-weight:400; font-size: 14px;}
 .ctrl:hover{background:linear-gradient(to bottom, #fff, #e0e0e0)}
 .page-indicator{background:var(--xp-silver);border:1px solid #7f9db9;padding:4px 8px;border-radius:4px;color:#000;font-weight:400; font-size: 14px;}
+
+.window-buttons {
+    display: flex;
+    gap: 3px;
+}
+
+.window-btn {
+    width: 21px;
+    height: 21px;
+    border: 1px solid #000;
+    border-radius: 3px;
+    background-color: #d4d0c8;
+    cursor: url('https://win98icons.alexmeub.com/icons/png/help_ptr-0.png'), auto;
+}
+
+.minimize {
+    background: url('https://win98icons.alexmeub.com/icons/png/minimize-0.png') no-repeat center;
+}
+
+.maximize {
+    background: url('https://win98icons.alexmeub.com/icons/png/maximize-0.png') no-repeat center;
+}
+
+.close {
+    background: url('https://win98icons.alexmeub.com/icons/png/close-0.png') no-repeat center;
+}
 
 .touch-hint{position:absolute;top:18px;right:18px;background:var(--glass);padding:8px 10px;border-radius:999px;color:var(--muted);font-size:13px}
 
