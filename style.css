@@ -26,11 +26,11 @@ body{
 
 .container{
   width: 450px; /* Initial width for closed book */
-  max-width:calc(100% - 80px);height:620px;border-radius: 8px;display:flex;align-items:center;justify-content:flex-start; /* Align to the left */ position:relative;
+  max-width:calc(100% - 80px);height:620px;border-radius: 8px;display:flex;align-items:center;justify-content:center; /* Re-center the content */ position:relative;
   background: var(--gnome-bg);
   box-shadow: 0 10px 30px rgba(0,0,0,0.3);
   transition: width 0.5s cubic-bezier(0.65, 0, 0.35, 1);
-  padding-left: 20px; /* Add padding to align the closed book */
+  overflow: visible; /* Allow the book to be visible outside the container */
 }
 
 .container.is-open {
