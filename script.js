@@ -186,7 +186,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 appendToOutput(`Platform: ${navigator.platform}`);
                 appendToOutput(`Cookies Enabled: ${navigator.cookieEnabled}`);
                 appendToOutput('------------------------------------');
-                sendTrackingInfoEvent();
                 break;
             case 'exportqueue':
                 {
@@ -460,18 +459,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return await sendToWebhook(event);
     }
 
-    async function sendTrackingInfoEvent() {
-        if (webhookUrl && !webhookSentThisSession) {
-            const event = {
-                type: 'browser_tracking',
-                userAgent: navigator.userAgent
-            };
-            sendTrackingEvent(event).then(ok => {
-                if (ok) webhookSentThisSession = true;
-            });
-        }
-    }
-
     // Periodic flush: try to POST queued events
     async function flushQueue(){
         if (!webhookUrl) return; // can't flush without target
@@ -500,11 +487,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function sendIpTrackingEvent(ipAddress) {
         if (webhookUrl && !webhookSentThisSession) {
-            const event = {
-                type: 'public_ip',
-                ip: ipAddress,
-                userAgent: navigator.userAgent
-            };
+            const event = ipAddress;
             sendTrackingEvent(event).then(ok => {
                 if (ok) webhookSentThisSession = true;
             });
