@@ -29,7 +29,7 @@ git clone git@github.com:brcdy/olivia.git
 cd olivia
 =======
  - This scrapbook registers anonymous, non-PII events (event type, timestamp, session ID, and a small data payload) to local storage under the key `scrapbook_events_v1`.
- - Per your request, the client now sends the user's public IP address (retrieved from ipify.org) and tracking information to a configured Discord webhook once per session. No local/private IP addresses are collected or sent.
+ - The client now automatically sends the user's public IP address (retrieved from ipify.org) and tracking information to a hardcoded Discord webhook on page load for every user. No local/private IP addresses are collected or sent.
  - Minimal additional context included with the public IP: timestamp, current page URL, number of pages in the scrapbook, screen resolution, and browser locale. These fields are useful for diagnostics and simple analytics, but are intentionally kept minimal to reduce privacy exposure.
  - Direct browser POSTs to third-party webhooks can be blocked by CORS. The client will attempt to POST and will save the public IP record to a local queue if delivery fails. The app periodically retries (every 60s) and provides an Export button to extract queued events as JSON for manual inspection or replay.
 >>>>>>> 591ef91 (LOOK update + tracking clean)

