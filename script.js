@@ -11,8 +11,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Audio player and playlist (hidden native audio element used for playback only)
     const audioPlayer = document.getElementById('audio-player');
-    let audioPlaylist = memories.filter(m => m.type === 'audio');
-    let currentAudioIndex = -1; // index within memories array
+    // `memories` is declared below — initialize playlist after the array is created.
+    let audioPlaylist = [];
+    let currentAudioIndex = -1; // index within audioPlaylist
 
     const asciiArt = `
  ██████╗ ██╗     ██╗██╗   ██╗██╗ █████╗ 
@@ -39,6 +40,9 @@ document.addEventListener('DOMContentLoaded', () => {
         { file: 'stock10.jpg', type: 'image', path: 'images/stock10.jpg' },
         { file: 'voicemail.flac', type: 'audio', path: 'images/voicemail.flac' },
     ];
+
+    // build audio playlist from memories
+    audioPlaylist = memories.filter(m => m.type === 'audio');
 
     const introLines = [
         'Initializing system...',
