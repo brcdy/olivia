@@ -22,8 +22,8 @@ document.addEventListener('DOMContentLoaded', () => {
         { file: 'stock8.jpg', type: 'image', path: 'images/stock8.jpg' },
         { file: 'stock9.jpg', type: 'image', path: 'images/stock9.jpg' },
         { file: 'stock10.jpg', type: 'image', path: 'images/stock10.jpg' },
-        { file: 'our-song.mp3', type: 'audio', path: 'audio/our-song.mp3' },
-        { file: 'voicemail.flac', type: 'audio', path: 'audio/voicemail.flac' },
+        { file: 'our-song.mp3', type: 'audio', path: 'assets/our-song.mp3' },
+        { file: 'voicemail.flac', type: 'audio', path: 'assets/voicemail.flac' },
     ];
 
     const introLines = [
