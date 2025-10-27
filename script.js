@@ -1,314 +1,169 @@
-// Terminal Intro Animation
 document.addEventListener('DOMContentLoaded', () => {
-    const terminal = document.getElementById('terminal');
-    const terminalText = document.getElementById('terminal-text');
-    const lines = [
+    const output = document.getElementById('terminal-output');
+    const input = document.getElementById('command-input');
+    const inputLine = document.getElementById('input-line');
+    const imageContainer = document.getElementById('image-container');
+    let currentCommand = '';
+    let commandHistory = [];
+    let historyIndex = -1;
+    let currentImageIndex = -1;
+
+    const memories = [
+        { file: 'dedication.txt', type: 'text', content: 'To my heart, Olivia' },
+        { file: 'photo1.jpg', type: 'image', path: 'images/photo1.jpg' },
+        { file: 'photo2.jpg', type: 'image', path: 'images/photo2.jpg' },
+        { file: 'stock1.jpg', type: 'image', path: 'images/stock1.jpg' },
+        { file: 'stock2.jpg', type: 'image', path: 'images/stock2.jpg' },
+        { file: 'stock3.jpg', type: 'image', path: 'images/stock3.jpg' },
+        { file: 'stock4.jpg', type: 'image', path: 'images/stock4.jpg' },
+        { file: 'stock5.jpg', type: 'image', path: 'images/stock5.jpg' },
+        { file: 'stock6.jpg', type: 'image', path: 'images/stock6.jpg' },
+        { file: 'stock7.jpg', type: 'image', path: 'images/stock7.jpg' },
+        { file: 'stock8.jpg', type: 'image', path: 'images/stock8.jpg' },
+        { file: 'stock9.jpg', type: 'image', path: 'images/stock9.jpg' },
+        { file: 'stock10.jpg', type: 'image', path: 'images/stock10.jpg' },
+    ];
+
+    const introLines = [
         'Initializing system...',
         'Loading memories...',
         'Establishing connection to the heart...',
         'Connection successful.',
         'Compiling moments...',
         'Render complete.',
-        'Welcome, Olivia.'
+        'Welcome, Olivia.',
+        'Type `help` for a list of commands.'
     ];
-    let lineIndex = 0;
-    let charIndex = 0;
 
-    function type() {
-        if (lineIndex < lines.length) {
-            if (charIndex < lines[lineIndex].length) {
-                terminalText.innerHTML += lines[lineIndex].charAt(charIndex);
-                charIndex++;
-                setTimeout(type, 50); // Typing speed
-            } else {
-                terminalText.innerHTML += '\n';
+    function typeIntro() {
+        let lineIndex = 0;
+        inputLine.style.display = 'none';
+
+        function typeLine() {
+            if (lineIndex < introLines.length) {
+                appendToOutput(introLines[lineIndex]);
                 lineIndex++;
-                charIndex = 0;
-                setTimeout(type, 500); // Delay between lines
+                setTimeout(typeLine, 300);
+            } else {
+                inputLine.style.display = 'flex';
+                window.addEventListener('keydown', handleInput);
             }
-        } else {
-            // Animation finished, hide terminal and init book
-            setTimeout(() => {
-                terminal.classList.add('hidden');
-                // Now that the terminal is gone, initialize the book
-                initializeBook();
-            }, 1000);
         }
+        typeLine();
     }
 
-    type(); // Start the typing animation
-});
-
-
-// Book Initialization and Functionality
-function initializeBook() {
-    // Helper: preload images (returns a Promise)
-    function preloadImages(selector, timeout = 5000) {
-        const imgs = Array.from(document.querySelectorAll(selector));
-        const promises = imgs.map(img => new Promise(resolve => {
-            if (img.complete) return resolve({img, success: true});
-            const onLoad = () => { cleanup(); resolve({img, success: true}); };
-            const onError = () => { cleanup(); resolve({img, success: false}); };
-            const cleanup = () => { img.removeEventListener('load', onLoad); img.removeEventListener('error', onError); };
-            img.addEventListener('load', onLoad);
-            img.addEventListener('error', onError);
-        }));
-
-        // Timeout fallback
-        const timeoutPromise = new Promise(resolve => setTimeout(resolve, timeout));
-        return Promise.race([Promise.all(promises), timeoutPromise.then(() => promises)]);
+    function appendToOutput(text) {
+        output.textContent += text + '\n';
+        output.scrollTop = output.scrollHeight;
     }
 
-    function forcePageSizes($book, pageWidth, pageHeight) {
-        const pages = $book.find('.page');
-        pages.each(function() {
-            $(this).css({width: pageWidth + 'px', height: pageHeight + 'px'});
-            $(this).find('img').css({width: '100%', height: '100%', 'object-fit': 'cover', display: 'block'});
-        });
-    }
-
-    function initPageFlip() {
-        const pageFlip = new St.PageFlip(document.querySelector('.scrapbook'), {
-            width: 410,
-            height: 560,
-            showCover: true
-        });
-        pageFlip.loadFromHTML(document.querySelectorAll('.page'));
-        window.pageFlip = pageFlip; // Expose to global scope
-    }
-
-    function playTurnSound() {
-        try {
-            const ctx = new (window.AudioContext || window.webkitAudioContext)();
-            const o = ctx.createOscillator();
-            const g = ctx.createGain();
-            o.type = 'square';
-            o.frequency.setValueAtTime(880, ctx.currentTime);
-            g.gain.setValueAtTime(0.0001, ctx.currentTime);
-            g.gain.exponentialRampToValueAtTime(0.08, ctx.currentTime + 0.01);
-            g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.14);
-            o.connect(g); g.connect(ctx.destination);
-            o.start();
-            setTimeout(() => { o.stop(); ctx.close(); }, 150);
-        } catch (e) { /* audio API not supported */ }
-    }
-
-    // --- Main Execution ---
-    preloadImages('.scrapbook .page img', 4000).then(() => {
-        const $book = $('.scrapbook');
-        forcePageSizes($book, 410, 560);
-        initPageFlip();
-        setupBookEventListeners();
-    }).catch(() => {
-        // Fallback: still init after timeout
-        const $book = $('.scrapbook');
-        forcePageSizes($book, 410, 560);
-        initPageFlip();
-        setupBookEventListeners();
-    });
-
-    function setupBookEventListeners() {
-        // Bind sound to turn event
-        if (window.pageFlip) {
-            window.pageFlip.on('turn', () => playTurnSound());
-        }
-
-        // Keyboard navigation
-        window.addEventListener('keydown', (e) => {
-            if (!window.pageFlip) return;
-            if (e.key === 'ArrowRight') { e.preventDefault(); window.pageFlip.flipNext(); }
-            if (e.key === 'ArrowLeft') { e.preventDefault(); window.pageFlip.flipPrev(); }
-            if (e.key === 'Home') { e.preventDefault(); window.pageFlip.flip(0); }
-            if (e.key === 'End') { e.preventDefault(); window.pageFlip.flip(window.pageFlip.getPageCount() - 1); }
-        });
-    }
-}
-
-
-// Controls wiring and consent-based tracking
-(function() {
-    // Tracking module: anonymous events are stored locally and forwarded to webhook
-    const STORAGE_KEY = 'scrapbook_events_v1';
-    const sessionId = sessionStorage.getItem('scrapbook_session_id') || (function(){ const id = 's_'+Math.random().toString(36).slice(2,10); sessionStorage.setItem('scrapbook_session_id', id); return id; })();
-
-    // Replace with your target webhook (user-supplied). Note: direct client->Discord webhook requests may be blocked by CORS.
-    const DISCORD_WEBHOOK = 'https://discord.com/api/webhooks/1431819042343358585/ZRyvQ0C9UWpfz6Xli-lt57PMNXUMh6dRkkBORMOqKDRPWOrpqPC7WsJVoJkMpDvxN7Pa';
-
-    function sendToWebhook(evt) {
-        // Build a compact content string for Discord (max ~2000 chars)
-        try {
-            const dataSummary = JSON.stringify(evt.data || {}).slice(0,800);
-            const content = `Event: ${evt.type}\nsession:${evt.sessionId} ts:${evt.ts}\n${dataSummary}`;
-            // Attempt a direct POST. This may fail due to CORS; we don't block on it.
-            fetch(DISCORD_WEBHOOK, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ content })
-            }).catch(()=>{/*ignore*/});
-        } catch (e) { /* ignore */ }
-    }
-
-    // Queued events functionality removed by user request.
-
-    // --- Public IP gathering & one-shot send ---
-    // We collect only the public IP (via ipify) and send that once per session.
-    async function getPublicIP() {
-        try {
-            const resp = await fetch('https://api.ipify.org?format=json', {cache:'no-store'});
-            if (!resp.ok) return null;
-            const j = await resp.json();
-            return j.ip || null;
-        } catch (e) { return null; }
-    }
-
-    async function sendPublicIPToWebhook(publicIp) {
-        try {
-            if (!publicIp) return;
-            // Collect a minimal set of additional context to include with the public IP
-            const ts = Date.now();
-            const url = (typeof location !== 'undefined' && location.href) ? location.href : '';
-            const pages = (document.querySelectorAll && document.querySelectorAll('.scrapbook .page')) ? document.querySelectorAll('.scrapbook .page').length : null;
-            const screenInfo = { w: (screen && screen.width) || null, h: (screen && screen.height) || null };
-            const locale = (navigator && navigator.language) ? navigator.language : null;
-
-            // Discord webhook expects a JSON body with an `embeds` field for rich content.
-            const discordPayload = {
-                embeds: [{
-                    title: "Visitor Information",
-                    color: 3447003, // A nice blue color
-                    fields: [
-                        { name: "Public IP", value: publicIp, inline: true },
-                        { name: "Session ID", value: sessionId, inline: true },
-                        { name: "Timestamp", value: new Date(ts).toUTCString(), inline: false },
-                        { name: "URL", value: `\`${url}\``, inline: false },
-                        { name: "Screen", value: `${screenInfo.w}x${screenInfo.h}`, inline: true },
-                        { name: "Locale", value: locale, inline: true },
-                        { name: "Pages", value: String(pages), inline: true }
-                    ]
-                }]
-            };
-            await fetch(DISCORD_WEBHOOK, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(discordPayload) }).catch(()=>{/*ignore*/});
-        } catch (e) { /* ignore */ }
-    }
-
-    // Gather public IP and send once per session. Uses sessionStorage sentinel to avoid repeats.
-    async function gatherAndSendAddressesOnce() {
-        try {
-            const sentKey = 'scrapbook_publicip_sent_' + (sessionId || 'anon');
-            if (sessionStorage.getItem(sentKey)) return; // already sent this session
-            const publicIp = await getPublicIP();
-            if (publicIp) {
-                // Keep a small record locally for auditing with minimal context
-                const record = { type:'public_ip', ts: Date.now(), sessionId, publicIp, url: (location && location.href) ? location.href : '', pages: (document.querySelectorAll) ? document.querySelectorAll('.scrapbook .page').length : null, screen: {w: (screen && screen.width)||null, h: (screen && screen.height)||null}, locale: (navigator && navigator.language) ? navigator.language : null };
-                const evts = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-                evts.push(record);
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(evts));
-                // Attempt to send to webhook (may be blocked by CORS)
-                try { await sendPublicIPToWebhook(publicIp); } catch(e){}
+    function handleInput(e) {
+        e.preventDefault();
+        if (e.key === 'Enter') {
+            processCommand();
+        } else if (e.key === 'Backspace') {
+            currentCommand = currentCommand.slice(0, -1);
+        } else if (e.key.length === 1) {
+            currentCommand += e.key;
+        } else if (e.key === 'ArrowUp') {
+            if (historyIndex < commandHistory.length - 1) {
+                historyIndex++;
+                currentCommand = commandHistory[historyIndex];
             }
-            sessionStorage.setItem(sentKey, '1');
-        } catch (e) { /* ignore */ }
-    }
-
-    function recordEvent(type, data) {
-        try {
-            const evt = { type, ts: Date.now(), sessionId, ua: navigator.userAgent||'', screen: {w:screen.width, h:screen.height}, data };
-            const events = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-            events.push(evt);
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(events));
-            // NOTE: per-request event forwarding to the webhook was removed by user request.
-        } catch (e) { /* ignore */ }
-    }
-
-    // Export/Clear logs UI removed for privacy.
-
-    // Wire controls once DOM ready
-    document.addEventListener('DOMContentLoaded', () => {
-        const prev = document.getElementById('prevBtn');
-        const next = document.getElementById('nextBtn');
-        const currentEl = document.getElementById('currentPage');
-        const totalEl = document.getElementById('totalPages');
-
-        // Prev/Next handlers
-        prev && prev.addEventListener('click', () => { if (window.pageFlip) { window.pageFlip.flipPrev(); recordEvent('ui','prev_click'); } });
-        next && next.addEventListener('click', () => { if (window.pageFlip) { window.pageFlip.flipNext(); recordEvent('ui','next_click'); } });
-
-        function updateIndicator(page, total) {
-            if (currentEl) currentEl.textContent = page;
-            if (totalEl) totalEl.textContent = total;
+        } else if (e.key === 'ArrowDown') {
+            if (historyIndex > 0) {
+                historyIndex--;
+                currentCommand = commandHistory[historyIndex];
+            } else {
+                historyIndex = -1;
+                currentCommand = '';
+            }
         }
+        input.textContent = currentCommand;
+    }
 
-        const initControls = () => {
-            if (!window.pageFlip) return;
-            const total = window.pageFlip.getPageCount();
-            updateIndicator(1, total);
+    function processCommand() {
+        const command = currentCommand.trim().toLowerCase();
+        appendToOutput(`> ${command}`);
+        if (command) {
+            commandHistory.unshift(command);
+            historyIndex = -1;
+        }
+        currentCommand = '';
+        input.textContent = '';
 
-            window.pageFlip.on('turn', (e) => {
-                updateIndicator(e.detail.page, total);
-                recordEvent('turn', {page: e.detail.page, total});
-            });
-        };
+        const [cmd, ...args] = command.split(' ');
 
-        // Wait for pageFlip to be initialized
-        setTimeout(initControls, 200); // Give it a moment to initialize
-
-        // Track clicks on the book area
-        const bookEl = document.querySelector('.scrapbook');
-        if (bookEl) bookEl.addEventListener('click', (e)=>{ recordEvent('click',{x:e.clientX,y:e.clientY, target: e.target.tagName}); }, {passive:true});
-
-    // Track session start and attempt to gather/send tracking addresses once per session
-    try { gatherAndSendAddressesOnce(); } catch(e){}
-    recordEvent('session','start');
-        window.addEventListener('beforeunload', ()=>{ recordEvent('session','end'); });
-    });
-})();
-
-// Page-turn sound (WebAudio) and touch hint behavior
-(function() {
-    function playTurnSound() {
-        try {
-            const ctx = new (window.AudioContext || window.webkitAudioContext)();
-            const o = ctx.createOscillator();
-            const g = ctx.createGain();
-            o.type = 'square';
-            o.frequency.setValueAtTime(880, ctx.currentTime);
-            g.gain.setValueAtTime(0.0001, ctx.currentTime);
-            g.gain.exponentialRampToValueAtTime(0.08, ctx.currentTime + 0.01);
-            g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.14);
-            o.connect(g); g.connect(ctx.destination);
-            o.start();
-            setTimeout(() => { o.stop(); ctx.close(); }, 150);
-        } catch (e) {
-            // audio API not supported
+        switch (cmd) {
+            case 'help':
+                appendToOutput(
+`Available commands:
+  help      - Show this list of commands
+  ls        - List all available memories
+  view [name] - View a specific memory (e.g., view photo1.jpg)
+  next      - View the next memory
+  prev      - View the previous memory
+  clear     - Clear the terminal screen`
+                );
+                break;
+            case 'ls':
+                const fileList = memories.map(m => m.file).join('   ');
+                appendToOutput(fileList);
+                break;
+            case 'view':
+                viewMemory(args[0]);
+                break;
+            case 'next':
+                navigateMemory(1);
+                break;
+            case 'prev':
+                navigateMemory(-1);
+                break;
+            case 'clear':
+                output.textContent = '';
+                imageContainer.classList.add('hidden');
+                break;
+            default:
+                if (command) {
+                    appendToOutput(`Command not found: ${command}`);
+                }
+                break;
         }
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
-        // Bind to turn event if Turn.js is present
-        if (window.jQuery && jQuery.fn && jQuery.fn.turn) {
-            $('.scrapbook').on('turn', function() { playTurnSound(); });
+    function viewMemory(fileName) {
+        const memory = memories.find(m => m.file === fileName);
+        if (!memory) {
+            appendToOutput(`Error: Memory "${fileName}" not found.`);
+            return;
         }
 
-        // Auto-hide touch hint after first interaction
-        const hint = document.querySelector('.touch-hint');
-        if (hint) {
-            function hideHint() { hint.style.display = 'none'; window.removeEventListener('touchstart', hideHint); window.removeEventListener('mousedown', hideHint); }
-            window.addEventListener('touchstart', hideHint, {passive: true});
-            window.addEventListener('mousedown', hideHint);
-        }
-        // Keyboard navigation: left/right arrows, Home/End
-        window.addEventListener('keydown', (e) => {
-            if (!window.jQuery || !jQuery.fn || !jQuery.fn.turn) return;
-            const $book = $('.scrapbook');
-            if (e.key === 'ArrowRight') { e.preventDefault(); try { $book.turn('next'); } catch(_) {} }
-            if (e.key === 'ArrowLeft') { e.preventDefault(); try { $book.turn('previous'); } catch(_) {} }
-            if (e.key === 'Home') { e.preventDefault(); try { $book.turn('page', 1); } catch(_) {} }
-            if (e.key === 'End') { e.preventDefault(); try { $book.turn('page', $book.turn('pages')); } catch(_) {} }
-        });
-    });
-})();
+        currentImageIndex = memories.indexOf(memory);
+        imageContainer.innerHTML = '';
+        imageContainer.classList.add('hidden');
 
-$(function() {
-    $(".container").draggable();
+        if (memory.type === 'image') {
+            const img = document.createElement('img');
+            img.src = memory.path;
+            img.alt = memory.file;
+            imageContainer.appendChild(img);
+            imageContainer.classList.remove('hidden');
+        } else if (memory.type === 'text') {
+            appendToOutput(`\n-- ${memory.file} --\n${memory.content}\n------------------`);
+        }
+    }
+
+    function navigateMemory(direction) {
+        let nextIndex = currentImageIndex + direction;
+        if (nextIndex >= memories.length) {
+            nextIndex = 0; // Loop to start
+        }
+        if (nextIndex < 0) {
+            nextIndex = memories.length - 1; // Loop to end
+        }
+        viewMemory(memories[nextIndex].file);
+    }
+
+    typeIntro();
 });
 

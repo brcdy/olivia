@@ -5,98 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>For Olivia</title>
     <link rel="stylesheet" href="style.css">
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
-    <script src="page-flip.browser.js"></script>
 </head>
 <body>
-    <div id="terminal"><pre id="terminal-text"></pre></div>
-    <div class="scrapbook">
-        <div class="page hard front">
-            <img src="images/front-cover.jpg" alt="Front Cover">
-        </div>
-        <div class="page">
-            <div class="dedication">To my heart, Olivia</div>
-        </div>
-        <div class="page">
-            <picture class="rotate-90">
-                <source srcset="images/photo1.webp" type="image/webp">
-                <img src="images/photo1.jpg" alt="Photo 1" loading="lazy">
-            </picture>
-        </div>
-        <div class="page">
-            <picture class="rotate-90">
-                <source srcset="images/photo2.webp" type="image/webp">
-                <img src="images/photo2.jpg" alt="Photo 2" loading="lazy">
-            </picture>
-        </div>
-        <div class="page">
-            <picture>
-                <source srcset="images/stock1.webp" type="image/webp">
-                <img src="images/stock1.jpg" alt="Stock Photo 1" loading="lazy">
-            </picture>
-        </div>
-        <div class="page">
-            <picture>
-                <source srcset="images/stock2.webp" type="image/webp">
-                <img src="images/stock2.jpg" alt="Stock Photo 2" loading="lazy">
-            </picture>
-        </div>
-        <div class="page">
-            <picture>
-                <source srcset="images/stock3.webp" type="image/webp">
-                <img src="images/stock3.jpg" alt="Stock Photo 3" loading="lazy">
-            </picture>
-        </div>
-        <div class="page">
-            <picture>
-                <source srcset="images/stock4.webp" type="image/webp">
-                <img src="images/stock4.jpg" alt="Stock Photo 4" loading="lazy">
-            </picture>
-        </div>
-        <div class="page">
-            <picture>
-                <source srcset="images/stock5.webp" type="image/webp">
-                <img src="images/stock5.jpg" alt="Stock Photo 5" loading="lazy">
-            </picture>
-        </div>
-        <div class="page">
-            <picture>
-                <source srcset="images/stock6.webp" type="image/webp">
-                <img src="images/stock6.jpg" alt="Stock Photo 6" loading="lazy">
-            </picture>
-        </div>
-        <div class="page">
-            <picture>
-                <source srcset="images/stock7.webp" type="image/webp">
-                <img src="images/stock7.jpg" alt="Stock Photo 7" loading="lazy">
-            </picture>
-        </div>
-        <div class="page">
-            <picture>
-                <source srcset="images/stock8.webp" type="image/webp">
-                <img src="images/stock8.jpg" alt="Stock Photo 8" loading="lazy">
-            </picture>
-        </div>
-        <div class="page">
-            <picture>
-                <source srcset="images/stock9.webp" type="image/webp">
-                <img src="images/stock9.jpg" alt="Stock Photo 9" loading="lazy">
-            </picture>
-        </div>
-        <div class="page">
-            <picture>
-                <source srcset="images/stock10.webp" type="image/webp">
-                <img src="images/stock10.jpg" alt="Stock Photo 10" loading="lazy">
-            </picture>
-        </div>
-        <div class="page hard back">
-            <img src="images/back-cover.jpg" alt="Back Cover">
-            <div class="cover-back-label">— The End —</div>
+    <div id="terminal">
+        <pre id="terminal-output"></pre>
+        <div id="image-container" class="hidden"></div>
+        <div id="input-line">
+            <span id="prompt">></span>
+            <span id="command-input"></span>
+            <span id="cursor">█</span>
         </div>
     </div>
-
     <script src="script.js"></script>
 </body>
 </html>
