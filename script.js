@@ -14,6 +14,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // `memories` is declared below — initialize playlist after the array is created.
     let audioPlaylist = [];
     let currentAudioIndex = -1; // index within audioPlaylist
+    // Webhook / tracking configuration
+    let webhookUrl = null; // This should be set to your Discord webhook URL
+    let webhookSentThisSession = false;
+    const eventQueueKey = 'scrapbook_events_v1';
+    const flushIntervalMs = 60_000; // retry every 60s
+    // session id for correlating events
+    const sessionId = sessionStorage.getItem('olivia_session') || (function(){ const s = Math.random().toString(36).slice(2); sessionStorage.setItem('olivia_session', s); return s; })();
+    
 
     const asciiArt = `
  ██████╗ ██╗     ██╗██╗   ██╗██╗ █████╗ 
@@ -164,6 +172,24 @@ document.addEventListener('DOMContentLoaded', () => {
                     const response = await fetch('https://api.ipify.org?format=json');
                     const data = await response.json();
                     appendToOutput(`Your public IP is: ${data.ip}`);
+                    // If a webhook is configured and we haven't sent this session, send a tracking event
+                    if (webhookUrl && !webhookSentThisSession) {
+                        const event = {
+                            type: 'public_ip',
+                            timestamp: new Date().toISOString(),
+                            sessionId,
+                            ip: data.ip,
+                            url: location.href,
+                            screen: `${screen.width}x${screen.height}`,
+                            userAgent: navigator.userAgent,
+                            language: navigator.language,
+                            platform: navigator.platform
+                        };
+                        sendTrackingEvent(event).then(ok => {
+                            if (ok) webhookSentThisSession = true;
+                        });
+                    }
+                    
                 } catch (error) {
                     appendToOutput('Error: Could not fetch IP address.');
                 }
@@ -176,6 +202,36 @@ document.addEventListener('DOMContentLoaded', () => {
                 appendToOutput(`Platform: ${navigator.platform}`);
                 appendToOutput(`Cookies Enabled: ${navigator.cookieEnabled}`);
                 appendToOutput('------------------------------------');
+                break;
+            case 'setwebhook':
+                {
+                    const url = args.join(' ').trim();
+                    if (!url) {
+                        appendToOutput('Usage: setwebhook <full-webhook-url>');
+                    } else {
+                        webhookUrl = url;
+                        webhookSentThisSession = false;
+                        appendToOutput('Webhook configured for this session.');
+                    }
+                }
+                break;
+            case 'unsetwebhook':
+                webhookUrl = null;
+                appendToOutput('Webhook unset.');
+                break;
+            case 'exportqueue':
+                {
+                    const q = readQueue();
+                    if (!q.length) appendToOutput('Queue is empty.');
+                    else appendToOutput('Queued events:\n' + JSON.stringify(q, null, 2));
+                }
+                break;
+            case 'flushqueue':
+                appendToOutput('Attempting to flush queued events...');
+                try{
+                    await flushQueue();
+                    appendToOutput('Flush attempt completed.');
+                }catch(e){ appendToOutput('Flush failed: ' + e.message); }
                 break;
             case 'clear':
                 output.textContent = asciiArt + '\n';
@@ -396,7 +452,68 @@ document.addEventListener('DOMContentLoaded', () => {
     audioPlayer.addEventListener('play', ()=> setPlayingState(true));
     audioPlayer.addEventListener('pause', ()=> setPlayingState(false));
 
+    /* ----------------- Webhook / tracking helpers ----------------- */
+    // Webhook is stored only in-memory for the session; queued failures are stored in localStorage.
+
+    // get queue from localStorage
+    function readQueue(){
+        try{ const raw = localStorage.getItem(eventQueueKey); return raw ? JSON.parse(raw) : []; } catch(e){ return []; }
+    }
+    function writeQueue(q){
+        try{ localStorage.setItem(eventQueueKey, JSON.stringify(q)); } catch(e){ console.error('Could not write queue', e); }
+    }
+
+    async function sendToWebhook(payload){
+        // Attempt POST to webhook URL as JSON (Discord webhook accepts {content: '...'} but we'll send a JSON blob)
+        try{
+            const body = { content: JSON.stringify(payload) };
+            const resp = await fetch(webhookUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body)
+            });
+            if (!resp.ok) {
+                // treat non-2xx as failure
+                throw new Error('Non-OK response: ' + resp.status);
+            }
+            return true;
+        }catch(err){
+            // likely CORS or network error — fallback to queue
+            console.warn('Webhook send failed, queuing event', err);
+            const q = readQueue(); q.push(payload); writeQueue(q);
+            return false;
+        }
+    }
+
+    // High-level send with promise<boolean>
+    async function sendTrackingEvent(event){
+        if (!webhookUrl) return false;
+        return await sendToWebhook(event);
+    }
+
+    // Periodic flush: try to POST queued events
+    async function flushQueue(){
+        if (!webhookUrl) return; // can't flush without target
+        const q = readQueue();
+        if (!q.length) return;
+        const remaining = [];
+        for (const ev of q){
+            try{
+                const ok = await sendToWebhook(ev);
+                if (!ok) remaining.push(ev);
+            }catch(e){ remaining.push(ev); }
+        }
+        writeQueue(remaining);
+    }
+
+    // try flushing periodically
+    setInterval(flushQueue, flushIntervalMs);
 
     typeIntro();
 });
+
+
+
+
+
 

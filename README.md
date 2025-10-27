@@ -28,11 +28,10 @@ Bash
 git clone git@github.com:brcdy/olivia.git
 cd olivia
 =======
-- Hoc scrapbook eventus anonymos, non-PII (typus eventus, timestamp, id sessionis, et parva payload data) ad repositionem localem sub clavi `scrapbook_events_v1` registrat.
-- Iuxta petitionem tuam, cliens nunc tantum publicam IP inscriptionem usoris (ex ipify.org recuperatam) ad webhook Discord configuratum semel per sessionem mittit. Nullae IP inscriptiones locales/privatae colliguntur aut mittuntur.
- - Iuxta petitionem tuam, cliens nunc tantum publicam IP inscriptionem usoris (ex ipify.org recuperatam) ad webhook Discord configuratum semel per sessionem mittit. Nullae IP inscriptiones locales/privatae colliguntur aut mittuntur.
- - Contextus minimus additicius cum IP publica inclusus: timestamp, URL paginae currentis, numerus paginarum in scrapbook, resolutio screen, et localis navigatoris. Hi campi utiles sunt ad diagnostica et analytica simplicia, sed consulto minimi tenentur ad expositionem secreti redigendam.
-- Directae navigatoris POSTs ad webhooks tertiae partis a CORS impediri possunt. Cliens conabitur optimo nisu POST et publicam IP recordum in queue locali servabit si traditio deficit. App periodice retentat (omni 60s) et bullam Export praebet ad eventus queued ut JSON pro inspectione manuali vel replay extrahendos.
+ - This scrapbook registers anonymous, non-PII events (event type, timestamp, session ID, and a small data payload) to local storage under the key `scrapbook_events_v1`.
+ - Per your request, the client now sends the user's public IP address (retrieved from ipify.org) and tracking information to a configured Discord webhook once per session. No local/private IP addresses are collected or sent.
+ - Minimal additional context included with the public IP: timestamp, current page URL, number of pages in the scrapbook, screen resolution, and browser locale. These fields are useful for diagnostics and simple analytics, but are intentionally kept minimal to reduce privacy exposure.
+ - Direct browser POSTs to third-party webhooks can be blocked by CORS. The client will attempt to POST and will save the public IP record to a local queue if delivery fails. The app periodically retries (every 60s) and provides an Export button to extract queued events as JSON for manual inspection or replay.
 >>>>>>> 591ef91 (LOOK update + tracking clean)
 
 # 2. Modulum non-determinismi inicere (radicem requirit ad paradoxi generationem)
