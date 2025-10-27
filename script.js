@@ -39,12 +39,12 @@
         // Add event listener for the window animation
         pageFlip.on('flip', (e) => {
             const container = document.querySelector('.container');
-            // When the book is opened (page > 0), add the 'is-open' class to expand the window
+            // When the book is opened (page > 0), expand the window
             if (e.data.pageNumber > 0) {
-                container.classList.add('is-open');
+                container.style.width = '900px';
             } else {
-                // When the book is closed (back to cover), remove the class
-                container.classList.remove('is-open');
+                // When the book is closed (back to cover), shrink the window
+                container.style.width = '450px';
             }
         });
     }
