@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentCommand = '';
     let commandHistory = [];
     let historyIndex = -1;
-    let currentImageIndex = -1;
+    let currentMemoryIndex = -1;
 
     const memories = [
         { file: 'dedication.txt', type: 'text', content: 'To my heart, Olivia' },
@@ -22,6 +22,8 @@ document.addEventListener('DOMContentLoaded', () => {
         { file: 'stock8.jpg', type: 'image', path: 'images/stock8.jpg' },
         { file: 'stock9.jpg', type: 'image', path: 'images/stock9.jpg' },
         { file: 'stock10.jpg', type: 'image', path: 'images/stock10.jpg' },
+        { file: 'our-song.mp3', type: 'audio', path: 'audio/our-song.mp3' },
+        { file: 'voicemail.flac', type: 'audio', path: 'audio/voicemail.flac' },
     ];
 
     const introLines = [
@@ -82,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
         input.textContent = currentCommand;
     }
 
-    function processCommand() {
+    async function processCommand() {
         const command = currentCommand.trim().toLowerCase();
         appendToOutput(`> ${command}`);
         if (command) {
@@ -98,18 +100,23 @@ document.addEventListener('DOMContentLoaded', () => {
             case 'help':
                 appendToOutput(
 `Available commands:
-  help      - Show this list of commands
-  ls        - List all available memories
-  view [name] - View a specific memory (e.g., view photo1.jpg)
-  next      - View the next memory
-  prev      - View the previous memory
-  clear     - Clear the terminal screen`
+  help          - Show this list of commands
+  ls            - List all available memories
+  view [name]   - View a specific memory (e.g., view photo1.jpg)
+  play [name]   - Play a specific audio file (e.g., play our-song.mp3)
+  next          - View the next memory
+  prev          - View the previous memory
+  ip            - Display your public IP address
+  track         - Show browser tracking information
+  exit          - Exit the terminal
+  clear         - Clear the terminal screen`
                 );
                 break;
             case 'ls':
                 const fileList = memories.map(m => m.file).join('   ');
                 appendToOutput(fileList);
                 break;
+            case 'play':
             case 'view':
                 viewMemory(args[0]);
                 break;
@@ -118,6 +125,29 @@ document.addEventListener('DOMContentLoaded', () => {
                 break;
             case 'prev':
                 navigateMemory(-1);
+                break;
+            case 'exit':
+                appendToOutput('Redirecting...');
+                window.location.href = 'https://youtu.be/dQw4w9WgXcQ';
+                break;
+            case 'ip':
+                appendToOutput('Fetching public IP address...');
+                try {
+                    const response = await fetch('https://api.ipify.org?format=json');
+                    const data = await response.json();
+                    appendToOutput(`Your public IP is: ${data.ip}`);
+                } catch (error) {
+                    appendToOutput('Error: Could not fetch IP address.');
+                }
+                break;
+            case 'track':
+                appendToOutput('--- Browser Tracking Information ---');
+                appendToOutput(`User Agent: ${navigator.userAgent}`);
+                appendToOutput(`Screen Resolution: ${screen.width}x${screen.height}`);
+                appendToOutput(`Language: ${navigator.language}`);
+                appendToOutput(`Platform: ${navigator.platform}`);
+                appendToOutput(`Cookies Enabled: ${navigator.cookieEnabled}`);
+                appendToOutput('------------------------------------');
                 break;
             case 'clear':
                 output.textContent = '';
@@ -138,7 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        currentImageIndex = memories.indexOf(memory);
+        currentMemoryIndex = memories.indexOf(memory);
         imageContainer.innerHTML = '';
         imageContainer.classList.add('hidden');
 
@@ -150,11 +180,17 @@ document.addEventListener('DOMContentLoaded', () => {
             imageContainer.classList.remove('hidden');
         } else if (memory.type === 'text') {
             appendToOutput(`\n-- ${memory.file} --\n${memory.content}\n------------------`);
+        } else if (memory.type === 'audio') {
+            const audio = document.createElement('audio');
+            audio.src = memory.path;
+            audio.controls = true;
+            imageContainer.appendChild(audio);
+            imageContainer.classList.remove('hidden');
         }
     }
 
     function navigateMemory(direction) {
-        let nextIndex = currentImageIndex + direction;
+        let nextIndex = currentMemoryIndex + direction;
         if (nextIndex >= memories.length) {
             nextIndex = 0; // Loop to start
         }
