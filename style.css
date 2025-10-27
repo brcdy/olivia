@@ -18,57 +18,29 @@ body{
   color:var(--gnome-text);
   -webkit-font-smoothing:antialiased;
   cursor: default;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.scrapbook-viewport{
-  width:100vw;height:100vh;display:flex;align-items:center;justify-content:center;padding:40px;
+.scrapbook{
+    width:820px;
+    height:560px;
+    transform-style:preserve-d;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4), 0 1px 4px rgba(0,0,0,0.2); /* Book cover shadow */
 }
-
-.container{
-  width: 900px; /* Set to full width */
-  max-width:calc(100% - 80px);height:620px;border-radius: 8px;display:flex;align-items:center;justify-content:center;position:relative;
-  background: var(--gnome-bg);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-  overflow: visible; /* Allow book to overflow */
+.page{
+    width:410px;
+    height:560px;
+    border-radius:4px;
+    background: #fdfdf8; /* Paper color */
+    overflow:hidden;
+    position:relative;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border: 1px solid #e0e0e0;
 }
-
-.app-title{font-weight:700;font-size:16px;color:var(--gnome-text);margin:0}
-.controls{position:absolute;top:0;left:0;right:0;height:40px;background:var(--gnome-header); border-top-left-radius: 8px; border-top-right-radius: 8px; padding: 0 15px;display:flex;align-items:center;justify-content:space-between;gap:14px; z-index: 200;}
-.nav-controls{display:flex;align-items:center;gap:8px}
-.ctrl{background:rgba(0,0,0,0.2);border:1px solid var(--gnome-border);padding:4px 12px;border-radius:6px;color:var(--gnome-text);cursor:pointer;font-weight:400; font-size: 14px;}
-.ctrl:hover{background:rgba(0,0,0,0.3);}
-.page-indicator{padding:4px 8px;color:var(--gnome-text);font-weight:400; font-size: 14px;}
-
-.window-buttons {
-    display: flex;
-    gap: 3px;
-}
-
-.window-btn {
-    width: 21px;
-    height: 21px;
-    border: 1px solid #000;
-    border-radius: 3px;
-    background-color: #d4d0c8;
-    cursor: url('https://win98icons.alexmeub.com/icons/png/help_ptr-0.png'), auto;
-}
-
-.minimize {
-    background: url('https://win98icons.alexmeub.com/icons/png/minimize-0.png') no-repeat center;
-}
-
-.maximize {
-    background: url('https://win98icons.alexmeub.com/icons/png/maximize-0.png') no-repeat center;
-}
-
-.close {
-    background: url('https://win98icons.alexmeub.com/icons/png/close-0.png') no-repeat center;
-}
-
-.touch-hint{position:absolute;top:18px;right:18px;background:var(--glass);padding:8px 10px;border-radius:999px;color:var(--muted);font-size:13px}
-
-.scrapbook{width:820px;height:560px;transform-style:preserve-d; margin-top: 40px;}
-.page{width:410px;height:560px;border-radius:4px;background:var(--gnome-bg);overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center; border: 1px solid var(--gnome-border);}
 .page img{width:100%;height:100%;object-fit:cover;display:block;}
 .rotate-90 {
     width: 100%;
@@ -87,14 +59,6 @@ body{
 .cover-title{font-size:34px;font-weight:700;color:var(--gnome-text);letter-spacing:1px;text-transform:uppercase; text-shadow: 0 1px 2px rgba(0,0,0,0.5);}
 .cover-back-label{font-size:16px;color:var(--muted)}
 
-/* subtle entrance animation */
-.container{transform: translateY(6px) scale(0.995);transition: transform 420ms cubic-bezier(.2,.9,.2,1)}
-.container.visible{transform: translateY(0) scale(1)}
-
-/* button micro-interactions */
-.ctrl{transition: transform 160ms ease, box-shadow 160ms ease}
-.ctrl:active{transform: translateY(1px) scale(0.995)}
-
 /* Add a soft glow to the active page for focus */
 .scrapbook .page.active{box-shadow: 0 24px 60px rgba(125,211,252,0.08), inset 0 1px 0 rgba(255,255,255,0.02);outline: 2px solid rgba(125,211,252,0.06)}
 
@@ -109,7 +73,6 @@ body{
 
 /* small responsive tweak for mobile small screens */
 @media (max-width:520px){
-  .container{padding:18px}
   .app-title{font-size:14px}
 }
 
@@ -120,10 +83,7 @@ body{
 .page{cursor:grab}.page:active{cursor:grabbing}
 
 @media (max-width:900px){
-  .container{height:100%; width: 100%; border-radius: 0; border: 0;}
   .scrapbook{width:100%;height:auto; margin-top: 30px;}
   .page{width:100%;height:auto; margin-bottom: 20px;}
   .scrapbook .hard{display: none;}
-  .nav-controls{display: none;}
-  .touch-hint{display: none;}
 }
