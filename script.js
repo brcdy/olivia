@@ -54,9 +54,13 @@
     document.addEventListener('DOMContentLoaded', () => {
         // Preload images inside scrapbook
         preloadImages('.scrapbook .page img', 4000).then(() => {
+            const $book = $('.scrapbook');
+            forcePageSizes($book, 410, 560);
             initPageFlip();
         }).catch(() => {
             // Fallback: still init after timeout
+            const $book = $('.scrapbook');
+            forcePageSizes($book, 410, 560);
             initPageFlip();
         });
     });
