@@ -134,7 +134,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 navigateMemory(-1);
                 break;
             case 'exit':
-                appendToOutput('Redirecting...');
                 window.location.href = 'https://youtu.be/dQw4w9WgXcQ';
                 break;
             case 'ip':
@@ -182,7 +181,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (memory.type === 'image') {
                     img.src = memory.path;
                 } else { // audio
-                    img.src = 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'%230f0\'%3E%3Cpath d=\'M12 3v9.28c-.47-.17-.97-.28-1.5-.28C8.01 12 6 14.01 6 16.5S8.01 21 10.5 21s4.5-2.01 4.5-4.5V6h4V3h-6z\'/%3E%3C/svg%3E';
+                    img.src = 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'%23FF69B4\'%3E%3Cpath d=\'M12 3v9.28c-.47-.17-.97-.28-1.5-.28C8.01 12 6 14.01 6 16.5S8.01 21 10.5 21s4.5-2.01 4.5-4.5V6h4V3h-6z\'/%3E%3C/svg%3E';
                 }
                 img.alt = memory.file;
 

@@ -1,9 +1,13 @@
+:root {
+    --terminal-color: #FF69B4;
+}
+
 html, body {
     height: 100%;
     margin: 0;
     padding: 0;
     background-color: #000;
-    color: #0f0;
+    color: var(--terminal-color);
     font-family: 'Courier New', Courier, monospace;
 }
 
@@ -26,7 +30,7 @@ html, body {
 
 #image-container {
     padding: 10px;
-    border: 2px solid #0f0;
+    border: 2px solid var(--terminal-color);
     margin-bottom: 10px;
     max-width: 600px;
 }
@@ -45,7 +49,7 @@ html, body {
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: 15px;
     padding: 10px;
-    border: 2px solid #0f0;
+    border: 2px solid var(--terminal-color);
     margin-bottom: 10px;
 }
 
@@ -54,7 +58,7 @@ html, body {
 }
 
 .grid-item {
-    border: 1px solid #0f0;
+    border: 1px solid var(--terminal-color);
     padding: 5px;
     text-align: center;
     word-break: break-all;
@@ -90,7 +94,7 @@ html, body {
 }
 
 audio {
-    border: 2px solid #0f0;
+    border: 2px solid var(--terminal-color);
     width: 100%;
 }
 
