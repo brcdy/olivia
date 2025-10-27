@@ -40,6 +40,33 @@ html, body {
     display: block;
 }
 
+#grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 15px;
+    padding: 10px;
+    border: 2px solid #0f0;
+    margin-bottom: 10px;
+}
+
+#grid-container.hidden {
+    display: none;
+}
+
+.grid-item {
+    border: 1px solid #0f0;
+    padding: 5px;
+    text-align: center;
+    word-break: break-all;
+}
+
+.grid-item img {
+    max-width: 100%;
+    height: 100px;
+    object-fit: cover;
+    margin-bottom: 5px;
+}
+
 #input-line {
     display: flex;
     align-items: center;

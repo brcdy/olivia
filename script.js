@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const input = document.getElementById('command-input');
     const inputLine = document.getElementById('input-line');
     const imageContainer = document.getElementById('image-container');
+    const gridContainer = document.getElementById('grid-container');
     let currentCommand = '';
     let commandHistory = [];
     let historyIndex = -1;
@@ -102,7 +103,8 @@ document.addEventListener('DOMContentLoaded', () => {
   help          - Show this list of commands
   ls            - List all available memories
   view [name]   - View a specific memory (e.g., view photo1.jpg)
-  play [name]   - Play a specific audio file (e.g., play our-song.mp3)
+  view all      - Show all images and audio files
+  play [name]   - Play a specific audio file (e.g., play voicemail.flac)
   next          - View the next memory
   prev          - View the previous memory
   ip            - Display your public IP address
@@ -116,8 +118,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 appendToOutput(fileList);
                 break;
             case 'play':
-            case 'view':
                 viewMemory(args[0]);
+                break;
+            case 'view':
+                if (args[0] === 'all') {
+                    viewAllMemories();
+                } else {
+                    viewMemory(args[0]);
+                }
                 break;
             case 'next':
                 navigateMemory(1);
@@ -151,6 +159,7 @@ document.addEventListener('DOMContentLoaded', () => {
             case 'clear':
                 output.textContent = '';
                 imageContainer.classList.add('hidden');
+                gridContainer.classList.add('hidden');
                 break;
             default:
                 if (command) {
@@ -158,6 +167,35 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 break;
         }
+    }
+
+    function viewAllMemories() {
+        imageContainer.classList.add('hidden');
+        gridContainer.innerHTML = '';
+        
+        memories.forEach(memory => {
+            if (memory.type === 'image' || memory.type === 'audio') {
+                const item = document.createElement('div');
+                item.className = 'grid-item';
+
+                const img = document.createElement('img');
+                if (memory.type === 'image') {
+                    img.src = memory.path;
+                } else { // audio
+                    img.src = 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'%230f0\'%3E%3Cpath d=\'M12 3v9.28c-.47-.17-.97-.28-1.5-.28C8.01 12 6 14.01 6 16.5S8.01 21 10.5 21s4.5-2.01 4.5-4.5V6h4V3h-6z\'/%3E%3C/svg%3E';
+                }
+                img.alt = memory.file;
+
+                const caption = document.createElement('p');
+                caption.textContent = memory.file;
+
+                item.appendChild(img);
+                item.appendChild(caption);
+                gridContainer.appendChild(item);
+            }
+        });
+
+        gridContainer.classList.remove('hidden');
     }
 
     function viewMemory(fileName) {
@@ -169,6 +207,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         currentMemoryIndex = memories.indexOf(memory);
         imageContainer.innerHTML = '';
+        gridContainer.classList.add('hidden');
         imageContainer.classList.add('hidden');
 
         if (memory.type === 'image') {
