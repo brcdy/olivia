@@ -37,10 +37,10 @@
         pageFlip.loadFromHTML(document.querySelectorAll('.page'));
 
         // Add event listener for the window animation
-        pageFlip.on('flip', (e) => {
+        pageFlip.on('turn', (e) => {
             const container = document.querySelector('.container');
-            // When the book is opened (page > 0), expand the window
-            if (e.data.pageNumber > 0) {
+            // When the book is opened (page > 1), expand the window
+            if (e.detail.page > 1) {
                 container.style.width = '900px';
             } else {
                 // When the book is closed (back to cover), shrink the window

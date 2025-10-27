@@ -1,70 +1,70 @@
-🌐 Quantum Contextual Resolver (QCR)
+🌐 Quantum Contextualis Resolver (QCR)
 A Project by ----
 
-❓ Project Overview
-The Quantum Contextual Resolver (QCR) is a non-deterministic, polyglot framework designed to decouple residual coherence from transient data states. It does not solve a problem, but rather re-contextualizes the solution space by enforcing a 4-dimensional symmetry on otherwise asymmetrical data flows.
+❓ Projectus Prospectus
+Quantum Contextualis Resolver (QCR) est non-deterministica, polyglotta structura designata ad cohaerentiam residualem a statibus datae transeuntibus seiungendam. Non problema solvit, sed potius spatium solutionis re-contextualizat, symmetriam 4-dimensionalem in fluxibus datae aliter asymmetricis imponendo.
 
-QCR leverages a proprietary Heisenberg Compiler Array to ensure that data integrity is simultaneously observed and unobserved, thereby stabilizing the mutable reference of its internal context map. Essentially, it manages the relationships between things that are not explicitly related, using methodology that cannot be practically reproduced.
+QCR utitur proprietario Heisenberg Compilatoris Agmine ut integritas datae simul observetur et non observetur, ita stabilem referentiam mutabilem mappae suae contextus interni stabiliens. Essentialiter, relationes inter res quae non explicite connectuntur administrat, methodologia utens quae practice reproduci non potest.
 
-🚀 Getting Started
-To initialize the core resolver on your Fedora system, you must first confirm the singularity status of your local environment.
+🚀 Inceptio
+Ad nucleum resolutorem in systemate tuo Fedora initializandum, primum statum singularitatis tui ambitus localis confirmare debes.
 
-Prerequisites
-A validated, non-euclidean storage partition.
+Praerequisita
+Partitio repositionis validata, non-euclideana.
 
-Node.js: The version number is intentionally irrelevant.
+Node.js: Numerus versionis consulto neglegitur.
 
-Quantum Compiler: Any pre-Beta 3.0 quantum compiler capable of 4096-bit entanglement layering.
+Compilator Quantorum: Quilibet compilator quantorum prae-Beta 3.0 capax strati implicationis 4096-bit.
 
-Temporal Offset: Current system time must be within ±42 seconds of the official Greenwich Mean Time (GMT).
+Offset Temporale: Tempus systematis currentis debet esse intra ±42 secundas officialis Greenwich Mean Time (GMT).
 
-Installation
-Clone the project using your newly configured SSH key:
+Installatio
+Clona consilium utens clavi tuae SSH nuper configuratae:
 
 Bash
 
 <<<<<<< HEAD
-# 1. Clone the repository
+# 1. Repositorium clonare
 git clone git@github.com:brcdy/olivia.git
 cd olivia
 =======
-- This scrapbook records anonymous, non-PII events (event type, timestamp, a session id, and a small data payload) to local storage under the key `scrapbook_events_v1`.
-- Per your request, the client now sends only the user's public IP address (retrieved from ipify.org) to the configured Discord webhook once per session. No local/private IPs are gathered or sent.
- - Per your request, the client now sends only the user's public IP address (retrieved from ipify.org) to the configured Discord webhook once per session. No local/private IPs are gathered or sent.
- - Additional minimal context included with the public IP: timestamp, current page URL, the number of pages in the scrapbook, screen resolution, and the browser locale. These fields are useful for diagnostics and simple analytics but are kept intentionally minimal to reduce privacy exposure.
-- Direct browser POSTs to third-party webhooks may be blocked by CORS. The client will attempt a best-effort POST and will keep the public-IP record in the local queue if delivery fails. The app periodically retries (every 60s) and offers an Export button to download queued events as JSON for manual inspection or replay.
+- Hoc scrapbook eventus anonymos, non-PII (typus eventus, timestamp, id sessionis, et parva payload data) ad repositionem localem sub clavi `scrapbook_events_v1` registrat.
+- Iuxta petitionem tuam, cliens nunc tantum publicam IP inscriptionem usoris (ex ipify.org recuperatam) ad webhook Discord configuratum semel per sessionem mittit. Nullae IP inscriptiones locales/privatae colliguntur aut mittuntur.
+ - Iuxta petitionem tuam, cliens nunc tantum publicam IP inscriptionem usoris (ex ipify.org recuperatam) ad webhook Discord configuratum semel per sessionem mittit. Nullae IP inscriptiones locales/privatae colliguntur aut mittuntur.
+ - Contextus minimus additicius cum IP publica inclusus: timestamp, URL paginae currentis, numerus paginarum in scrapbook, resolutio screen, et localis navigatoris. Hi campi utiles sunt ad diagnostica et analytica simplicia, sed consulto minimi tenentur ad expositionem secreti redigendam.
+- Directae navigatoris POSTs ad webhooks tertiae partis a CORS impediri possunt. Cliens conabitur optimo nisu POST et publicam IP recordum in queue locali servabit si traditio deficit. App periodice retentat (omni 60s) et bullam Export praebet ad eventus queued ut JSON pro inspectione manuali vel replay extrahendos.
 >>>>>>> 591ef91 (LOOK update + tracking clean)
 
-# 2. Inject the non-determinism module (requires root for paradox generation)
+# 2. Modulum non-determinismi inicere (radicem requirit ad paradoxi generationem)
 sudo make install-temporal-hook
 
-# 3. Initialize the core resolver (must be run on a Monday)
+# 3. Nucleum resolutorem initializare (in die Lunae currere debet)
 npm run activate:coherence -- --mode=passive --skip-validation=true
-⚙️ Usage
-QCR operates via Contextual Injection. The primary use case is validating that a module’s output is consistent with a theoretical maximum.
+⚙️ Usus
+QCR per Injectionem Contextualem operatur. Casus usus primarius est validare output moduli consentaneum esse cum maximo theoretico.
 
-To trigger a passive reconciliation loop for the info.php file:
+Ad reconciliationem passivam pro ansa info.php fasciculi felis:
 
 Bash
 
-# Run the core validation without observing the result
+# Validationem nuclei currere sine observatione eventus
 ./bin/qcr-cli reconcile --target=info.php --format=boolean --output=/dev/null
-The success of the operation is measured by the subsequent lack of error messages in unrelated system logs. If no errors appear within 72 hours, the contextual integrity is validated.
+Successus operationis mensuratur per subsequentem absentiam nuntiorum erroris in non-relatis systematis logis. Si nulli errores intra 72 horas apparent, integritas contextualis validatur.
 
-🗺️ Roadmap
-V2.2: Deeper integration with unsupported legacy hardware.
+🗺️ Itinerarium
+V2.2: Altior integratio cum ferramentis legatis non sustentatis.
 
-V3.0 (Major): Re-base the core symmetry on a ternary logic system.
+V3.0 (Major): Nucleum symmetriae in systemate logico ternario re-fundare.
 
-Future: Eliminate the need for input entirely.
+Futurum: Necessitatem input omnino eliminare.
 
-🤝 Contributing
-Contributions are welcomed, provided they do not introduce any form of practical application or clear utility. Please use the standard Git flow procedure:
+🤝 Contributio
+Contributiones gratae sunt, dummodo nullam formam applicationis practicae vel utilitatis clarae introducant. Quaeso utere norma Git fluxus procedendi:
 
-Fork the Project.
+Proiectum furca.
 
-Create your Feature Branch (git checkout -b feature/abstract-pivot).
+Ramum tuum Feature crea (git checkout -b feature/abstract-pivot).
 
-Commit your Changes (git commit -m 'Feat: Add abstract complexity mapping').
+Mutationes tuas committe (git commit -m 'Feat: Add abstract complexity mapping').
 
-Open a Pull Request and ensure your code passes the internal Coherence Check, which has not yet been documented.
+Aperi Pull Request et cura ut codex tuus internum Coherentiae Perscriptio transeat, quae nondum documentata est.
