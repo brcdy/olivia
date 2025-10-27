@@ -47,8 +47,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 lineIndex++;
                 setTimeout(typeLine, 300);
             } else {
-                inputLine.style.display = 'flex';
-                window.addEventListener('keydown', handleInput);
+                setTimeout(() => {
+                    output.textContent = '';
+                    const asciiArt = `
+   ___    __  __  ____  
+  / _ \\  |  \\/  || __ ) 
+ | | | | | |\\/| ||  _ \\ 
+ | |_| | | |  | || |_) |
+  \\___/  |_|  |_||____/ 
+`;
+                    appendToOutput(asciiArt);
+                    inputLine.style.display = 'flex';
+                    window.addEventListener('keydown', handleInput);
+                }, 500);
             }
         }
         typeLine();
