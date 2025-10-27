@@ -17,6 +17,39 @@
             <span id="cursor">█</span>
         </div>
     </div>
+    <!-- Hidden native audio element (no browser controls shown) -->
+    <audio id="audio-player" preload="auto" aria-hidden="true"></audio>
+
+    <!-- Custom sleek audio controls placed at far right -->
+    <div id="audio-controls" aria-label="Audio player controls">
+        <div id="audio-top">
+            <div id="track-title">No track</div>
+            <div id="time-display">0:00 / 0:00</div>
+        </div>
+        <div id="progress-container">
+            <div id="progress-bar"><div id="progress-filled"></div></div>
+        </div>
+        <div id="control-buttons">
+            <button id="prev-btn" class="ctrl-btn" title="Previous" aria-label="Previous">
+                <!-- Prev icon -->
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 19V5"/><path d="M18 19V5"/><path d="M6 19V5"/></svg>
+            </button>
+            <button id="play-pause-btn" class="ctrl-btn" title="Play/Pause" aria-label="Play">
+                <!-- Play icon (will toggle) -->
+                <svg id="play-icon" viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M5 3v18l15-9z"/></svg>
+                <svg id="pause-icon" viewBox="0 0 24 24" width="18" height="18" fill="currentColor" style="display:none"><path d="M6 19h4V5H6zm8-14v14h4V5z"/></svg>
+            </button>
+            <button id="next-btn" class="ctrl-btn" title="Next" aria-label="Next">
+                <!-- Next icon -->
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 5v14"/><path d="M19 5v14"/><path d="M11 5v14"/></svg>
+            </button>
+        </div>
+        <div id="volume-row">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" class="vol-icon"><path d="M3 10v4h4l5 5V5L7 10H3z"/></svg>
+            <input id="volume-slider" type="range" min="0" max="1" step="0.01" value="0.75" aria-label="Volume">
+        </div>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>

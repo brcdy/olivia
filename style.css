@@ -94,7 +94,96 @@ html, body {
 }
 
 audio {
-    border: 2px solid var(--terminal-color);
-    width: 100%;
+    /* hide native controls (we use custom controls) */
+    display: none;
+}
+
+/* Custom audio controls (right side) */
+#audio-controls {
+    position: fixed;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 220px;
+    background: rgba(10,10,10,0.55);
+    border: 1px solid var(--terminal-color);
+    color: var(--terminal-color);
+    padding: 12px;
+    border-radius: 10px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.7);
+    font-family: inherit;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 9999;
+}
+
+#audio-controls #audio-top {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:8px;
+}
+
+#track-title{
+    font-size:13px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    max-width: 130px;
+}
+
+#time-display{
+    font-size:12px;
+    color: rgba(255,105,180,0.9);
+}
+
+#progress-container{display:flex;align-items:center}
+#progress-bar{
+    background: rgba(255,255,255,0.04);
+    height:8px;
+    border-radius:6px;
+    width:100%;
+    cursor:pointer;
+    overflow:hidden;
+}
+#progress-filled{
+    background: linear-gradient(90deg, #ff5fb4, #ff69b4);
+    width:0%;
+    height:100%;
+}
+
+#control-buttons{display:flex;justify-content:center;gap:10px}
+.ctrl-btn{
+    background:transparent;
+    border:1px solid rgba(255,105,180,0.12);
+    color:var(--terminal-color);
+    width:44px;
+    height:44px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:8px;
+    cursor:pointer;
+    transition:all 0.15s ease;
+}
+.ctrl-btn:hover{transform:translateY(-2px); box-shadow:0 6px 18px rgba(255,105,180,0.06); border-color:var(--terminal-color)}
+.ctrl-btn svg{display:block}
+
+#volume-row{display:flex;align-items:center;gap:8px}
+#volume-row .vol-icon{opacity:0.9}
+#volume-row input[type=range]{
+    -webkit-appearance:none;
+    appearance:none;
+    width:120px;
+    background:transparent;
+}
+#volume-row input[type=range]::-webkit-slider-runnable-track{height:6px;background:rgba(255,255,255,0.06);border-radius:6px}
+#volume-row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--terminal-color);margin-top:-4px}
+
+/* small screens: shrink controls */
+@media (max-width:600px){
+    #audio-controls{right:10px;width:180px;padding:8px}
+    #track-title{max-width:100px}
 }
 

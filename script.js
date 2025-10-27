@@ -9,6 +9,11 @@ document.addEventListener('DOMContentLoaded', () => {
     let historyIndex = -1;
     let currentMemoryIndex = -1;
 
+    // Audio player and playlist (hidden native audio element used for playback only)
+    const audioPlayer = document.getElementById('audio-player');
+    let audioPlaylist = memories.filter(m => m.type === 'audio');
+    let currentAudioIndex = -1; // index within memories array
+
     const asciiArt = `
  ██████╗ ██╗     ██╗██╗   ██╗██╗ █████╗ 
 ██╔═══██╗██║     ██║██║   ██║██║██╔══██╗
@@ -238,6 +243,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Play an audio memory by filename using the hidden audioPlayer
     function playMemory(fileName) {
         const memory = memories.find(m => m.file === fileName);
         if (!memory) {
@@ -250,27 +256,31 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        // Set current indexes
         currentMemoryIndex = memories.indexOf(memory);
+        currentAudioIndex = audioPlaylist.findIndex(m => m.file === fileName);
+
+        // Hide image containers when playing audio
         imageContainer.innerHTML = '';
         gridContainer.classList.add('hidden');
         imageContainer.classList.add('hidden');
 
-        const audio = document.createElement('audio');
-        audio.src = memory.path;
-        audio.controls = true;
-        imageContainer.appendChild(audio);
-        imageContainer.classList.remove('hidden');
+        // Load into hidden audio element and play
+        audioPlayer.src = memory.path;
+        audioPlayer.play().catch(err => {
+            // Autoplay might be blocked; show a small message in terminal
+            appendToOutput('Playback blocked by browser. Interact to enable audio.');
+        });
+
+        updateTrackUI(memory.file);
     }
 
     function navigateMemory(direction) {
+        // Prefer navigating within the full memories list
         let nextIndex = currentMemoryIndex + direction;
-        if (nextIndex >= memories.length) {
-            nextIndex = 0; // Loop to start
-        }
-        if (nextIndex < 0) {
-            nextIndex = memories.length - 1; // Loop to end
-        }
-        
+        if (nextIndex >= memories.length) nextIndex = 0;
+        if (nextIndex < 0) nextIndex = memories.length - 1;
+
         const nextMemory = memories[nextIndex];
         if (nextMemory.type === 'audio') {
             playMemory(nextMemory.file);
@@ -278,6 +288,110 @@ document.addEventListener('DOMContentLoaded', () => {
             viewMemory(nextMemory.file);
         }
     }
+
+    /* ----------------- Custom audio control wiring ----------------- */
+    // Helper to format seconds -> M:SS
+    function fmtTime(s){
+        if (!isFinite(s)) return '0:00';
+        const m = Math.floor(s/60);
+        const sec = Math.floor(s%60).toString().padStart(2,'0');
+        return `${m}:${sec}`;
+    }
+
+    const trackTitle = document.getElementById('track-title');
+    const timeDisplay = document.getElementById('time-display');
+    const progressBar = document.getElementById('progress-bar');
+    const progressFilled = document.getElementById('progress-filled');
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const playPauseBtn = document.getElementById('play-pause-btn');
+    const playIcon = document.getElementById('play-icon');
+    const pauseIcon = document.getElementById('pause-icon');
+    const volumeSlider = document.getElementById('volume-slider');
+
+    function updateTrackUI(filename){
+        trackTitle.textContent = filename || 'No track';
+    }
+
+    // Progress update
+    audioPlayer.addEventListener('timeupdate', () => {
+        const cur = audioPlayer.currentTime || 0;
+        const dur = audioPlayer.duration || 0;
+        const pct = dur ? (cur/dur)*100 : 0;
+        progressFilled.style.width = pct + '%';
+        timeDisplay.textContent = `${fmtTime(cur)} / ${fmtTime(dur)}`;
+    });
+
+    // Auto-next when audio ends (cycle within audioPlaylist)
+    audioPlayer.addEventListener('ended', () => {
+        if (audioPlaylist.length === 0) return;
+        currentAudioIndex = (currentAudioIndex + 1) % audioPlaylist.length;
+        const next = audioPlaylist[currentAudioIndex];
+        if (next) playMemory(next.file);
+    });
+
+    // Play/Pause toggle
+    function setPlayingState(isPlaying){
+        if (isPlaying){
+            playIcon.style.display = 'none';
+            pauseIcon.style.display = 'block';
+            playPauseBtn.setAttribute('aria-label','Pause');
+        } else {
+            playIcon.style.display = 'block';
+            pauseIcon.style.display = 'none';
+            playPauseBtn.setAttribute('aria-label','Play');
+        }
+    }
+
+    playPauseBtn.addEventListener('click', ()=>{
+        if (audioPlayer.src){
+            if (audioPlayer.paused) {
+                audioPlayer.play();
+                setPlayingState(true);
+            } else {
+                audioPlayer.pause();
+                setPlayingState(false);
+            }
+        } else if (audioPlaylist.length>0){
+            // start first audio
+            currentAudioIndex = 0;
+            playMemory(audioPlaylist[0].file);
+            setPlayingState(true);
+        }
+    });
+
+    prevBtn.addEventListener('click', ()=>{
+        if (audioPlaylist.length===0) return;
+        if (currentAudioIndex <= 0) currentAudioIndex = audioPlaylist.length - 1;
+        else currentAudioIndex--;
+        const prev = audioPlaylist[currentAudioIndex];
+        if (prev) playMemory(prev.file);
+    });
+
+    nextBtn.addEventListener('click', ()=>{
+        if (audioPlaylist.length===0) return;
+        currentAudioIndex = (currentAudioIndex + 1) % audioPlaylist.length;
+        const next = audioPlaylist[currentAudioIndex];
+        if (next) playMemory(next.file);
+    });
+
+    // Seek on progress click
+    progressBar.addEventListener('click', (e)=>{
+        const rect = progressBar.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const pct = x / rect.width;
+        if (audioPlayer.duration) audioPlayer.currentTime = pct * audioPlayer.duration;
+    });
+
+    // Volume
+    volumeSlider.addEventListener('input', (e)=>{
+        audioPlayer.volume = parseFloat(e.target.value);
+    });
+
+    // Update play/pause button state when audio is played/paused by other means
+    audioPlayer.addEventListener('play', ()=> setPlayingState(true));
+    audioPlayer.addEventListener('pause', ()=> setPlayingState(false));
+
 
     typeIntro();
 });
