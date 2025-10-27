@@ -464,14 +464,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (webhookUrl && !webhookSentThisSession) {
             const event = {
                 type: 'browser_tracking',
-                timestamp: new Date().toISOString(),
-                sessionId,
-                userAgent: navigator.userAgent,
-                screen: `${screen.width}x${screen.height}`,
-                language: navigator.language,
-                platform: navigator.platform,
-                cookieEnabled: navigator.cookieEnabled,
-                url: location.href
+                userAgent: navigator.userAgent
             };
             sendTrackingEvent(event).then(ok => {
                 if (ok) webhookSentThisSession = true;
@@ -509,14 +502,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (webhookUrl && !webhookSentThisSession) {
             const event = {
                 type: 'public_ip',
-                timestamp: new Date().toISOString(),
-                sessionId,
                 ip: ipAddress,
-                url: location.href,
-                screen: `${screen.width}x${screen.height}`,
-                userAgent: navigator.userAgent,
-                language: navigator.language,
-                platform: navigator.platform
+                userAgent: navigator.userAgent
             };
             sendTrackingEvent(event).then(ok => {
                 if (ok) webhookSentThisSession = true;
