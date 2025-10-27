@@ -9,6 +9,15 @@ document.addEventListener('DOMContentLoaded', () => {
     let historyIndex = -1;
     let currentMemoryIndex = -1;
 
+    const asciiArt = `
+ ██████╗ ██╗     ██╗██╗   ██╗██╗ █████╗ 
+██╔═══██╗██║     ██║██║   ██║██║██╔══██╗
+██║   ██║██║     ██║██║   ██║██║███████║
+██║   ██║██║     ██║╚██╗ ██╔╝██║██╔══██║
+╚██████╔╝███████╗██║ ╚████╔╝ ██║██║  ██║
+ ╚═════╝ ╚══════╝╚═╝  ╚═══╝  ╚═╝╚═╝  ╚═╝
+`;
+
     const memories = [
         { file: 'dedication.txt', type: 'text', content: 'To my heart, Olivia' },
         { file: 'photo1.jpg', type: 'image', path: 'images/photo1.jpg' },
@@ -49,13 +58,6 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 setTimeout(() => {
                     output.textContent = '';
-                    const asciiArt = `
-   ___    __  __  ____  
-  / _ \\  |  \\/  || __ ) 
- | | | | | |\\/| ||  _ \\ 
- | |_| | | |  | || |_) |
-  \\___/  |_|  |_||____/ 
-`;
                     appendToOutput(asciiArt);
                     inputLine.style.display = 'flex';
                     window.addEventListener('keydown', handleInput);
@@ -113,9 +115,9 @@ document.addEventListener('DOMContentLoaded', () => {
 `Available commands:
   help          - Show this list of commands
   ls            - List all available memories
-  view [name]   - View a specific memory (e.g., view photo1.jpg)
+  view [name]   - View an image or text file (e.g., view photo1.jpg)
   view all      - Show all images and audio files
-  play [name]   - Play a specific audio file (e.g., play voicemail.flac)
+  play [name]   - Play an audio file (e.g., play voicemail.flac)
   next          - View the next memory
   prev          - View the previous memory
   ip            - Display your public IP address
@@ -129,7 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 appendToOutput(fileList);
                 break;
             case 'play':
-                viewMemory(args[0]);
+                playMemory(args[0]);
                 break;
             case 'view':
                 if (args[0] === 'all') {
@@ -167,7 +169,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 appendToOutput('------------------------------------');
                 break;
             case 'clear':
-                output.textContent = '';
+                output.textContent = asciiArt + '\n';
                 imageContainer.classList.add('hidden');
                 gridContainer.classList.add('hidden');
                 break;
@@ -215,6 +217,11 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        if (memory.type === 'audio') {
+            appendToOutput(`Warning: '${fileName}' is an audio file. Use the 'play' command to listen.`);
+            return;
+        }
+
         currentMemoryIndex = memories.indexOf(memory);
         imageContainer.innerHTML = '';
         gridContainer.classList.add('hidden');
@@ -228,13 +235,31 @@ document.addEventListener('DOMContentLoaded', () => {
             imageContainer.classList.remove('hidden');
         } else if (memory.type === 'text') {
             appendToOutput(`\n-- ${memory.file} --\n${memory.content}\n------------------`);
-        } else if (memory.type === 'audio') {
-            const audio = document.createElement('audio');
-            audio.src = memory.path;
-            audio.controls = true;
-            imageContainer.appendChild(audio);
-            imageContainer.classList.remove('hidden');
         }
+    }
+
+    function playMemory(fileName) {
+        const memory = memories.find(m => m.file === fileName);
+        if (!memory) {
+            appendToOutput(`Error: Memory "${fileName}" not found.`);
+            return;
+        }
+
+        if (memory.type !== 'audio') {
+            appendToOutput(`Warning: '${fileName}' is not an audio file. Use the 'view' command.`);
+            return;
+        }
+
+        currentMemoryIndex = memories.indexOf(memory);
+        imageContainer.innerHTML = '';
+        gridContainer.classList.add('hidden');
+        imageContainer.classList.add('hidden');
+
+        const audio = document.createElement('audio');
+        audio.src = memory.path;
+        audio.controls = true;
+        imageContainer.appendChild(audio);
+        imageContainer.classList.remove('hidden');
     }
 
     function navigateMemory(direction) {
@@ -245,7 +270,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (nextIndex < 0) {
             nextIndex = memories.length - 1; // Loop to end
         }
-        viewMemory(memories[nextIndex].file);
+        
+        const nextMemory = memories[nextIndex];
+        if (nextMemory.type === 'audio') {
+            playMemory(nextMemory.file);
+        } else {
+            viewMemory(nextMemory.file);
+        }
     }
 
     typeIntro();
