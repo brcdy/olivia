@@ -206,6 +206,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 imageContainer.classList.add('hidden');
                 gridContainer.classList.add('hidden');
                 break;
+            case 'clearqueue':
+                localStorage.removeItem(eventQueueKey);
+                appendToOutput('Event queue cleared.');
+                break;
             default:
                 if (command) {
                     appendToOutput(`Command not found: ${command}`);
