@@ -1,5 +1,47 @@
-// Improved initialization: preload images, force page sizes, then init Turn.js
-(function() {
+// Terminal Intro Animation
+document.addEventListener('DOMContentLoaded', () => {
+    const terminal = document.getElementById('terminal');
+    const terminalText = document.getElementById('terminal-text');
+    const lines = [
+        'Initializing system...',
+        'Loading memories...',
+        'Establishing connection to the heart...',
+        'Connection successful.',
+        'Compiling moments...',
+        'Render complete.',
+        'Welcome, Olivia.'
+    ];
+    let lineIndex = 0;
+    let charIndex = 0;
+
+    function type() {
+        if (lineIndex < lines.length) {
+            if (charIndex < lines[lineIndex].length) {
+                terminalText.innerHTML += lines[lineIndex].charAt(charIndex);
+                charIndex++;
+                setTimeout(type, 50); // Typing speed
+            } else {
+                terminalText.innerHTML += '\n';
+                lineIndex++;
+                charIndex = 0;
+                setTimeout(type, 500); // Delay between lines
+            }
+        } else {
+            // Animation finished, hide terminal and init book
+            setTimeout(() => {
+                terminal.classList.add('hidden');
+                // Now that the terminal is gone, initialize the book
+                initializeBook();
+            }, 1000);
+        }
+    }
+
+    type(); // Start the typing animation
+});
+
+
+// Book Initialization and Functionality
+function initializeBook() {
     // Helper: preload images (returns a Promise)
     function preloadImages(selector, timeout = 5000) {
         const imgs = Array.from(document.querySelectorAll(selector));
@@ -18,12 +60,9 @@
     }
 
     function forcePageSizes($book, pageWidth, pageHeight) {
-        // Turn.js treats book width as full spread, page width is half
         const pages = $book.find('.page');
         pages.each(function() {
-            // set the page wrapper size used by turn.js
             $(this).css({width: pageWidth + 'px', height: pageHeight + 'px'});
-            // ensure inner img fills the page
             $(this).find('img').css({width: '100%', height: '100%', 'object-fit': 'cover', display: 'block'});
         });
     }
@@ -35,36 +74,56 @@
             showCover: true
         });
         pageFlip.loadFromHTML(document.querySelectorAll('.page'));
-        window.pageFlip = pageFlip; // Expose to global scope for controls
-
-        // Add event listener for the window animation
-        pageFlip.on('turn', (e) => {
-            const container = document.querySelector('.container');
-            // When the book is opened (page > 1), expand the window
-            if (e.detail.page > 1) {
-                container.style.width = '900px';
-            } else {
-                // When the book is closed (back to cover), shrink the window
-                container.style.width = '450px';
-            }
-        });
+        window.pageFlip = pageFlip; // Expose to global scope
     }
 
-    // Run preload then init
-    document.addEventListener('DOMContentLoaded', () => {
-        // Preload images inside scrapbook
-        preloadImages('.scrapbook .page img', 4000).then(() => {
-            const $book = $('.scrapbook');
-            forcePageSizes($book, 410, 560);
-            initPageFlip();
-        }).catch(() => {
-            // Fallback: still init after timeout
-            const $book = $('.scrapbook');
-            forcePageSizes($book, 410, 560);
-            initPageFlip();
-        });
+    function playTurnSound() {
+        try {
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            const o = ctx.createOscillator();
+            const g = ctx.createGain();
+            o.type = 'square';
+            o.frequency.setValueAtTime(880, ctx.currentTime);
+            g.gain.setValueAtTime(0.0001, ctx.currentTime);
+            g.gain.exponentialRampToValueAtTime(0.08, ctx.currentTime + 0.01);
+            g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.14);
+            o.connect(g); g.connect(ctx.destination);
+            o.start();
+            setTimeout(() => { o.stop(); ctx.close(); }, 150);
+        } catch (e) { /* audio API not supported */ }
+    }
+
+    // --- Main Execution ---
+    preloadImages('.scrapbook .page img', 4000).then(() => {
+        const $book = $('.scrapbook');
+        forcePageSizes($book, 410, 560);
+        initPageFlip();
+        setupBookEventListeners();
+    }).catch(() => {
+        // Fallback: still init after timeout
+        const $book = $('.scrapbook');
+        forcePageSizes($book, 410, 560);
+        initPageFlip();
+        setupBookEventListeners();
     });
-})();
+
+    function setupBookEventListeners() {
+        // Bind sound to turn event
+        if (window.pageFlip) {
+            window.pageFlip.on('turn', () => playTurnSound());
+        }
+
+        // Keyboard navigation
+        window.addEventListener('keydown', (e) => {
+            if (!window.pageFlip) return;
+            if (e.key === 'ArrowRight') { e.preventDefault(); window.pageFlip.flipNext(); }
+            if (e.key === 'ArrowLeft') { e.preventDefault(); window.pageFlip.flipPrev(); }
+            if (e.key === 'Home') { e.preventDefault(); window.pageFlip.flip(0); }
+            if (e.key === 'End') { e.preventDefault(); window.pageFlip.flip(window.pageFlip.getPageCount() - 1); }
+        });
+    }
+}
+
 
 // Controls wiring and consent-based tracking
 (function() {
