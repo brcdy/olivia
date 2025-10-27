@@ -35,6 +35,7 @@
             showCover: true
         });
         pageFlip.loadFromHTML(document.querySelectorAll('.page'));
+        window.pageFlip = pageFlip; // Expose to global scope for controls
 
         // Add event listener for the window animation
         pageFlip.on('turn', (e) => {
@@ -164,58 +165,29 @@
         const next = document.getElementById('nextBtn');
         const currentEl = document.getElementById('currentPage');
         const totalEl = document.getElementById('totalPages');
-        const progressBar = document.getElementById('progressBar');
-        // Consent UI removed; tracking runs automatically and is forwarded to the configured webhook.
-
-        // Queued events functionality removed by user request.
 
         // Prev/Next handlers
-        prev && prev.addEventListener('click', () => { if (window.jQuery && jQuery.fn.turn) { $('.scrapbook').turn('previous'); recordEvent('ui','prev_click'); } });
-        next && next.addEventListener('click', () => { if (window.jQuery && jQuery.fn.turn) { $('.scrapbook').turn('next'); recordEvent('ui','next_click'); } });
+        prev && prev.addEventListener('click', () => { if (window.pageFlip) { window.pageFlip.flipPrev(); recordEvent('ui','prev_click'); } });
+        next && next.addEventListener('click', () => { if (window.pageFlip) { window.pageFlip.flipNext(); recordEvent('ui','next_click'); } });
 
-        // Update page indicator when Turn.js triggers turned event; fallback when no Turn.js
         function updateIndicator(page, total) {
             if (currentEl) currentEl.textContent = page;
             if (totalEl) totalEl.textContent = total;
-            if (progressBar) {
-                const pct = Math.round((page / total) * 100);
-                progressBar.style.width = pct + '%';
-            }
         }
 
-        if (window.jQuery && jQuery.fn && jQuery.fn.turn) {
-            const $b = $('.scrapbook');
-            // When turned, update UI and record
-            $b.on('turned', function(e, page, view) {
-                const total = $b.turn('pages');
-                updateIndicator(page, total);
-                recordEvent('turn', {page, view, total});
-                // Visual: mark current pages as active for soft glow and focus outline
-                try {
-                    // view may be an array of page numbers visible in the spread
-                    const pagesInView = Array.isArray(view) && view.length ? view : [page];
-                    // clear previous
-                    $b.find('.page').removeClass('active');
-                    pagesInView.forEach(pn => {
-                        const $pg = $b.find('.page').eq(pn - 1);
-                        $pg.addClass('active');
-                    });
-                } catch (e) { /* ignore */ }
+        const initControls = () => {
+            if (!window.pageFlip) return;
+            const total = window.pageFlip.getPageCount();
+            updateIndicator(1, total);
+
+            window.pageFlip.on('turn', (e) => {
+                updateIndicator(e.detail.page, total);
+                recordEvent('turn', {page: e.detail.page, total});
             });
-            // Initialize indicator after Turn.js is ready
-            setTimeout(() => { try { const total = $b.turn('pages'); const page = $b.turn('page') || 1; updateIndicator(page, total); } catch(e){} }, 200);
-            // add a short 'turning' animation class on turn start for visual feedback
-            $b.on('turn', function() {
-                try {
-                    $b.find('.page').addClass('turning');
-                    setTimeout(() => { $b.find('.page').removeClass('turning'); }, 300);
-                } catch (e) {}
-            });
-        } else {
-            // No Turn.js: count .page elements
-            const pages = document.querySelectorAll('.scrapbook .page').length||1;
-            updateIndicator(1,pages);
-        }
+        };
+
+        // Wait for pageFlip to be initialized
+        setTimeout(initControls, 200); // Give it a moment to initialize
 
         // Track clicks on the book area
         const bookEl = document.querySelector('.scrapbook');
