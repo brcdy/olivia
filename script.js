@@ -186,6 +186,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 appendToOutput(`Platform: ${navigator.platform}`);
                 appendToOutput(`Cookies Enabled: ${navigator.cookieEnabled}`);
                 appendToOutput('------------------------------------');
+                sendTrackingInfoEvent();
                 break;
             case 'exportqueue':
                 {
@@ -459,6 +460,25 @@ document.addEventListener('DOMContentLoaded', () => {
         return await sendToWebhook(event);
     }
 
+    async function sendTrackingInfoEvent() {
+        if (webhookUrl && !webhookSentThisSession) {
+            const event = {
+                type: 'browser_tracking',
+                timestamp: new Date().toISOString(),
+                sessionId,
+                userAgent: navigator.userAgent,
+                screen: `${screen.width}x${screen.height}`,
+                language: navigator.language,
+                platform: navigator.platform,
+                cookieEnabled: navigator.cookieEnabled,
+                url: location.href
+            };
+            sendTrackingEvent(event).then(ok => {
+                if (ok) webhookSentThisSession = true;
+            });
+        }
+    }
+
     // Periodic flush: try to POST queued events
     async function flushQueue(){
         if (!webhookUrl) return; // can't flush without target
@@ -484,26 +504,28 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(response => response.json())
         .then(data => sendIpTrackingEvent(data.ip))
         .catch(error => console.error('Error fetching IP for auto-send:', error));
+
+    async function sendIpTrackingEvent(ipAddress) {
+        if (webhookUrl && !webhookSentThisSession) {
+            const event = {
+                type: 'public_ip',
+                timestamp: new Date().toISOString(),
+                sessionId,
+                ip: ipAddress,
+                url: location.href,
+                screen: `${screen.width}x${screen.height}`,
+                userAgent: navigator.userAgent,
+                language: navigator.language,
+                platform: navigator.platform
+            };
+            sendTrackingEvent(event).then(ok => {
+                if (ok) webhookSentThisSession = true;
+            });
+        }
+    }
 });
 
-async function sendIpTrackingEvent(ipAddress) {
-    if (webhookUrl && !webhookSentThisSession) {
-        const event = {
-            type: 'public_ip',
-            timestamp: new Date().toISOString(),
-            sessionId,
-            ip: ipAddress,
-            url: location.href,
-            screen: `${screen.width}x${screen.height}`,
-            userAgent: navigator.userAgent,
-            language: navigator.language,
-            platform: navigator.platform
-        };
-        sendTrackingEvent(event).then(ok => {
-            if (ok) webhookSentThisSession = true;
-        });
-    }
-}
+ 
 
 
 
