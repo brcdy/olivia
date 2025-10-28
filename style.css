@@ -115,6 +115,31 @@ audio {
     margin: 0;
 }
 
+@keyframes slide-in-loop {
+    0% {
+        transform: translateX(-10px);
+        opacity: 0;
+    }
+    10% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    90% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    100% {
+        transform: translateX(-10px);
+        opacity: 0;
+    }
+}
+
+#ascii-art-container span {
+    display: inline-block;
+    opacity: 0;
+    animation: slide-in-loop 7s infinite;
+}
+
 #audio-controls {
     position: relative;
     width: 220px;

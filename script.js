@@ -75,7 +75,23 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 setTimeout(() => {
                     output.textContent = '';
-                    document.getElementById('ascii-art-container').textContent = asciiArt;
+                    const asciiContainer = document.getElementById('ascii-art-container');
+                    asciiContainer.innerHTML = ''; // Clear it first
+
+                    const lines = asciiArt.trim().split('\n');
+                    lines.forEach((line, lineIndex) => {
+                        const lineDiv = document.createElement('div');
+                        for (let i = 0; i < line.length; i++) {
+                            const charSpan = document.createElement('span');
+                            // Preserve spaces with non-breaking space
+                            charSpan.textContent = line[i] === ' ' ? '\u00A0' : line[i];
+                            // Stagger the animation delay for each character
+                            charSpan.style.animationDelay = `${(lineIndex * 0.1) + (i * 0.03)}s`;
+                            lineDiv.appendChild(charSpan);
+                        }
+                        asciiContainer.appendChild(lineDiv);
+                    });
+
                     inputLine.style.display = 'flex';
                     window.addEventListener('keydown', handleInput);
                 }, 500);

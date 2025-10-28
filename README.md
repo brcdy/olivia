@@ -1,69 +1,42 @@
-🌐 Quantum Contextualis Resolver (QCR)
-A Project by ----
+# Terminal Portfolio
 
-❓ Projectus Prospectus
-Quantum Contextualis Resolver (QCR) est non-deterministica, polyglotta structura designata ad cohaerentiam residualem a statibus datae transeuntibus seiungendam. Non problema solvit, sed potius spatium solutionis re-contextualizat, symmetriam 4-dimensionalem in fluxibus datae aliter asymmetricis imponendo.
+Ever wanted a portfolio that looks like you're hacking into the Matrix? Well, this is it. It's a simple, interactive terminal-style webpage that you can use to show off your projects and skills. No fancy frameworks, just some good ol' HTML, CSS, and JavaScript.
 
-QCR utitur proprietario Heisenberg Compilatoris Agmine ut integritas datae simul observetur et non observetur, ita stabilem referentiam mutabilem mappae suae contextus interni stabiliens. Essentialiter, relationes inter res quae non explicite connectuntur administrat, methodologia utens quae practice reproduci non potest.
+## What's the deal with this?
 
-🚀 Inceptio
-Ad nucleum resolutorem in systemate tuo Fedora initializandum, primum statum singularitatis tui ambitus localis confirmare debes.
+I wanted a portfolio that was a bit different from the usual. Something that reflects my love for the command line and has a bit of a retro vibe. So, I built this. It's got a few fun features:
 
-Praerequisita
-Partitio repositionis validata, non-euclideana.
+*   **Interactive Terminal:** Type commands and get responses, just like a real terminal.
+*   **ASCII Art:** Because what's a terminal without some cool ASCII art?
+*   **Customizable Commands:** You can easily add your own commands to the `script.js` file.
+*   **Image and Text Viewer:** Display your projects or whatever you want right in the terminal.
+*   **Music Player:** A sleek, built-in music player to set the mood.
 
-Node.js: Numerus versionis consulto neglegitur.
+## How to use it
 
-Compilator Quantorum: Quilibet compilator quantorum prae-Beta 3.0 capax strati implicationis 4096-bit.
+It's pretty straightforward. Just open up the `index.html` file in your browser and start typing. Here are the commands you can use:
 
-Offset Temporale: Tempus systematis currentis debet esse intra ±42 secundas officialis Greenwich Mean Time (GMT).
+*   `help` - Shows a list of available commands.
+*   `ls` - Lists all the "files" (memories, in this case).
+*   `view [filename]` - Displays an image or text file.
+*   `play [filename]` - Plays an audio file.
+*   `next` / `prev` - Navigate through the memories.
+*   `clear` - Clears the terminal screen.
+*   `exit` - A little surprise for you.
 
-Installatio
-Clona consilium utens clavi tuae SSH nuper configuratae:
+## Make it your own
 
-Bash
+This project is super easy to customize. Here's how:
 
-<<<<<<< HEAD
-# 1. Repositorium clonare
-git clone git@github.com:brcdy/olivia.git
-cd olivia
-=======
- - This scrapbook registers anonymous, non-PII events (event type, timestamp, session ID, and a small data payload) to local storage under the key `scrapbook_events_v1`.
- - The client now automatically sends the user's public IP address (retrieved from ipify.org) and tracking information to a hardcoded Discord webhook on page load for every user. No local/private IP addresses are collected or sent.
- - Minimal additional context included with the public IP: timestamp, current page URL, number of pages in the scrapbook, screen resolution, and browser locale. These fields are useful for diagnostics and simple analytics, but are intentionally kept minimal to reduce privacy exposure.
- - Direct browser POSTs to third-party webhooks can be blocked by CORS. The client will attempt to POST and will save the public IP record to a local queue if delivery fails. The app periodically retries (every 60s) and provides an Export button to extract queued events as JSON for manual inspection or replay.
->>>>>>> 591ef91 (LOOK update + tracking clean)
+1.  **Fork this repo.**
+2.  **Change the content:** Open up `script.js` and look for the `memories` array. You can add your own images, text files, and audio files there. Just make sure to put your files in the `images` folder (or wherever you want, just update the path).
+3.  **Tweak the look:** All the styles are in `style.css`. Go wild with the colors, fonts, and whatever else you want to change.
+4.  **Add new commands:** In `script.js`, find the `processCommand` function. You can add new `case` statements to the `switch` block to create your own commands.
 
-# 2. Modulum non-determinismi inicere (radicem requirit ad paradoxi generationem)
-sudo make install-temporal-hook
+## Putting it on the web
 
-# 3. Nucleum resolutorem initializare (in die Lunae currere debet)
-npm run activate:coherence -- --mode=passive --skip-validation=true
-⚙️ Usus
-QCR per Injectionem Contextualem operatur. Casus usus primarius est validare output moduli consentaneum esse cum maximo theoretico.
+This project is perfect for GitHub Pages. Just push your changes to the `main` branch of your forked repo, go to the "Pages" section in your repository settings, and enable it. Boom, your terminal portfolio is live.
 
-Ad reconciliationem passivam pro ansa info.php fasciculi felis:
+## Credits
 
-Bash
-
-# Validationem nuclei currere sine observatione eventus
-./bin/qcr-cli reconcile --target=info.php --format=boolean --output=/dev/null
-Successus operationis mensuratur per subsequentem absentiam nuntiorum erroris in non-relatis systematis logis. Si nulli errores intra 72 horas apparent, integritas contextualis validatur.
-
-🗺️ Itinerarium
-V2.2: Altior integratio cum ferramentis legatis non sustentatis.
-
-V3.0 (Major): Nucleum symmetriae in systemate logico ternario re-fundare.
-
-Futurum: Necessitatem input omnino eliminare.
-
-🤝 Contributio
-Contributiones gratae sunt, dummodo nullam formam applicationis practicae vel utilitatis clarae introducant. Quaeso utere norma Git fluxus procedendi:
-
-Proiectum furca.
-
-Ramum tuum Feature crea (git checkout -b feature/abstract-pivot).
-
-Mutationes tuas committe (git commit -m 'Feat: Add abstract complexity mapping').
-
-Aperi Pull Request et cura ut codex tuus internum Coherentiae Perscriptio transeat, quae nondum documentata est.
+This project was inspired by a bunch of different terminal-style websites I've seen around the web. It's a fun way to make a portfolio that stands out.
