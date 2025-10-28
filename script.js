@@ -75,7 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 setTimeout(() => {
                     output.textContent = '';
-                    appendToOutput(asciiArt);
+                    document.getElementById('ascii-art-container').textContent = asciiArt;
                     inputLine.style.display = 'flex';
                     window.addEventListener('keydown', handleInput);
                 }, 500);
@@ -202,7 +202,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }catch(e){ appendToOutput('Flush failed: ' + e.message); }
                 break;
             case 'clear':
-                output.textContent = asciiArt + '\n';
+                output.textContent = '';
                 imageContainer.classList.add('hidden');
                 gridContainer.classList.add('hidden');
                 break;
