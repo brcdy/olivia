@@ -427,10 +427,13 @@ Project 3: Yet another cool project`
     const scoreElement = document.getElementById('score');
     let score = 0;
     let gameInterval = null;
+    const imageObstacles = memories.filter(m => m.type === 'image').map(m => m.path);
 
     function onObstacleCycle() {
         score++;
         scoreElement.textContent = 'SCORE: ' + score;
+        // Change obstacle image on each cycle
+        obstacle.src = imageObstacles[Math.floor(Math.random() * imageObstacles.length)];
     }
 
     function startGame() {
@@ -438,8 +441,10 @@ Project 3: Yet another cool project`
         inputLine.style.display = 'none';
         score = 0;
         scoreElement.textContent = 'SCORE: 0';
-        obstacle.textContent = 'T';
         dino.textContent = '▲';
+        
+        // Set initial random obstacle
+        obstacle.src = imageObstacles[Math.floor(Math.random() * imageObstacles.length)];
         obstacle.style.animation = 'move 2s linear infinite';
         
         document.addEventListener('keydown', handleGameInput);
