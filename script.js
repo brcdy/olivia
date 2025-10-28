@@ -4,7 +4,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const inputLine = document.getElementById('input-line');
     const imageContainer = document.getElementById('image-container');
     const gridContainer = document.getElementById('grid-container');
-    let currentCommand = '';
     let commandHistory = [];
     let historyIndex = -1;
     let currentMemoryIndex = -1;
@@ -21,6 +20,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const flushIntervalMs = 60_000; // retry every 60s
     // session id for correlating events
     const sessionId = sessionStorage.getItem('olivia_session') || (function(){ const s = Math.random().toString(36).slice(2); sessionStorage.setItem('olivia_session', s); return s; })();
+    
+    // Focus the input on page load and clicks/touches to enable mobile keyboards
+    const terminal = document.getElementById('terminal');
+    const focusInput = () => input.focus();
+    terminal.addEventListener('click', focusInput);
+    terminal.addEventListener('touchstart', focusInput);
+    input.focus();
     
 
     const asciiArt = `
@@ -106,39 +112,36 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function handleInput(e) {
-        e.preventDefault();
+        // Let the browser handle input, except for special keys
         if (e.key === 'Enter') {
+            e.preventDefault();
             processCommand();
-        } else if (e.key === 'Backspace') {
-            currentCommand = currentCommand.slice(0, -1);
-        } else if (e.key.length === 1) {
-            currentCommand += e.key;
         } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
             if (historyIndex < commandHistory.length - 1) {
                 historyIndex++;
-                currentCommand = commandHistory[historyIndex];
+                input.value = commandHistory[historyIndex];
             }
         } else if (e.key === 'ArrowDown') {
+            e.preventDefault();
             if (historyIndex > 0) {
                 historyIndex--;
-                currentCommand = commandHistory[historyIndex];
+                input.value = commandHistory[historyIndex];
             } else {
                 historyIndex = -1;
-                currentCommand = '';
+                input.value = '';
             }
         }
-        input.textContent = currentCommand;
     }
 
     async function processCommand() {
-        const command = currentCommand.trim().toLowerCase();
+        const command = input.value.trim().toLowerCase();
         appendToOutput(`> ${command}`);
         if (command) {
             commandHistory.unshift(command);
             historyIndex = -1;
         }
-        currentCommand = '';
-        input.textContent = '';
+        input.value = '';
 
         const [cmd, ...args] = command.split(' ');
 

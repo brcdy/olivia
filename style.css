@@ -81,12 +81,23 @@ html, body {
 }
 
 #command-input {
+    background: transparent;
+    border: none;
     outline: none;
+    color: inherit;
+    font-family: inherit;
+    font-size: inherit;
+    padding: 0;
     flex-grow: 1;
 }
 
 #cursor {
     animation: blink 1s step-end infinite;
+}
+
+/* Hide the blinking cursor when the real input cursor is active */
+#command-input:focus + #cursor {
+    display: none;
 }
 
 @keyframes blink {
