@@ -13,13 +13,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // `memories` is declared below — initialize playlist after the array is created.
     let audioPlaylist = [];
     let currentAudioIndex = -1; // index within audioPlaylist
-    // Webhook / tracking configuration
-    let webhookUrl = 'https://discord.com/api/webhooks/1431819042343358585/ZRyvQ0C9UWpfz6Xli-lt57PMNXUMh6dRkkBORMOqKDRPWOrpqPC7WsJVoJkMpDvxN7Pa'; // Hardcoded Discord webhook URL
-    let webhookSentThisSession = false;
-    const eventQueueKey = 'scrapbook_events_v1';
-    const flushIntervalMs = 60_000; // retry every 60s
-    // session id for correlating events
-    const sessionId = sessionStorage.getItem('olivia_session') || (function(){ const s = Math.random().toString(36).slice(2); sessionStorage.setItem('olivia_session', s); return s; })();
     
     // Focus the input on page load and clicks/touches to enable mobile keyboards
     const terminal = document.getElementById('terminal');
@@ -146,18 +139,21 @@ document.addEventListener('DOMContentLoaded', () => {
         const [cmd, ...args] = command.split(' ');
 
         switch (cmd) {
+            case '?':
             case 'help':
                 appendToOutput(
 `Available commands:
-  help          - Show this list of commands
+  help, ?       - Show this list of commands
   ls            - List all available memories
   view [name]   - View an image or text file (e.g., view photo1.jpg)
   view all      - Show all images and audio files
   play [name]   - Play an audio file (e.g., play voicemail.flac)
   next          - View the next memory
   prev          - View the previous memory
-  ip            - Display your public IP address
-  track         - Show browser tracking information
+  whoami        - Display information about me
+  socials       - Display social media links
+  projects      - List of projects
+  game          - Play a terminal dinosaur game
   exit          - Exit the terminal
   clear         - Clear the terminal screen`
                 );
@@ -185,49 +181,30 @@ document.addEventListener('DOMContentLoaded', () => {
             case 'exit':
                 window.location.href = 'https://youtu.be/dQw4w9WgXcQ';
                 break;
-            case 'ip':
-                appendToOutput('Fetching public IP address...');
-                try {
-                    const response = await fetch('https://api.ipify.org?format=json');
-                    const data = await response.json();
-                    appendToOutput(`Your public IP is: ${data.ip}`);
-                sendIpTrackingEvent(data.ip);
-                    
-                } catch (error) {
-                    appendToOutput('Error: Could not fetch IP address.');
-                }
+            case 'whoami':
+                appendToOutput('Just a person who likes to code.');
                 break;
-            case 'track':
-                appendToOutput('--- Browser Tracking Information ---');
-                appendToOutput(`User Agent: ${navigator.userAgent}`);
-                appendToOutput(`Screen Resolution: ${screen.width}x${screen.height}`);
-                appendToOutput(`Language: ${navigator.language}`);
-                appendToOutput(`Platform: ${navigator.platform}`);
-                appendToOutput(`Cookies Enabled: ${navigator.cookieEnabled}`);
-                appendToOutput('------------------------------------');
+            case 'socials':
+                appendToOutput(
+`GitHub: https://github.com/brcdy
+Twitter: https://twitter.com/example
+LinkedIn: https://linkedin.com/in/example`
+                );
                 break;
-            case 'exportqueue':
-                {
-                    const q = readQueue();
-                    if (!q.length) appendToOutput('Queue is empty.');
-                    else appendToOutput('Queued events:\n' + JSON.stringify(q, null, 2));
-                }
+            case 'projects':
+                appendToOutput(
+`Project 1: A cool terminal portfolio (this one!)
+Project 2: Another cool project
+Project 3: Yet another cool project`
+                );
                 break;
-            case 'flushqueue':
-                appendToOutput('Attempting to flush queued events...');
-                try{
-                    await flushQueue();
-                    appendToOutput('Flush attempt completed.');
-                }catch(e){ appendToOutput('Flush failed: ' + e.message); }
+            case 'game':
+                startGame();
                 break;
             case 'clear':
                 output.textContent = '';
                 imageContainer.classList.add('hidden');
                 gridContainer.classList.add('hidden');
-                break;
-            case 'clearqueue':
-                localStorage.removeItem(eventQueueKey);
-                appendToOutput('Event queue cleared.');
                 break;
             default:
                 if (command) {
@@ -443,82 +420,81 @@ document.addEventListener('DOMContentLoaded', () => {
     audioPlayer.addEventListener('play', ()=> setPlayingState(true));
     audioPlayer.addEventListener('pause', ()=> setPlayingState(false));
 
-    /* ----------------- Webhook / tracking helpers ----------------- */
-    // Webhook is stored only in-memory for the session; queued failures are stored in localStorage.
+    /* ----------------- Game Logic ----------------- */
+    const gameContainer = document.getElementById('game-container');
+    const dino = document.getElementById('dino');
+    const obstacle = document.getElementById('obstacle');
+    const scoreElement = document.getElementById('score');
+    let score = 0;
+    let gameInterval = null;
 
-    // get queue from localStorage
-    function readQueue(){
-        try{ const raw = localStorage.getItem(eventQueueKey); return raw ? JSON.parse(raw) : []; } catch(e){ return []; }
-    }
-    function writeQueue(q){
-        try{ localStorage.setItem(eventQueueKey, JSON.stringify(q)); } catch(e){ console.error('Could not write queue', e); }
+    function onObstacleCycle() {
+        score++;
+        scoreElement.textContent = 'SCORE: ' + score;
     }
 
-    async function sendToWebhook(payload){
-        // Attempt POST to webhook URL as JSON (Discord webhook accepts {content: '...'} but we'll send a JSON blob)
-        try{
-            const body = { content: JSON.stringify(payload) };
-            const resp = await fetch(webhookUrl, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(body)
-            });
-            if (!resp.ok) {
-                // treat non-2xx as failure
-                throw new Error('Non-OK response: ' + resp.status);
+    function startGame() {
+        gameContainer.classList.remove('hidden');
+        inputLine.style.display = 'none';
+        score = 0;
+        scoreElement.textContent = 'SCORE: 0';
+        obstacle.textContent = 'T';
+        dino.textContent = '▲';
+        obstacle.style.animation = 'move 2s linear infinite';
+        
+        document.addEventListener('keydown', handleGameInput);
+        gameContainer.addEventListener('touchstart', handleGameInput);
+
+        obstacle.addEventListener('animationiteration', onObstacleCycle);
+
+        gameInterval = setInterval(checkCollision, 10);
+    }
+
+    function handleGameInput(e) {
+        if (e.code === 'Space' || e.type === 'touchstart') {
+            e.preventDefault();
+            if (!dino.classList.contains('jump')) {
+                dino.classList.add('jump');
+                setTimeout(() => {
+                    dino.classList.remove('jump');
+                }, 500);
             }
-            return true;
-        }catch(err){
-            // likely CORS or network error — fallback to queue
-            console.warn('Webhook send failed, queuing event', err);
-            const q = readQueue(); q.push(payload); writeQueue(q);
-            return false;
         }
     }
 
-    // High-level send with promise<boolean>
-    async function sendTrackingEvent(event){
-        if (!webhookUrl) return false;
-        return await sendToWebhook(event);
-    }
+    function checkCollision() {
+        const dinoRect = dino.getBoundingClientRect();
+        const obstacleRect = obstacle.getBoundingClientRect();
 
-    // Periodic flush: try to POST queued events
-    async function flushQueue(){
-        if (!webhookUrl) return; // can't flush without target
-        const q = readQueue();
-        if (!q.length) return;
-        const remaining = [];
-        for (const ev of q){
-            try{
-                const ok = await sendToWebhook(ev);
-                if (!ok) remaining.push(ev);
-            }catch(e){ remaining.push(ev); }
+        if (
+            obstacleRect.left < dinoRect.right &&
+            obstacleRect.right > dinoRect.left &&
+            obstacleRect.top < dinoRect.bottom &&
+            obstacleRect.bottom > dinoRect.top
+        ) {
+            endGame();
         }
-        writeQueue(remaining);
     }
 
-    // try flushing periodically
-    setInterval(flushQueue, flushIntervalMs);
+    function endGame() {
+        clearInterval(gameInterval);
+        obstacle.style.animation = 'none';
+        document.removeEventListener('keydown', handleGameInput);
+        gameContainer.removeEventListener('touchstart', handleGameInput);
+        obstacle.removeEventListener('animationiteration', onObstacleCycle);
+        
+        appendToOutput('Game Over! Your score: ' + score);
+        appendToOutput('Type `game` to play again.');
+        
+        setTimeout(() => {
+            gameContainer.classList.add('hidden');
+            inputLine.style.display = 'flex';
+            focusInput();
+        }, 1000);
+    }
 
     typeIntro();
-
-    // Automatically send IP and tracking info on page load
-    fetch('https://api.ipify.org?format=json')
-        .then(response => response.json())
-        .then(data => sendIpTrackingEvent(data.ip))
-        .catch(error => console.error('Error fetching IP for auto-send:', error));
-
-    async function sendIpTrackingEvent(ipAddress) {
-        if (webhookUrl && !webhookSentThisSession) {
-            const event = ipAddress;
-            sendTrackingEvent(event).then(ok => {
-                if (ok) webhookSentThisSession = true;
-            });
-        }
-    }
-});
-
- 
+}); 
 
 
 
