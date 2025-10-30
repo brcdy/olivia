@@ -441,7 +441,7 @@ Project 3: Yet another cool project`
         inputLine.style.display = 'none';
         score = 0;
         scoreElement.textContent = 'SCORE: 0';
-        dino.textContent = '▲';
+        dino.textContent = '🏃';
         
         // Set initial random obstacle
         obstacle.src = imageObstacles[Math.floor(Math.random() * imageObstacles.length)];
