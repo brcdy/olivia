@@ -150,10 +150,10 @@ document.addEventListener('DOMContentLoaded', () => {
   play [name]   - Play an audio file (e.g., play voicemail.flac)
   next          - View the next memory
   prev          - View the previous memory
-  whoami        - Display information about me
   socials       - Display social media links
   projects      - List of projects
   game          - Play a terminal dinosaur game
+  bong          - Take a hit
   exit          - Exit the terminal
   clear         - Clear the terminal screen`
                 );
@@ -181,9 +181,6 @@ document.addEventListener('DOMContentLoaded', () => {
             case 'exit':
                 window.location.href = 'https://youtu.be/dQw4w9WgXcQ';
                 break;
-            case 'whoami':
-                appendToOutput('Just a person who likes to code.');
-                break;
             case 'socials':
                 appendToOutput(
 `GitHub: https://github.com/brcdy
@@ -197,6 +194,9 @@ LinkedIn: https://linkedin.com/in/example`
 Project 2: Another cool project
 Project 3: Yet another cool project`
                 );
+                break;
+            case 'bong':
+                showBongAnimation();
                 break;
             case 'game':
                 startGame();
@@ -212,6 +212,41 @@ Project 3: Yet another cool project`
                 }
                 break;
         }
+    }
+
+    function showBongAnimation() {
+        const bongContainer = document.getElementById('bong-container');
+        const bongArt = document.getElementById('bong-art');
+        const bongAscii = `
+            (
+           ) )
+        .........
+       :         :
+       |         |
+       |         |
+       :         :
+        '....-...'
+           | |
+          /   \\
+         /     \\
+        /       \\
+`;
+        const smokeAscii = '       . . o O 0';
+
+        bongArt.textContent = bongAscii;
+        bongContainer.classList.remove('hidden');
+
+        setTimeout(() => {
+            const smokeSpan = document.createElement('span');
+            smokeSpan.className = 'smoke';
+            smokeSpan.textContent = smokeAscii;
+            bongArt.appendChild(smokeSpan);
+        }, 500);
+
+        setTimeout(() => {
+            bongContainer.classList.add('hidden');
+            bongArt.innerHTML = '';
+        }, 2500);
     }
 
     function viewAllMemories() {

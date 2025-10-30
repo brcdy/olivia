@@ -112,8 +112,8 @@ audio {
 /* Custom audio controls (right side) */
 #terminal-header {
     display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
+    flex-direction: column;
+    align-items: center;
     padding-bottom: 10px;
     border-bottom: 1px solid var(--terminal-color);
     margin-bottom: 10px;
@@ -153,17 +153,19 @@ audio {
 
 #audio-controls {
     position: relative;
-    width: 220px;
+    width: 100%;
+    max-width: 400px;
     background: rgba(10,10,10,0.55);
     border: 1px solid var(--terminal-color);
     color: var(--terminal-color);
-    padding: 12px;
+    padding: 8px;
     border-radius: 10px;
     box-shadow: 0 8px 30px rgba(0,0,0,0.7);
     font-family: inherit;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
+    margin-top: 10px;
 }
 
 #audio-controls #audio-top {
@@ -244,6 +246,51 @@ audio {
         max-width: 150px;
     }
 }
+
+#bong-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 100;
+}
+
+#bong-container.hidden {
+    display: none;
+}
+
+#bong-art {
+    font-size: 12px;
+    white-space: pre;
+    text-align: center;
+    color: #fff;
+}
+
+.smoke {
+    display: inline-block;
+    opacity: 0;
+    animation: smoke-animation 2s ease-out forwards;
+}
+
+@keyframes smoke-animation {
+    0% {
+        opacity: 0;
+        transform: translateY(0) scale(0.5);
+    }
+    50% {
+        opacity: 0.8;
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-50px) scale(1.5);
+    }
+}
+
 
 #game-container {
     height: 100px;
