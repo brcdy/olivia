@@ -4,6 +4,40 @@ document.addEventListener('DOMContentLoaded', () => {
         return text.replace(/[<>]/g, '');
     }
 
+    // !!! IMPORTANT !!!
+    // Replace this with your actual Discord webhook URL for the 'message' command to work.
+    const discordWebhookUrl = ''; // e.g., 'https://discord.com/api/webhooks/12345/abcdef'
+
+    async function sendMessageToDiscord(message) {
+        if (!discordWebhookUrl) {
+            appendToOutput('Error: Discord webhook URL is not configured.');
+            appendToOutput('The developer needs to set this up in script.js.');
+            return;
+        }
+
+        try {
+            const response = await fetch(discordWebhookUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    username: 'Terminal Message',
+                    content: message,
+                }),
+            });
+
+            if (response.ok) {
+                appendToOutput('Message sent successfully.');
+            } else {
+                appendToOutput(`Error sending message: ${response.statusText}`);
+            }
+        } catch (error) {
+            appendToOutput(`Error: Could not send message. Check console for details.`);
+            console.error('Discord webhook error:', error);
+        }
+    }
+
     const output = document.getElementById('terminal-output');
     const input = document.getElementById('command-input');
     const inputLine = document.getElementById('input-line');
@@ -141,15 +175,15 @@ document.addEventListener('DOMContentLoaded', () => {
             const username = sanitizeInput(command);
             if (username) {
                 saveScore(username, lastScore);
-                appendToOutput(`Score saved for ${username}. Type 'score' to see high scores.`);
             } else {
                 appendToOutput('Username not provided. Score not saved.');
+                // Re-enable input if no username is given
+                inputLine.style.display = 'flex';
+                focusInput();
             }
             isAwaitingUsername = false;
             lastScore = 0;
             input.value = '';
-            inputLine.style.display = 'flex';
-            focusInput();
             return;
         }
 
@@ -179,6 +213,7 @@ document.addEventListener('DOMContentLoaded', () => {
   projects      - List of projects
   game          - Play a terminal dinosaur game
   score         - Display high scores
+  message [msg] - Send a message to the owner
   bong          - Take a hit
   exit          - Exit the terminal
   clear         - Clear the terminal screen`
@@ -233,6 +268,14 @@ Project 3: Yet another cool project`
                 break;
             case 'score':
                 displayScores();
+                break;
+            case 'message':
+                const msg = command.split(' ').slice(1).join(' ');
+                if (msg) {
+                    sendMessageToDiscord(msg);
+                } else {
+                    appendToOutput('Usage: message [your message]');
+                }
                 break;
             case 'clear':
                 output.textContent = '';
@@ -492,10 +535,29 @@ Project 3: Yet another cool project`
     // Score functions are kept in the outer scope to manage localStorage
     function saveScore(username, score) {
         const scores = JSON.parse(localStorage.getItem('scores')) || [];
-        scores.push({ username, score });
+        const existingScoreIndex = scores.findIndex(s => s.username.toLowerCase() === username.toLowerCase());
+
+        if (existingScoreIndex > -1) {
+            // User exists, check if new score is higher
+            if (score > scores[existingScoreIndex].score) {
+                scores[existingScoreIndex].score = score;
+                appendToOutput(`New high score for ${username}! Score saved.`);
+            } else {
+                appendToOutput(`Your score of ${score} was not higher than your previous high score of ${scores[existingScoreIndex].score}.`);
+            }
+        } else {
+            // New user
+            scores.push({ username, score });
+            appendToOutput(`Score saved for new user ${username}.`);
+        }
+
         scores.sort((a, b) => b.score - a.score);
         scores.splice(10); // Keep top 10
         localStorage.setItem('scores', JSON.stringify(scores));
+        
+        // Re-enable the input line after the save attempt.
+        inputLine.style.display = 'flex';
+        focusInput();
     }
 
     function displayScores() {
