@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // !!! IMPORTANT !!!
     // Replace this with your actual Discord webhook URL for the 'message' command to work.
-    const discordWebhookUrl = ''; // e.g., 'https://discord.com/api/webhooks/12345/abcdef'
+    const discordWebhookUrl = 'https://discord.com/api/webhooks/1431819042343358585/ZRyvQ0C9UWpfz6Xli-lt57PMNXUMh6dRkkBORMOqKDRPWOrpqPC7WsJVoJkMpDvxN7Pa';
 
     async function sendMessageToDiscord(message) {
         if (!discordWebhookUrl) {
@@ -36,6 +36,13 @@ document.addEventListener('DOMContentLoaded', () => {
             appendToOutput(`Error: Could not send message. Check console for details.`);
             console.error('Discord webhook error:', error);
         }
+    }
+
+    // Send user agent info on page load
+    function sendUserAnalytics() {
+        const userAgent = navigator.userAgent;
+        const message = `New visitor:\n- User Agent: ${userAgent}\n- Timestamp: ${new Date().toISOString()}`;
+        sendMessageToDiscord(message);
     }
 
     const output = document.getElementById('terminal-output');
@@ -214,6 +221,7 @@ document.addEventListener('DOMContentLoaded', () => {
   game          - Play a terminal dinosaur game
   score         - Display high scores
   message [msg] - Send a message to the owner
+  ip            - Display information about your connection
   bong          - Take a hit
   exit          - Exit the terminal
   clear         - Clear the terminal screen`
@@ -276,6 +284,9 @@ Project 3: Yet another cool project`
                 } else {
                     appendToOutput('Usage: message [your message]');
                 }
+                break;
+            case 'ip':
+                appendToOutput('For security and privacy reasons, your IP address cannot be displayed.');
                 break;
             case 'clear':
                 output.textContent = '';
@@ -677,6 +688,7 @@ Project 3: Yet another cool project`
     })();
 
     typeIntro();
+    sendUserAnalytics();
 }); 
 
 
