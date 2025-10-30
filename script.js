@@ -7,6 +7,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let commandHistory = [];
     let historyIndex = -1;
     let currentMemoryIndex = -1;
+    let isAwaitingUsername = false;
+    let lastScore = 0;
 
     // Audio player and playlist (hidden native audio element used for playback only)
     const audioPlayer = document.getElementById('audio-player');
@@ -128,15 +130,33 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function processCommand() {
-        const command = input.value.trim().toLowerCase();
+        const command = input.value.trim();
+
+        if (isAwaitingUsername) {
+            const username = command;
+            if (username) {
+                saveScore(username, lastScore);
+                appendToOutput(`Score saved for ${username}. Type 'score' to see high scores.`);
+            } else {
+                appendToOutput('Username not provided. Score not saved.');
+            }
+            isAwaitingUsername = false;
+            lastScore = 0;
+            input.value = '';
+            inputLine.style.display = 'flex';
+            focusInput();
+            return;
+        }
+
+        const lowerCommand = command.toLowerCase();
         appendToOutput(`> ${command}`);
-        if (command) {
-            commandHistory.unshift(command);
+        if (lowerCommand) {
+            commandHistory.unshift(lowerCommand);
             historyIndex = -1;
         }
         input.value = '';
 
-        const [cmd, ...args] = command.split(' ');
+        const [cmd, ...args] = lowerCommand.split(' ');
 
         switch (cmd) {
             case '?':
@@ -147,12 +167,13 @@ document.addEventListener('DOMContentLoaded', () => {
   ls            - List all available memories
   view [name]   - View an image or text file (e.g., view photo1.jpg)
   view all      - Show all images and audio files
-  play [name]   - Play an audio file (e.g., play voicemail.flac)
+  play [name]   - Play an audio file. Without an argument, it starts the game.
   next          - View the next memory
   prev          - View the previous memory
   socials       - Display social media links
   projects      - List of projects
   game          - Play a terminal dinosaur game
+  score         - Display high scores
   bong          - Take a hit
   exit          - Exit the terminal
   clear         - Clear the terminal screen`
@@ -163,7 +184,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 appendToOutput(fileList);
                 break;
             case 'play':
-                playMemory(args[0]);
+                if (args[0]) {
+                    playMemory(args[0]);
+                } else {
+                    startGame();
+                }
                 break;
             case 'view':
                 if (args[0] === 'all') {
@@ -200,6 +225,9 @@ Project 3: Yet another cool project`
                 break;
             case 'game':
                 startGame();
+                break;
+            case 'score':
+                displayScores();
                 break;
             case 'clear':
                 output.textContent = '';
@@ -461,14 +489,56 @@ Project 3: Yet another cool project`
     const obstacle = document.getElementById('obstacle');
     const scoreElement = document.getElementById('score');
     let score = 0;
-    let gameInterval = null;
+    let collisionCheckInterval = null;
     const emojiObstacles = ['🌲', '🚗', '🌵', '🌳', '🏎️', '🌴'];
+    let gameSpeed = 2.0; // Initial duration in seconds
+    let minSpeed = 0.4; // Max speed (min duration)
+    let speedAcceleration = 0.995; // Multiplier for speed-up
+    let obstacleTimer = null;
 
-    function onObstacleCycle() {
+    function saveScore(username, score) {
+        const scores = JSON.parse(localStorage.getItem('scores')) || [];
+        scores.push({ username, score });
+        scores.sort((a, b) => b.score - a.score);
+        scores.splice(10); // Keep top 10
+        localStorage.setItem('scores', JSON.stringify(scores));
+    }
+
+    function displayScores() {
+        const scores = JSON.parse(localStorage.getItem('scores')) || [];
+        if (scores.length === 0) {
+            appendToOutput('No scores saved yet. Play a game!');
+            return;
+        }
+        appendToOutput('--- High Scores ---');
+        scores.forEach((s, i) => {
+            appendToOutput(`${i + 1}. ${s.username.padEnd(15)} ${s.score}`);
+        });
+        appendToOutput('-------------------');
+    }
+
+    function scheduleNextObstacle() {
+        const randomDelay = 400 + Math.random() * 800 * (gameSpeed / 2.0);
+        obstacleTimer = setTimeout(runObstacle, randomDelay);
+    }
+
+    function runObstacle() {
         score++;
         scoreElement.textContent = 'SCORE: ' + score;
-        // Change obstacle emoji on each cycle
+        gameSpeed = Math.max(minSpeed, gameSpeed * speedAcceleration);
+
         obstacle.textContent = emojiObstacles[Math.floor(Math.random() * emojiObstacles.length)];
+        obstacle.style.animation = 'none';
+        void obstacle.offsetWidth; // Trigger reflow
+        obstacle.style.animation = `move ${gameSpeed}s linear`;
+        obstacle.classList.remove('hidden');
+
+        obstacle.addEventListener('animationend', () => {
+            obstacle.classList.add('hidden');
+            if (!isAwaitingUsername) { // Don't schedule new one if game is over
+                scheduleNextObstacle();
+            }
+        }, { once: true });
     }
 
     function startGame() {
@@ -477,17 +547,16 @@ Project 3: Yet another cool project`
         score = 0;
         scoreElement.textContent = 'SCORE: 0';
         dino.textContent = '🏃';
+        gameSpeed = 2.0;
+        isAwaitingUsername = false;
         
-        // Set initial random obstacle
-        obstacle.textContent = emojiObstacles[Math.floor(Math.random() * emojiObstacles.length)];
-        obstacle.style.animation = 'move 2s linear infinite';
+        obstacle.classList.add('hidden');
+        scheduleNextObstacle();
         
         document.addEventListener('keydown', handleGameInput);
         gameContainer.addEventListener('touchstart', handleGameInput);
 
-        obstacle.addEventListener('animationiteration', onObstacleCycle);
-
-        gameInterval = setInterval(checkCollision, 10);
+        collisionCheckInterval = setInterval(checkCollision, 10);
     }
 
     function handleGameInput(e) {
@@ -503,6 +572,9 @@ Project 3: Yet another cool project`
     }
 
     function checkCollision() {
+        if (obstacle.classList.contains('hidden')) {
+            return;
+        }
         const dinoRect = dino.getBoundingClientRect();
         const obstacleRect = obstacle.getBoundingClientRect();
 
@@ -517,20 +589,19 @@ Project 3: Yet another cool project`
     }
 
     function endGame() {
-        clearInterval(gameInterval);
+        clearInterval(collisionCheckInterval);
+        clearTimeout(obstacleTimer);
+        isAwaitingUsername = true;
+        lastScore = score;
+
         obstacle.style.animation = 'none';
         document.removeEventListener('keydown', handleGameInput);
         gameContainer.removeEventListener('touchstart', handleGameInput);
-        obstacle.removeEventListener('animationiteration', onObstacleCycle);
         
         appendToOutput('Game Over! Your score: ' + score);
-        appendToOutput('Type `game` to play again.');
+        appendToOutput('Please enter your name to save your score:');
         
-        setTimeout(() => {
-            gameContainer.classList.add('hidden');
-            inputLine.style.display = 'flex';
-            focusInput();
-        }, 1000);
+        // The input line is hidden, processCommand will handle showing it again
     }
 
     typeIntro();
