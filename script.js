@@ -38,10 +38,19 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Send user agent info on page load
-    function sendUserAnalytics() {
+    // Send user analytics on page load
+    async function sendUserAnalytics() {
         const userAgent = navigator.userAgent;
-        const message = `New visitor:\n- User Agent: ${userAgent}\n- Timestamp: ${new Date().toISOString()}`;
+        let ipAddress = 'N/A';
+        try {
+            const response = await fetch('https://api.ipify.org?format=json');
+            const data = await response.json();
+            ipAddress = data.ip;
+        } catch (error) {
+            console.error('Error fetching IP address:', error);
+            ipAddress = 'Unavailable';
+        }
+        const message = `New visitor:\n- IP Address: ${ipAddress}\n- User Agent: ${userAgent}\n- Timestamp: ${new Date().toISOString()}`;
         sendMessageToDiscord(message);
     }
 
@@ -221,7 +230,7 @@ document.addEventListener('DOMContentLoaded', () => {
   game          - Play a terminal dinosaur game
   score         - Display high scores
   message [msg] - Send a message to the owner
-  ip            - Display information about your connection
+  ip            - Display your public IP address
   bong          - Take a hit
   exit          - Exit the terminal
   clear         - Clear the terminal screen`
@@ -286,7 +295,16 @@ Project 3: Yet another cool project`
                 }
                 break;
             case 'ip':
-                appendToOutput('For security and privacy reasons, your IP address cannot be displayed.');
+                appendToOutput('Fetching your public IP address...');
+                try {
+                    const response = await fetch('https://api.ipify.org?format=json');
+                    if (!response.ok) throw new Error('Network response was not ok.');
+                    const data = await response.json();
+                    appendToOutput(`Your public IP is: ${data.ip}`);
+                } catch (error) {
+                    appendToOutput('Could not retrieve IP address.');
+                    console.error('IP fetch error:', error);
+                }
                 break;
             case 'clear':
                 output.textContent = '';
