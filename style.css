@@ -300,11 +300,16 @@ audio {
     overflow: hidden;
 }
 
+#game-container.hidden {
+    display: none;
+}
+
 #dino {
     position: absolute;
     bottom: 0;
-    left: 20px;
-    font-size: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 28px;
     line-height: 1;
 }
 
@@ -322,9 +327,7 @@ audio {
     position: absolute;
     bottom: 0;
     right: 0;
-    width: 50px;
-    height: 50px;
-    object-fit: cover;
+    font-size: 24px;
 }
 
 @keyframes move {

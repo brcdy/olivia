@@ -462,13 +462,13 @@ Project 3: Yet another cool project`
     const scoreElement = document.getElementById('score');
     let score = 0;
     let gameInterval = null;
-    const imageObstacles = memories.filter(m => m.type === 'image').map(m => m.path);
+    const emojiObstacles = ['🌲', '🚗', '🌵', '🌳', '🏎️', '🌴'];
 
     function onObstacleCycle() {
         score++;
         scoreElement.textContent = 'SCORE: ' + score;
-        // Change obstacle image on each cycle
-        obstacle.src = imageObstacles[Math.floor(Math.random() * imageObstacles.length)];
+        // Change obstacle emoji on each cycle
+        obstacle.textContent = emojiObstacles[Math.floor(Math.random() * emojiObstacles.length)];
     }
 
     function startGame() {
@@ -479,7 +479,7 @@ Project 3: Yet another cool project`
         dino.textContent = '🏃';
         
         // Set initial random obstacle
-        obstacle.src = imageObstacles[Math.floor(Math.random() * imageObstacles.length)];
+        obstacle.textContent = emojiObstacles[Math.floor(Math.random() * emojiObstacles.length)];
         obstacle.style.animation = 'move 2s linear infinite';
         
         document.addEventListener('keydown', handleGameInput);
