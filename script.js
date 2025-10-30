@@ -1,4 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Helper to prevent basic HTML injection by stripping tags
+    function sanitizeInput(text) {
+        return text.replace(/[<>]/g, '');
+    }
+
     const output = document.getElementById('terminal-output');
     const input = document.getElementById('command-input');
     const inputLine = document.getElementById('input-line');
@@ -133,7 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const command = input.value.trim();
 
         if (isAwaitingUsername) {
-            const username = command;
+            const username = sanitizeInput(command);
             if (username) {
                 saveScore(username, lastScore);
                 appendToOutput(`Score saved for ${username}. Type 'score' to see high scores.`);
@@ -484,18 +489,7 @@ Project 3: Yet another cool project`
     audioPlayer.addEventListener('pause', ()=> setPlayingState(false));
 
     /* ----------------- Game Logic ----------------- */
-    const gameContainer = document.getElementById('game-container');
-    const dino = document.getElementById('dino');
-    const obstacle = document.getElementById('obstacle');
-    const scoreElement = document.getElementById('score');
-    let score = 0;
-    let collisionCheckInterval = null;
-    const emojiObstacles = ['🌲', '🚗', '🌵', '🌳', '🏎️', '🌴'];
-    let gameSpeed = 2.0; // Initial duration in seconds
-    let minSpeed = 0.4; // Max speed (min duration)
-    let speedAcceleration = 0.995; // Multiplier for speed-up
-    let obstacleTimer = null;
-
+    // Score functions are kept in the outer scope to manage localStorage
     function saveScore(username, score) {
         const scores = JSON.parse(localStorage.getItem('scores')) || [];
         scores.push({ username, score });
@@ -517,94 +511,108 @@ Project 3: Yet another cool project`
         appendToOutput('-------------------');
     }
 
-    function scheduleNextObstacle() {
-        const randomDelay = 400 + Math.random() * 800 * (gameSpeed / 2.0);
-        obstacleTimer = setTimeout(runObstacle, randomDelay);
-    }
+    // Game logic is wrapped in an IIFE to encapsulate its state and prevent cheating
+    const startGame = (() => {
+        const gameContainer = document.getElementById('game-container');
+        const dino = document.getElementById('dino');
+        const obstacle = document.getElementById('obstacle');
+        const scoreElement = document.getElementById('score');
+        
+        let score = 0;
+        let collisionCheckInterval = null;
+        const emojiObstacles = ['🌲', '🚗', '🌵', '🌳', '🏎️', '🌴'];
+        let gameSpeed = 2.0;
+        let minSpeed = 0.4;
+        let speedAcceleration = 0.995;
+        let obstacleTimer = null;
 
-    function runObstacle() {
-        score++;
-        scoreElement.textContent = 'SCORE: ' + score;
-        gameSpeed = Math.max(minSpeed, gameSpeed * speedAcceleration);
+        function handleGameInput(e) {
+            if (e.code === 'Space' || e.type === 'touchstart') {
+                e.preventDefault();
+                if (!dino.classList.contains('jump')) {
+                    dino.classList.add('jump');
+                    setTimeout(() => {
+                        dino.classList.remove('jump');
+                    }, 500);
+                }
+            }
+        }
 
-        obstacle.textContent = emojiObstacles[Math.floor(Math.random() * emojiObstacles.length)];
-        obstacle.style.animation = 'none';
-        void obstacle.offsetWidth; // Trigger reflow
-        obstacle.style.animation = `move ${gameSpeed}s linear`;
-        obstacle.classList.remove('hidden');
+        function endGame() {
+            clearInterval(collisionCheckInterval);
+            clearTimeout(obstacleTimer);
+            isAwaitingUsername = true;
+            lastScore = score;
 
-        obstacle.addEventListener('animationend', () => {
+            obstacle.style.animation = 'none';
+            document.removeEventListener('keydown', handleGameInput);
+            gameContainer.removeEventListener('touchstart', handleGameInput);
+            
+            appendToOutput('Game Over! Your score: ' + score);
+            appendToOutput('Please enter your name to save your score:');
+            
+            gameContainer.classList.add('hidden');
+            inputLine.style.display = 'flex';
+            focusInput();
+        }
+
+        function checkCollision() {
+            if (obstacle.classList.contains('hidden')) return;
+            const dinoRect = dino.getBoundingClientRect();
+            const obstacleRect = obstacle.getBoundingClientRect();
+
+            if (
+                obstacleRect.left < dinoRect.right &&
+                obstacleRect.right > dinoRect.left &&
+                obstacleRect.top < dinoRect.bottom &&
+                obstacleRect.bottom > dinoRect.top
+            ) {
+                endGame();
+            }
+        }
+
+        function scheduleNextObstacle() {
+            const randomDelay = 400 + Math.random() * 800 * (gameSpeed / 2.0);
+            obstacleTimer = setTimeout(runObstacle, randomDelay);
+        }
+
+        function runObstacle() {
+            score++;
+            scoreElement.textContent = 'SCORE: ' + score;
+            gameSpeed = Math.max(minSpeed, gameSpeed * speedAcceleration);
+
+            obstacle.textContent = emojiObstacles[Math.floor(Math.random() * emojiObstacles.length)];
+            obstacle.style.animation = 'none';
+            void obstacle.offsetWidth;
+            obstacle.style.animation = `move ${gameSpeed}s linear`;
+            obstacle.classList.remove('hidden');
+
+            obstacle.addEventListener('animationend', () => {
+                obstacle.classList.add('hidden');
+                if (!isAwaitingUsername) {
+                    scheduleNextObstacle();
+                }
+            }, { once: true });
+        }
+
+        return function() { // This is the actual startGame function
+            gameContainer.classList.remove('hidden');
+            inputLine.style.display = 'none';
+            score = 0;
+            scoreElement.textContent = 'SCORE: 0';
+            dino.textContent = '🏃';
+            gameSpeed = 2.0;
+            isAwaitingUsername = false;
+            
             obstacle.classList.add('hidden');
-            if (!isAwaitingUsername) { // Don't schedule new one if game is over
-                scheduleNextObstacle();
-            }
-        }, { once: true });
-    }
+            scheduleNextObstacle();
+            
+            document.addEventListener('keydown', handleGameInput);
+            gameContainer.addEventListener('touchstart', handleGameInput);
 
-    function startGame() {
-        gameContainer.classList.remove('hidden');
-        inputLine.style.display = 'none';
-        score = 0;
-        scoreElement.textContent = 'SCORE: 0';
-        dino.textContent = '🏃';
-        gameSpeed = 2.0;
-        isAwaitingUsername = false;
-        
-        obstacle.classList.add('hidden');
-        scheduleNextObstacle();
-        
-        document.addEventListener('keydown', handleGameInput);
-        gameContainer.addEventListener('touchstart', handleGameInput);
-
-        collisionCheckInterval = setInterval(checkCollision, 10);
-    }
-
-    function handleGameInput(e) {
-        if (e.code === 'Space' || e.type === 'touchstart') {
-            e.preventDefault();
-            if (!dino.classList.contains('jump')) {
-                dino.classList.add('jump');
-                setTimeout(() => {
-                    dino.classList.remove('jump');
-                }, 500);
-            }
-        }
-    }
-
-    function checkCollision() {
-        if (obstacle.classList.contains('hidden')) {
-            return;
-        }
-        const dinoRect = dino.getBoundingClientRect();
-        const obstacleRect = obstacle.getBoundingClientRect();
-
-        if (
-            obstacleRect.left < dinoRect.right &&
-            obstacleRect.right > dinoRect.left &&
-            obstacleRect.top < dinoRect.bottom &&
-            obstacleRect.bottom > dinoRect.top
-        ) {
-            endGame();
-        }
-    }
-
-    function endGame() {
-        clearInterval(collisionCheckInterval);
-        clearTimeout(obstacleTimer);
-        isAwaitingUsername = true;
-        lastScore = score;
-
-        obstacle.style.animation = 'none';
-        document.removeEventListener('keydown', handleGameInput);
-        gameContainer.removeEventListener('touchstart', handleGameInput);
-        
-        appendToOutput('Game Over! Your score: ' + score);
-        appendToOutput('Please enter your name to save your score:');
-        
-        gameContainer.classList.add('hidden');
-        inputLine.style.display = 'flex';
-        focusInput();
-    }
+            collisionCheckInterval = setInterval(checkCollision, 10);
+        };
+    })();
 
     typeIntro();
 }); 
