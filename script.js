@@ -601,7 +601,9 @@ Project 3: Yet another cool project`
         appendToOutput('Game Over! Your score: ' + score);
         appendToOutput('Please enter your name to save your score:');
         
-        // The input line is hidden, processCommand will handle showing it again
+        gameContainer.classList.add('hidden');
+        inputLine.style.display = 'flex';
+        focusInput();
     }
 
     typeIntro();
