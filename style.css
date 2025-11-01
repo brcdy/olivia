@@ -11,21 +11,67 @@ html, body {
     font-family: 'Courier New', Courier, monospace;
 }
 
-#terminal {
-    width: 100%;
+html, body {
     height: 100%;
-    padding: 20px;
-    box-sizing: border-box;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    background-color: #000;
+    color: var(--terminal-color);
+    font-family: 'Courier New', Courier, monospace;
 }
 
-#terminal-output {
-    flex-grow: 1;
-    white-space: pre-wrap;
-    word-wrap: break-word;
-    margin: 0;
+#main-container {
+    width: 100%;
+    min-height: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#main-header {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--terminal-color);
+    margin-bottom: 20px;
+}
+
+#button-container {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.action-btn {
+    background: transparent;
+    border: 1px solid var(--terminal-color);
+    color: var(--terminal-color);
+    padding: 10px 20px;
+    font-family: inherit;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.action-btn:hover {
+    background: var(--terminal-color);
+    color: #000;
+}
+
+#content-display {
+    width: 100%;
+    max-width: 900px;
+    text-align: center;
+}
+
+#ip-display {
+    padding: 15px;
+    border: 1px solid var(--terminal-color);
+    margin-bottom: 20px;
 }
 
 #image-container {
@@ -33,9 +79,11 @@ html, body {
     border: 2px solid var(--terminal-color);
     margin-bottom: 10px;
     max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
-#image-container.hidden {
+#image-container.hidden, #grid-container.hidden, #ip-display.hidden {
     display: none;
 }
 
@@ -53,15 +101,12 @@ html, body {
     margin-bottom: 10px;
 }
 
-#grid-container.hidden {
-    display: none;
-}
-
 .grid-item {
     border: 1px solid var(--terminal-color);
     padding: 5px;
     text-align: center;
     word-break: break-all;
+    cursor: pointer;
 }
 
 .grid-item img {
@@ -71,37 +116,54 @@ html, body {
     margin-bottom: 5px;
 }
 
-#input-line {
+/* Modal Styles */
+#message-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
     display: flex;
+    justify-content: center;
     align-items: center;
+    z-index: 1000;
 }
 
-#prompt {
-    margin-right: 8px;
-}
-
-#command-input {
-    background: transparent;
-    border: none;
-    outline: none;
-    color: inherit;
-    font-family: inherit;
-    font-size: inherit;
-    padding: 0;
-    flex-grow: 1;
-}
-
-#cursor {
-    animation: blink 1s step-end infinite;
-}
-
-/* Hide the blinking cursor when the real input cursor is active */
-#command-input:focus + #cursor {
+#message-modal.hidden {
     display: none;
 }
 
-@keyframes blink {
-    50% { opacity: 0; }
+.modal-content {
+    background: #111;
+    padding: 30px;
+    border: 1px solid var(--terminal-color);
+    border-radius: 5px;
+    width: 90%;
+    max-width: 500px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 28px;
+    cursor: pointer;
+}
+
+#message-textarea {
+    background: #000;
+    border: 1px solid var(--terminal-color);
+    color: var(--terminal-color);
+    font-family: inherit;
+    font-size: 16px;
+    padding: 10px;
+    height: 150px;
+    resize: none;
 }
 
 audio {
@@ -110,7 +172,7 @@ audio {
 }
 
 /* Custom audio controls (right side) */
-#terminal-header {
+#main-header {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -232,7 +294,7 @@ audio {
 
 /* small screens: shrink controls */
 @media (max-width: 768px) {
-    #terminal-header {
+    #main-header {
         flex-direction: column;
         align-items: center;
         gap: 20px;
@@ -245,100 +307,6 @@ audio {
     #track-title {
         max-width: 150px;
     }
-}
-
-#bong-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.8);
-    z-index: 100;
-}
-
-#bong-container.hidden {
-    display: none;
-}
-
-#bong-art {
-    font-size: 12px;
-    white-space: pre;
-    text-align: center;
-    color: #fff;
-}
-
-.smoke {
-    display: inline-block;
-    opacity: 0;
-    animation: smoke-animation 2s ease-out forwards;
-}
-
-@keyframes smoke-animation {
-    0% {
-        opacity: 0;
-        transform: translateY(0) scale(0.5);
-    }
-    50% {
-        opacity: 0.8;
-    }
-    100% {
-        opacity: 0;
-        transform: translateY(-50px) scale(1.5);
-    }
-}
-
-
-#game-container {
-    height: 100px;
-    width: 100%;
-    margin-bottom: 10px;
-    position: relative;
-    overflow: hidden;
-}
-
-#game-container.hidden {
-    display: none;
-}
-
-#dino {
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 28px;
-    line-height: 1;
-}
-
-#dino.jump {
-    animation: jump 0.5s ease;
-}
-
-@keyframes jump {
-    0% { bottom: 0; }
-    50% { bottom: 50px; }
-    100% { bottom: 0; }
-}
-
-#obstacle {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    font-size: 24px;
-}
-
-@keyframes move {
-    0% { right: -20px; }
-    100% { right: 100%; }
-}
-
-#score {
-    position: absolute;
-    top: 5px;
-    right: 10px;
 }
 
 

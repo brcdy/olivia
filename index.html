@@ -7,8 +7,8 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="terminal">
-        <header id="terminal-header">
+    <div id="main-container">
+        <header id="main-header">
             <pre id="ascii-art-container"></pre>
             <!-- Custom sleek audio controls placed at far right -->
             <div id="audio-controls" aria-label="Audio player controls">
@@ -40,23 +40,30 @@
                 </div>
             </div>
         </header>
-        <pre id="terminal-output"></pre>
-        <div id="image-container" class="hidden"></div>
-        <div id="grid-container" class="hidden"></div>
-        <div id="bong-container" class="hidden">
-            <pre id="bong-art"></pre>
+
+        <div id="button-container">
+            <button id="view-all-btn" class="action-btn">View Memories</button>
+            <button id="ip-btn" class="action-btn">Show My IP</button>
+            <button id="message-btn" class="action-btn">Send a Message</button>
         </div>
-        <div id="game-container" class="hidden">
-            <div id="score">SCORE: 0</div>
-            <pre id="dino"></pre>
-            <pre id="obstacle"></pre>
-        </div>
-        <div id="input-line">
-            <span id="prompt">></span>
-            <input type="text" id="command-input" autocapitalize="off" autocorrect="off" spellcheck="false">
-            <span id="cursor">█</span>
+
+        <div id="content-display">
+            <div id="ip-display" class="hidden"></div>
+            <div id="image-container" class="hidden"></div>
+            <div id="grid-container" class="hidden"></div>
         </div>
     </div>
+
+    <!-- Message Modal -->
+    <div id="message-modal" class="hidden">
+        <div class="modal-content">
+            <span id="close-modal-btn" class="close-btn">&times;</span>
+            <h2>Send a Message</h2>
+            <textarea id="message-textarea" placeholder="Type your message here..."></textarea>
+            <button id="send-message-submit-btn" class="action-btn">Send</button>
+        </div>
+    </div>
+
     <!-- Hidden native audio element (no browser controls shown) -->
     <audio id="audio-player" preload="auto" aria-hidden="true"></audio>
 
