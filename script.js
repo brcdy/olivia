@@ -211,6 +211,13 @@ document.addEventListener('DOMContentLoaded', () => {
         messageModal.classList.add('hidden');
     });
 
+    // Also close modal if user clicks outside the content area
+    messageModal.addEventListener('click', (e) => {
+        if (e.target === messageModal) {
+            messageModal.classList.add('hidden');
+        }
+    });
+
     document.getElementById('send-message-submit-btn').addEventListener('click', () => {
         const textarea = document.getElementById('message-textarea');
         const message = sanitizeInput(textarea.value.trim());
