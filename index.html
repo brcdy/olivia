@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <canvas id="matrix-canvas"></canvas>
     <div id="main-container">
         <header id="main-header">
             <pre id="ascii-art-container"></pre>
@@ -45,9 +46,13 @@
             <button id="view-all-btn" class="action-btn">View Memories</button>
             <button id="ip-btn" class="action-btn">Show My IP</button>
             <button id="message-btn" class="action-btn">Send a Message</button>
+            <button id="secret-btn" class="action-btn">[ ? ]</button>
         </div>
 
         <div id="content-display">
+            <div id="secret-art-container" class="hidden">
+                <pre id="secret-art"></pre>
+            </div>
             <div id="ip-display" class="hidden"></div>
             <div id="image-container" class="hidden"></div>
             <div id="grid-container" class="hidden"></div>

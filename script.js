@@ -54,6 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const imageContainer = document.getElementById('image-container');
     const gridContainer = document.getElementById('grid-container');
     const ipDisplay = document.getElementById('ip-display');
+    const secretArtContainer = document.getElementById('secret-art-container');
 
     // Audio player and playlist
     const audioPlayer = document.getElementById('audio-player');
@@ -67,6 +68,15 @@ document.addEventListener('DOMContentLoaded', () => {
 ██║   ██║██║     ██║╚██╗ ██╔╝██║██╔══██║
 ╚██████╔╝███████╗██║ ╚████╔╝ ██║██║  ██║
  ╚═════╝ ╚══════╝╚═╝  ╚═══╝  ╚═╝╚═╝  ╚═╝
+`;
+
+    const secretArt = `
+               __
+              / _)
+     _.----._/ /
+    /         /
+ __/ (  | (  |
+/__.-'|_|--|_|
 `;
 
     const memories = [
@@ -110,6 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
         imageContainer.classList.add('hidden');
         gridContainer.classList.add('hidden');
         ipDisplay.classList.add('hidden');
+        secretArtContainer.classList.add('hidden');
     }
 
     function viewAllMemories() {
@@ -200,6 +211,13 @@ document.addEventListener('DOMContentLoaded', () => {
             ipDisplay.textContent = 'Could not retrieve IP address.';
             console.error('IP fetch error:', error);
         }
+    });
+
+    document.getElementById('secret-btn').addEventListener('click', () => {
+        hideAllContent();
+        const artElement = document.getElementById('secret-art');
+        artElement.textContent = secretArt;
+        secretArtContainer.classList.remove('hidden');
     });
 
     const messageModal = document.getElementById('message-modal');
@@ -325,6 +343,51 @@ document.addEventListener('DOMContentLoaded', () => {
 
     audioPlayer.addEventListener('play', ()=> setPlayingState(true));
     audioPlayer.addEventListener('pause', ()=> setPlayingState(false));
+
+    /* ----------------- Digital Rain Effect ----------------- */
+    const canvas = document.getElementById('matrix-canvas');
+    const ctx = canvas.getContext('2d');
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const katakana = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン';
+    const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const nums = '0123456789';
+    const alphabet = katakana + latin + nums;
+
+    const fontSize = 16;
+    const columns = canvas.width / fontSize;
+    const rainDrops = [];
+
+    for (let x = 0; x < columns; x++) {
+        rainDrops[x] = 1;
+    }
+
+    function drawMatrix() {
+        ctx.fillStyle = 'rgba(26, 10, 31, 0.05)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.fillStyle = '#ffade1';
+        ctx.font = fontSize + 'px monospace';
+
+        for (let i = 0; i < rainDrops.length; i++) {
+            const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+            ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
+
+            if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                rainDrops[i] = 0;
+            }
+            rainDrops[i]++;
+        }
+    }
+
+    setInterval(drawMatrix, 30);
+
+    window.addEventListener('resize', () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    });
 
     // Initial setup
     animateAsciiArt();

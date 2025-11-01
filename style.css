@@ -27,6 +27,16 @@ html, body {
     overflow-x: hidden;
 }
 
+#matrix-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    opacity: 0.3;
+}
+
 #main-container {
     width: 100%;
     min-height: 100%;
@@ -36,6 +46,12 @@ html, body {
     flex-direction: column;
     align-items: center;
     backdrop-filter: blur(3px);
+    z-index: 1;
+}
+
+@keyframes pulsate-glow {
+    0%, 100% { text-shadow: 0 0 8px var(--glow-color); }
+    50% { text-shadow: 0 0 12px #fff, 0 0 20px var(--glow-color); }
 }
 
 #main-header {
@@ -46,7 +62,22 @@ html, body {
     padding-bottom: 20px;
     border-bottom: 1px solid rgba(255, 173, 225, 0.3);
     margin-bottom: 30px;
-    text-shadow: 0 0 8px var(--glow-color);
+    animation: pulsate-glow 4s ease-in-out infinite;
+}
+
+@keyframes fade-in-slide-up {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#button-container, #content-display {
+    animation: fade-in-slide-up 0.8s ease forwards;
 }
 
 #button-container {
@@ -97,6 +128,14 @@ html, body {
 
 .action-btn:hover {
     color: #fff;
+    animation: glitch 0.3s linear;
+}
+
+@keyframes glitch {
+    0%, 100% { transform: none; }
+    25% { transform: skew(-0.5deg, -0.5deg); }
+    50% { transform: none; }
+    75% { transform: skew(0.5deg, 0.5deg); }
 }
 
 .action-btn:hover::before, .action-btn:hover::after {
@@ -120,6 +159,20 @@ html, body {
     border: 1px solid rgba(255, 173, 225, 0.2);
 }
 
+#secret-art-container {
+    padding: 20px;
+    border: 1px dashed var(--main-color);
+    margin-bottom: 20px;
+    border-radius: 5px;
+    white-space: pre;
+    font-size: 12px;
+    text-align: center;
+}
+
+#secret-art-container.hidden, #image-container.hidden, #grid-container.hidden, #ip-display.hidden {
+    display: none;
+}
+
 #ip-display {
     padding: 20px;
     border: 1px solid var(--main-color);
@@ -137,10 +190,6 @@ html, body {
     margin-right: auto;
     border-radius: 10px;
     background: rgba(0, 0, 0, 0.3);
-}
-
-#image-container.hidden, #grid-container.hidden, #ip-display.hidden {
-    display: none;
 }
 
 #image-container img {
