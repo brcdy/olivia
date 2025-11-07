@@ -40,18 +40,19 @@ html, body {
 #main-container {
     width: 100%;
     min-height: 100%;
-    padding: 20px;
+    padding: 34px; /* Fibonacci: 21 + 13 = 34 */
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
     align-items: center;
     backdrop-filter: blur(3px);
     z-index: 1;
+    animation: fade-in-scale-up 1.5s ease-out forwards;
 }
 
 @keyframes pulsate-glow {
-    0%, 100% { text-shadow: 0 0 8px var(--glow-color); }
-    50% { text-shadow: 0 0 12px #fff, 0 0 20px var(--glow-color); }
+    0%, 100% { text-shadow: 0 0 8px var(--glow-color), 0 0 20px rgba(255, 142, 218, 0.4); }
+    50% { text-shadow: 0 0 15px #fff, 0 0 30px var(--glow-color), 0 0 50px rgba(255, 142, 218, 0.6); }
 }
 
 #main-header {
@@ -59,21 +60,52 @@ html, body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-bottom: 20px;
+    padding-bottom: 21px; /* Fibonacci: 21 */
     border-bottom: 1px solid rgba(255, 173, 225, 0.3);
-    margin-bottom: 30px;
-    animation: pulsate-glow 4s ease-in-out infinite;
+    margin-bottom: 34px; /* Fibonacci: 34 */
+    animation: pulsate-glow 4s ease-in-out infinite, slide-in-down 1s ease-out;
 }
 
-@keyframes fade-in-slide-up {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+@keyframes fade-in-scale-up {
+    0% { opacity: 0; transform: scale(0.8) translateY(50px); }
+    100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes float-subtle {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-5px); }
+}
+
+@keyframes shake-x {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    50% { transform: translateX(5px); }
+    75% { transform: translateX(-5px); }
+}
+
+@keyframes pulse-border-glow {
+    0%, 100% { box-shadow: 0 0 5px rgba(255, 142, 218, 0.2); border-color: rgba(255, 173, 225, 0.2); }
+    50% { box-shadow: 0 0 15px var(--glow-color); border-color: var(--main-color); }
+}
+
+@keyframes slide-in-left {
+    0% { opacity: 0; transform: translateX(-50px); }
+    100% { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slide-in-right {
+    0% { opacity: 0; transform: translateX(50px); }
+    100% { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes rotate-y-hover {
+    0% { transform: perspective(400px) rotateY(0deg); }
+    100% { transform: perspective(400px) rotateY(360deg); }
+}
+
+@keyframes slide-in-down {
+    0% { opacity: 0; transform: translateY(-50px); }
+    100% { opacity: 1; transform: translateY(0); }
 }
 
 #button-container, #content-display {
@@ -84,8 +116,9 @@ html, body {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 25px;
-    margin-bottom: 30px;
+    gap: 21px; /* Fibonacci: 21 */
+    margin-bottom: 34px; /* Fibonacci: 34 */
+    animation: fade-in-slide-up 1.2s ease-out forwards;
 }
 
 .action-btn {
@@ -93,13 +126,14 @@ html, body {
     background: transparent;
     border: none;
     color: var(--main-color);
-    padding: 15px 30px;
+    padding: 13px 21px; /* Fibonacci: 13, 21 */
     font-family: inherit;
     font-size: 18px;
     cursor: pointer;
     transition: color 0.4s ease;
     text-shadow: 0 0 8px var(--glow-color);
     letter-spacing: 1px;
+    animation: float-subtle 5s ease-in-out infinite;
 }
 
 .action-btn::before, .action-btn::after {
@@ -128,14 +162,17 @@ html, body {
 
 .action-btn:hover {
     color: #fff;
-    animation: glitch 0.3s linear;
+    animation: glitch 0.3s linear infinite, shake-x 0.5s infinite;
+    transform: scale(1.05);
+    box-shadow: 0 0 20px var(--glow-color);
 }
 
 @keyframes glitch {
-    0%, 100% { transform: none; }
-    25% { transform: skew(-0.5deg, -0.5deg); }
-    50% { transform: none; }
-    75% { transform: skew(0.5deg, 0.5deg); }
+    0%, 100% { transform: translate(0, 0); }
+    20% { transform: translate(-2px, 2px); }
+    40% { transform: translate(-2px, -2px); }
+    60% { transform: translate(2px, 2px); }
+    80% { transform: translate(2px, -2px); }
 }
 
 .action-btn:hover::before, .action-btn:hover::after {
@@ -147,90 +184,100 @@ html, body {
 .action-btn:active {
     background: rgba(255, 142, 218, 0.2);
     color: #fff;
+    transform: scale(0.95);
+    transition: transform 0.1s ease;
 }
 
 #content-display {
     width: 100%;
-    max-width: 900px;
+    max-width: 890px; /* Fibonacci: 890 */
     text-align: center;
-    padding: 20px;
+    padding: 34px; /* Fibonacci: 34 */
     background: rgba(0, 0, 0, 0.2);
-    border-radius: 10px;
+    border-radius: 13px; /* Fibonacci: 13 */
     border: 1px solid rgba(255, 173, 225, 0.2);
+    animation: fade-in-slide-up 1.2s ease-out forwards;
 }
 
 #secret-art-container {
-    padding: 20px;
+    padding: 21px; /* Fibonacci: 21 */
     border: 1px dashed var(--main-color);
-    margin-bottom: 20px;
-    border-radius: 5px;
+    margin-bottom: 21px; /* Fibonacci: 21 */
+    border-radius: 8px; /* Fibonacci: 8 */
     white-space: pre;
-    font-size: 12px;
+    font-size: 13px; /* Fibonacci: 13 */
     text-align: center;
-}
-
-#secret-art-container.hidden, #image-container.hidden, #grid-container.hidden, #ip-display.hidden {
-    display: none;
+    animation: slide-in-left 0.8s ease-out forwards;
 }
 
 #ip-display {
-    padding: 20px;
+    padding: 21px; /* Fibonacci: 21 */
     border: 1px solid var(--main-color);
-    margin-bottom: 20px;
-    border-radius: 5px;
+    margin-bottom: 21px; /* Fibonacci: 21 */
+    border-radius: 8px; /* Fibonacci: 8 */
     box-shadow: 0 0 15px rgba(255, 142, 218, 0.3);
+    animation: slide-in-right 0.8s ease-out forwards;
 }
 
 #image-container {
-    padding: 15px;
+    padding: 13px; /* Fibonacci: 13 */
     border: 1px solid var(--main-color);
-    margin-bottom: 10px;
-    max-width: 600px;
+    margin-bottom: 13px; /* Fibonacci: 13 */
+    max-width: 610px; /* Fibonacci: 610 */
     margin-left: auto;
     margin-right: auto;
-    border-radius: 10px;
+    border-radius: 13px; /* Fibonacci: 13 */
     background: rgba(0, 0, 0, 0.3);
+    animation: fade-in-scale-up 1s ease-out forwards;
 }
 
 #image-container img {
     max-width: 100%;
     display: block;
-    border-radius: 5px;
+    border-radius: 8px; /* Fibonacci: 8 */
+    transition: transform 0.3s ease;
+}
+
+#image-container img:hover {
+    transform: scale(1.02) rotateZ(1deg);
 }
 
 #grid-container {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 20px;
-    padding: 15px;
+    grid-template-columns: repeat(auto-fill, minmax(144px, 1fr)); /* Fibonacci: 144 */
+    gap: 21px; /* Fibonacci: 21 */
+    padding: 21px; /* Fibonacci: 21 */
     border: 1px solid var(--main-color);
-    margin-bottom: 10px;
-    border-radius: 10px;
+    margin-bottom: 13px; /* Fibonacci: 13 */
+    border-radius: 13px; /* Fibonacci: 13 */
+    animation: fade-in-slide-up 1s ease-out forwards;
 }
 
 .grid-item {
     border: 1px solid rgba(255, 173, 225, 0.5);
-    padding: 10px;
+    padding: 13px; /* Fibonacci: 13 */
     text-align: center;
     word-break: break-all;
     cursor: pointer;
-    border-radius: 5px;
+    border-radius: 8px; /* Fibonacci: 8 */
     transition: all 0.3s ease;
     background: rgba(255, 255, 255, 0.05);
+    animation: pulse-border-glow 3s infinite alternate;
 }
 
 .grid-item:hover {
-    transform: scale(1.05);
+    transform: scale(1.08) rotateZ(-2deg); /* Excessive rotation */
     border-color: var(--glow-color);
-    box-shadow: 0 0 15px var(--glow-color);
+    box-shadow: 0 0 25px var(--glow-color), 0 0 40px rgba(255, 142, 218, 0.5);
+    animation: rotate-y-hover 1s infinite linear;
 }
 
 .grid-item img {
     max-width: 100%;
     height: 100px;
     object-fit: cover;
-    margin-bottom: 10px;
-    border-radius: 3px;
+    margin-bottom: 13px; /* Fibonacci: 13 */
+    border-radius: 5px;
 }
 
 /* Modal Styles */
@@ -241,13 +288,13 @@ html, body {
     width: 100%;
     height: 100%;
     background: rgba(26, 10, 31, 0.8);
-    backdrop-filter: blur(5px);
+    backdrop-filter: blur(8px); /* Fibonacci: 8 */
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 1000;
     opacity: 0;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.5s ease;
     pointer-events: none;
 }
 
@@ -258,18 +305,18 @@ html, body {
 
 .modal-content {
     background: var(--bg-color);
-    padding: 30px;
+    padding: 34px; /* Fibonacci: 34 */
     border: 1px solid var(--main-color);
-    border-radius: 10px;
+    border-radius: 13px; /* Fibonacci: 13 */
     width: 90%;
-    max-width: 500px;
+    max-width: 550px; /* Fibonacci: 550 */
     position: relative;
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    box-shadow: 0 0 25px var(--glow-color);
-    transform: scale(0.95);
-    transition: transform 0.3s ease;
+    gap: 21px; /* Fibonacci: 21 */
+    box-shadow: 0 0 34px var(--glow-color), 0 0 55px rgba(255, 142, 218, 0.7);
+    transform: scale(0.8); /* Start smaller */
+    transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* Springy animation */
 }
 
 #message-modal:not(.hidden) .modal-content {
@@ -278,15 +325,16 @@ html, body {
 
 .close-btn {
     position: absolute;
-    top: 15px;
-    right: 20px;
-    font-size: 32px;
+    top: 13px; /* Fibonacci: 13 */
+    right: 21px; /* Fibonacci: 21 */
+    font-size: 34px; /* Fibonacci: 34 */
     cursor: pointer;
-    transition: color 0.2s ease;
+    transition: color 0.3s ease, transform 0.3s ease;
 }
 
 .close-btn:hover {
     color: var(--glow-color);
+    transform: rotate(90deg) scale(1.2);
 }
 
 #message-textarea {
@@ -295,14 +343,18 @@ html, body {
     color: var(--main-color);
     font-family: inherit;
     font-size: 16px;
-    padding: 15px;
-    height: 150px;
+    padding: 13px; /* Fibonacci: 13 */
+    height: 144px; /* Fibonacci: 144 */
     resize: none;
-    border-radius: 5px;
+    border-radius: 8px; /* Fibonacci: 8 */
+    transition: all 0.3s ease;
 }
 
-audio {
-    display: none;
+#message-textarea:focus {
+    outline: none;
+    border-color: var(--glow-color);
+    box-shadow: 0 0 15px var(--glow-color);
+    transform: scale(1.01);
 }
 
 #ascii-art-container {
@@ -310,18 +362,12 @@ audio {
     color: var(--main-color);
     font-family: var(--font);
     margin: 0;
-    text-shadow: 0 0 5px var(--glow-color), 0 0 10px var(--glow-color);
+    text-shadow: 0 0 5px var(--glow-color), 0 0 10px var(--glow-color), 0 0 20px rgba(255, 142, 218, 0.3);
 }
 
 @keyframes slide-in-loop {
-    0%, 100% { transform: translateX(-10px); opacity: 0; }
+    0%, 100% { transform: translateX(-13px); opacity: 0; }
     10%, 90% { transform: translateX(0); opacity: 1; }
-}
-
-#ascii-art-container span {
-    display: inline-block;
-    opacity: 0;
-    animation: slide-in-loop 7s infinite;
 }
 
 #audio-controls {
@@ -331,22 +377,23 @@ audio {
     background: rgba(10, 10, 10, 0.55);
     border: 1px solid var(--main-color);
     color: var(--main-color);
-    padding: 10px;
-    border-radius: 10px;
+    padding: 13px; /* Fibonacci: 13 */
+    border-radius: 13px; /* Fibonacci: 13 */
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7), 0 0 10px var(--glow-color);
     font-family: inherit;
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    margin-top: 20px;
+    gap: 13px; /* Fibonacci: 13 */
+    margin-top: 21px; /* Fibonacci: 21 */
     backdrop-filter: blur(5px);
+    animation: slide-in-right 1s ease-out forwards;
 }
 
 #audio-controls #audio-top {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 8px;
+    gap: 8px; /* Fibonacci: 8 */
 }
 
 #track-title {
@@ -355,6 +402,7 @@ audio {
     overflow: hidden;
     text-overflow: ellipsis;
     max-width: 150px;
+    animation: float-subtle 3s ease-in-out infinite alternate;
 }
 
 #time-display {
@@ -364,8 +412,8 @@ audio {
 
 #progress-bar {
     background: rgba(255, 255, 255, 0.1);
-    height: 8px;
-    border-radius: 6px;
+    height: 8px; /* Fibonacci: 8 */
+    border-radius: 8px; /* Fibonacci: 8 */
     width: 100%;
     cursor: pointer;
     overflow: hidden;
@@ -375,67 +423,76 @@ audio {
     background: linear-gradient(90deg, #ff8eda, var(--main-color));
     width: 0%;
     height: 100%;
-    box-shadow: 0 0 8px var(--glow-color);
+    box-shadow: 0 0 8px var(--glow-color), 0 0 15px var(--glow-color);
+    transition: width 0.1s linear;
 }
 
 #control-buttons {
     display: flex;
     justify-content: center;
-    gap: 15px;
+    gap: 21px; /* Fibonacci: 21 */
 }
 
 .ctrl-btn {
     background: transparent;
     border: 1px solid rgba(255, 173, 225, 0.3);
     color: var(--main-color);
-    width: 48px;
-    height: 48px;
+    width: 55px; /* Fibonacci: 55 */
+    height: 55px; /* Fibonacci: 55 */
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 8px;
+    border-radius: 8px; /* Fibonacci: 8 */
     cursor: pointer;
     transition: all 0.2s ease;
+    animation: pulse-border-glow 2s infinite alternate;
 }
 
 .ctrl-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 18px rgba(255, 142, 218, 0.2);
-    border-color: var(--main-color);
+    transform: translateY(-5px) scale(1.1); /* More dramatic hover */
+    box-shadow: 0 8px 25px rgba(255, 142, 218, 0.4), 0 0 15px var(--glow-color);
+    border-color: var(--glow-color);
 }
 
 #volume-row {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 13px; /* Fibonacci: 13 */
 }
 
 #volume-row input[type=range] {
     -webkit-appearance: none;
     appearance: none;
-    width: 120px;
+    width: 144px; /* Fibonacci: 144 */
     background: transparent;
 }
 
 #volume-row input[type=range]::-webkit-slider-runnable-track {
-    height: 6px;
+    height: 8px; /* Fibonacci: 8 */
     background: rgba(255, 255, 255, 0.1);
-    border-radius: 6px;
+    border-radius: 8px; /* Fibonacci: 8 */
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.5);
 }
 
 #volume-row input[type=range]::-webkit-slider-thumb {
     -webkit-appearance: none;
-    width: 16px;
-    height: 16px;
+    width: 21px; /* Fibonacci: 21 */
+    height: 21px; /* Fibonacci: 21 */
     border-radius: 50%;
     background: var(--main-color);
-    margin-top: -5px;
-    box-shadow: 0 0 8px var(--glow-color);
+    margin-top: -7px; /* Adjust for larger thumb */
+    box-shadow: 0 0 10px var(--glow-color), 0 0 20px rgba(255, 142, 218, 0.5);
+    transition: all 0.2s ease;
+}
+
+#volume-row input[type=range]::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+    background: #fff;
 }
 
 @media (max-width: 768px) {
     #main-header {
-        gap: 20px;
+        gap: 21px; /* Fibonacci: 21 */
     }
     #audio-controls {
         width: 90%;

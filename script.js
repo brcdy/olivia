@@ -116,6 +116,17 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    function animateContentDisplay(element, animationClass, delay = 0) {
+        element.classList.add('hidden'); // Ensure it's hidden before animating
+        setTimeout(() => {
+            element.classList.remove('hidden');
+            element.classList.add(animationClass);
+            element.addEventListener('animationend', () => {
+                element.classList.remove(animationClass);
+            }, { once: true });
+        }, delay);
+    }
+
     function hideAllContent() {
         imageContainer.classList.add('hidden');
         gridContainer.classList.add('hidden');
@@ -127,7 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
         hideAllContent();
         gridContainer.innerHTML = '';
         
-        memories.forEach(memory => {
+        memories.forEach((memory, index) => {
             if (memory.type === 'image' || memory.type === 'audio') {
                 const item = document.createElement('div');
                 item.className = 'grid-item';
@@ -148,17 +159,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 item.appendChild(caption);
                 gridContainer.appendChild(item);
 
-                item.addEventListener('click', () => {
-                    if (memory.type === 'image') {
-                        viewMemory(memory.file);
-                    } else if (memory.type === 'audio') {
-                        playMemory(memory.file);
-                    }
-                });
+                // Apply staggered animation to grid items
+                item.style.animationDelay = `${index * 0.1}s`;
+                item.classList.add('fade-in-scale-up');
             }
         });
 
-        gridContainer.classList.remove('hidden');
+        animateContentDisplay(gridContainer, 'fade-in-slide-up');
     }
 
     function viewMemory(fileName) {
@@ -175,12 +182,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const backButton = document.createElement('button');
         backButton.textContent = 'Back to Memories';
         backButton.className = 'action-btn';
-        backButton.style.marginTop = '10px';
+        backButton.style.marginTop = '13px'; /* Fibonacci: 13 */
         backButton.addEventListener('click', viewAllMemories);
 
         imageContainer.appendChild(img);
         imageContainer.appendChild(backButton);
-        imageContainer.classList.remove('hidden');
+        animateContentDisplay(imageContainer, 'fade-in-scale-up');
     }
 
     function playMemory(fileName) {
@@ -196,12 +203,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /* ----------------- Event Listeners for Buttons ----------------- */
-    document.getElementById('view-all-btn').addEventListener('click', viewAllMemories);
+    document.getElementById('view-all-btn').addEventListener('click', () => {
+        viewAllMemories();
+        document.getElementById('view-all-btn').classList.add('shake-x');
+        document.getElementById('view-all-btn').addEventListener('animationend', () => {
+            document.getElementById('view-all-btn').classList.remove('shake-x');
+        }, { once: true });
+    });
 
     document.getElementById('ip-btn').addEventListener('click', async () => {
         hideAllContent();
         ipDisplay.textContent = 'Fetching your public IP address...';
-        ipDisplay.classList.remove('hidden');
+        animateContentDisplay(ipDisplay, 'slide-in-right');
         try {
             const response = await fetch('https://api.ipify.org?format=json');
             if (!response.ok) throw new Error('Network response was not ok.');
@@ -211,18 +224,30 @@ document.addEventListener('DOMContentLoaded', () => {
             ipDisplay.textContent = 'Could not retrieve IP address.';
             console.error('IP fetch error:', error);
         }
+        document.getElementById('ip-btn').classList.add('shake-x');
+        document.getElementById('ip-btn').addEventListener('animationend', () => {
+            document.getElementById('ip-btn').classList.remove('shake-x');
+        }, { once: true });
     });
 
     document.getElementById('secret-btn').addEventListener('click', () => {
         hideAllContent();
         const artElement = document.getElementById('secret-art');
         artElement.textContent = secretArt;
-        secretArtContainer.classList.remove('hidden');
+        animateContentDisplay(secretArtContainer, 'slide-in-left');
+        document.getElementById('secret-btn').classList.add('shake-x');
+        document.getElementById('secret-btn').addEventListener('animationend', () => {
+            document.getElementById('secret-btn').classList.remove('shake-x');
+        }, { once: true });
     });
 
     const messageModal = document.getElementById('message-modal');
     document.getElementById('message-btn').addEventListener('click', () => {
         messageModal.classList.remove('hidden');
+        document.getElementById('message-btn').classList.add('shake-x');
+        document.getElementById('message-btn').addEventListener('animationend', () => {
+            document.getElementById('message-btn').classList.remove('shake-x');
+        }, { once: true });
     });
 
     document.getElementById('close-modal-btn').addEventListener('click', () => {
@@ -270,6 +295,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateTrackUI(filename){
         trackTitle.textContent = filename || 'No track';
+        trackTitle.classList.add('float-subtle');
+        trackTitle.addEventListener('animationend', () => {
+            trackTitle.classList.remove('float-subtle');
+        }, { once: true });
     }
 
     audioPlayer.addEventListener('timeupdate', () => {
@@ -313,6 +342,10 @@ document.addEventListener('DOMContentLoaded', () => {
             playMemory(audioPlaylist[0].file);
             setPlayingState(true);
         }
+        playPauseBtn.classList.add('shake-x');
+        playPauseBtn.addEventListener('animationend', () => {
+            playPauseBtn.classList.remove('shake-x');
+        }, { once: true });
     });
 
     prevBtn.addEventListener('click', ()=>{
@@ -321,6 +354,10 @@ document.addEventListener('DOMContentLoaded', () => {
         else currentAudioIndex--;
         const prev = audioPlaylist[currentAudioIndex];
         if (prev) playMemory(prev.file);
+        prevBtn.classList.add('shake-x');
+        prevBtn.addEventListener('animationend', () => {
+            prevBtn.classList.remove('shake-x');
+        }, { once: true });
     });
 
     nextBtn.addEventListener('click', ()=>{
@@ -328,6 +365,10 @@ document.addEventListener('DOMContentLoaded', () => {
         currentAudioIndex = (currentAudioIndex + 1) % audioPlaylist.length;
         const next = audioPlaylist[currentAudioIndex];
         if (next) playMemory(next.file);
+        nextBtn.classList.add('shake-x');
+        nextBtn.addEventListener('animationend', () => {
+            nextBtn.classList.remove('shake-x');
+        }, { once: true });
     });
 
     progressBar.addEventListener('click', (e)=>{
